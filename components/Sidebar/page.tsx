@@ -24,22 +24,16 @@ const Sidebar = () => {
     "Channel 5",
   ];
   return (
-    <div className="bg-[#2D1851] h-full text-white">
+    <div className="bg-[#598dcd] h-full text-[#fff]">
       {" "}
-      <div className="space-y-4 py-4">
+      <div className=" py-4">
         <div className="px-3 py-2">
           <div className="flex flex-col justify-evenly items-center gap-7 my-4">
-            <Image
-              src="/landing-1.svg"
-              alt="Logo"
-              width={50}
-              height={50}
-              className="object-contain"
-            />
-            <Button className="bg-[#432477] w-2/3 text-white hover:bg-white hover:text-black ">
-              <CiStreamOn className="mr-2 h-5 w-5" />
-              Start Streaming
-            </Button>
+            <Image src="/logo.png" alt="logo" width={30} height={30} />
+            <p className="font-bold text-inherit ml-2 text-xl text-white">
+              <span className="text-[#313465] mr-1">Venue</span>
+              Booker
+            </p>
           </div>
 
           <h2 className="mb-2 mt-8 px-4 text-lg font-semibold tracking-tight">

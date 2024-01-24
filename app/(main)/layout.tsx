@@ -5,7 +5,7 @@ import "../globals.css";
 import { Poppins } from "next/font/google";
 import { NextUIProvider } from "@nextui-org/react";
 import NavBar from "@/components/Navbar/page";
-
+import Sidebar from "@/components/Sidebar/page";
 export default function RootLayout({
   children,
 }: {
@@ -13,14 +13,12 @@ export default function RootLayout({
 }) {
   return (
     <div className="w-full h-[100vh] flex justify-between items-center">
-      {/* <div className="w-1/4 h-full">
+      <div className="w-1/4 h-full">
         <Sidebar />
-      </div> */}
+      </div>
 
       <div className="w-full h-full flex flex-col justify-between items-center">
-        <div className="w-full">
-          <NavBar />
-        </div>
+       
         <NextUIProvider className="w-full h-full  overflow-y-scroll">
           <div className="w-full h-full">{children}</div>
         </NextUIProvider>
