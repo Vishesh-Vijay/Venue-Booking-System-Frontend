@@ -18,7 +18,7 @@ export default function RootLayout({
       </div>
 
       <div className="w-full h-full flex flex-col justify-between items-center">
-       
+        <NavBar /> 
         <NextUIProvider className="w-full h-full  overflow-y-scroll">
           <div className="w-full h-full">{children}</div>
         </NextUIProvider>

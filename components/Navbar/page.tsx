@@ -14,7 +14,7 @@ import {
 import DropdownComponent from "../Dropdown Menu/page";
 const NavBar = () => {
   return (
-    <Navbar shouldHideOnScroll className=" border border-b-black text-white p-4">
+    <Navbar shouldHideOnScroll className=" border border-b-black text-white p-3">
       <NavbarContent className="flex justify-between items-center">
         <NavbarItem isActive>
           <Link
@@ -22,8 +22,7 @@ const NavBar = () => {
             aria-current="page"
             className="flex justify-center items-center"
           >
-            <Image src="/iiita.png" alt="iiita" width={40} height={40} />
-            <p className="text-white">IIIT Allahabad</p>
+            <Image src="/iiita.png" alt="iiita" width={45} height={45} />
           </Link>
         </NavbarItem>
       </NavbarContent>

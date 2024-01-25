@@ -13,6 +13,7 @@ import { HiOutlinePaintBrush } from "react-icons/hi2";
 import { GrChannel } from "react-icons/gr";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+
 const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -28,14 +29,18 @@ const Sidebar = () => {
       {" "}
       <div className=" py-4">
         <div className="px-3 py-2">
-          <div className="flex flex-col justify-evenly items-center gap-7 my-4">
-            <Image src="/logo.png" alt="logo" width={30} height={30} />
+          <div className="flex flex-col justify-evenly items-center gap-1 my-4">
+            <Image src="/logo.png" alt="logo" width={50} height={50} />
             <p className="font-bold text-inherit ml-2 text-xl text-white">
               <span className="text-[#313465] mr-1">Venue</span>
               Booker
             </p>
           </div>
+          <div>
+            <div>
 
+            </div>
+          </div>
           <h2 className="mb-2 mt-8 px-4 text-lg font-semibold tracking-tight">
             Discover
           </h2>
