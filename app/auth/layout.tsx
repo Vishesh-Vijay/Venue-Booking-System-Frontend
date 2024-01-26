@@ -1,7 +1,6 @@
 'use client'
 import React from "react";
 import Image from "next/image";
-import { AuthContextProvider } from "@/app/context/AuthContext";
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="w-full h-[100vh] flex justify-around items-center">
@@ -20,7 +19,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
       <div className="w-1/2 h-[100vh] bg-white flex justify-around items-center">
-        <AuthContextProvider>{children}</AuthContextProvider>
+       {children}
       </div>
     </div>
   );

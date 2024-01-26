@@ -1,35 +1,33 @@
-'use client'
-import React, { useState } from 'react'
-import Image from 'next/image'
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
-import { Button } from '@nextui-org/react'
-import { useUserAuth } from '@/app/context/AuthContext'; 
-import { userAgent } from 'next/server';
-import {Spinner} from '@nextui-org/react'
+import { Button } from "@nextui-org/react";
+
+import { userAgent } from "next/server";
+import { Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
+import { auth } from "../../firebase";
+import {signInWithPopup,GoogleAuthProvider} from 'firebase/auth'
 const login = () => {
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const { googleSignIn, user, logOut }:any = useUserAuth();
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const [loading, setLoading] = useState(false)
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const router = useRouter()
-    const handleSignIn = async()=>{
-        try{
-            //set loading untill its done
-            setLoading(true)
-            await googleSignIn()
-            if(user){
-                setLoading(false)
-                router.push('/')
-            }
-            
-            
-        }catch(err){
-            console.log(err)
-        }
-    }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [loading, setLoading] = useState(false);
+  const googleAuth =  new GoogleAuthProvider()
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const router = useRouter();
+  const handleLogin = async () => {
+      setLoading(true)
+      const userCredential:any = await signInWithPopup(auth,googleAuth)
+      if(userCredential){
+        console.log(userCredential)
+        setLoading(false)
+      } 
+      const token = userCredential.user.accessToken
+      const user = userCredential.user
+      console.log(token,user)
+  }
   return (
     <div className="bg-white flex flex-col justify-between items-center">
       <Image
@@ -40,16 +38,18 @@ const router = useRouter()
       />
       <h1 className="font-bold text-[#323263] text-3xl mt-5">LOGIN</h1>
       <Button
-        className="bg-[#313465] flex items-center mt-6 text-white"
+        className="bg-[#313465] flex items-center mt-6 px-3 py-2 text-white rounded-xl"
         startContent={<FcGoogle />}
         radius="md"
-        onClick={handleSignIn}
+        onClick={handleLogin}
       >
         Login with Google
       </Button>
-        {loading && <Spinner color='primary' label='loading...' className='mt-4' />}
+      {loading && (
+        <Spinner color="primary" label="loading..." className="mt-4" />
+      )}
     </div>
   );
-}
+};
 
-export default login
+export default login;
