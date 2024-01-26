@@ -1,10 +1,10 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 // import { AuthContextProvider } from "./context/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 export const metadata: Metadata = {
   title: "Venue Booker",
@@ -23,7 +23,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={poppins.variable}>{children}</body>
+      <body className={poppins.variable}>
+        <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+      </body>
     </html>
   );
 }

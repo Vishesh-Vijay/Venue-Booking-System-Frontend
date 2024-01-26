@@ -9,25 +9,77 @@ import { Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
 import { auth } from "../../firebase";
-import {signInWithPopup,GoogleAuthProvider} from 'firebase/auth'
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import Alert from "@mui/material/Alert";
+import { loginUser } from "@/utils/utils";
 const login = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [loading, setLoading] = useState(false);
-  const googleAuth =  new GoogleAuthProvider()
-
+  const googleAuth = new GoogleAuthProvider();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [showAlert, setShowAlert] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [isError, setIsError] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [error,setError] = useState("");
   const handleLogin = async () => {
-      setLoading(true)
-      const userCredential:any = await signInWithPopup(auth,googleAuth)
-      if(userCredential){
-        console.log(userCredential)
-        setLoading(false)
-      } 
-      const token = userCredential.user.accessToken
-      const user = userCredential.user
-      console.log(token,user)
-  }
+    setLoading(true);
+    try {
+      const userCredential: any = await signInWithPopup(auth, googleAuth);
+      if (userCredential) {
+        const user = userCredential.user;
+        console.log(userCredential);
+        try {
+          const user_Data = {
+            name: user.displayName,
+            email: user.email,
+            // photoURL: user.photoURL,
+            // uid: user.uid,
+          };
+          localStorage.setItem("token", userCredential._tokenResponse.idToken);
+          const response: any = await loginUser(
+            user_Data,
+            userCredential._tokenResponse.idToken
+          ).then(
+            (res) => {
+              const resp = res
+              if(resp.status==200){
+                  setLoading(false);
+                  setShowAlert(true);
+                  setTimeout(() => {
+                    setShowAlert(false);
+                  }, 3000);
+                        router.replace("/")
+
+                }
+              } 
+          )
+          
+
+        } catch (error: any) {
+          console.log(error.response.data.response_message);
+          setIsError(true);
+          setError(error.response.data.response_message);
+          setTimeout(() => {
+            setIsError(false);
+            setError("");
+          }, 3000);
+        }
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.log(error);
+      setIsError(true);
+      setError(error.response.data.response_message);
+      setTimeout(() => {
+        setIsError(false);
+        setError("")
+
+      },3000)
+    }
+  };
   return (
     <div className="bg-white flex flex-col justify-between items-center">
       <Image
@@ -45,9 +97,19 @@ const login = () => {
       >
         Login with Google
       </Button>
-      {loading && (
-        <Spinner color="primary" label="loading..." className="mt-4" />
+      {loading && <Spinner label="loading..." className="mt-4" />}
+      {showAlert && !isError && (
+        <Alert severity="success" className="mt-4">
+          Login Successful
+        </Alert>
       )}
+      {
+        isError && (
+          <Alert severity="error">
+            {error}
+          </Alert>
+        )
+      }
     </div>
   );
 };

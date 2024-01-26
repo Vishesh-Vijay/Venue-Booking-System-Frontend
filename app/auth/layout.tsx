@@ -1,8 +1,24 @@
 'use client'
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useState } from "react";
+
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+   const router = useRouter();
+   const [show, setShow] = useState(false);
+   useEffect(() => {
+     const token = localStorage.getItem("token");
+     if (token != null) {
+       setShow(false);
+       router.push("/");
+     } else {
+       setShow(true);
+     }
+   }, [router]);
   return (
+    show &&
     <div className="w-full h-[100vh] flex justify-around items-center">
       <div className="h-[100vh] bg-[#7298C6] w-3/4 space-y-6 flex justify-center items-center">
         <div>

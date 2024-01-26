@@ -6,13 +6,27 @@ import { Poppins } from "next/font/google";
 import { NextUIProvider } from "@nextui-org/react";
 import NavBar from "@/components/Navbar/page";
 import Sidebar from "@/components/Sidebar/page";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token == null) {
+      setShow(false);
+      router.push("/auth/login");
+    } else {
+      setShow(true);
+    }
+  }, [router]);
   return (
-    <div className="w-full h-[100vh] flex justify-between items-center">
+    show && (<div className="w-full h-[100vh] flex justify-between items-center">
       <div className="w-1/4 h-full">
         <Sidebar />
       </div>
@@ -23,6 +37,6 @@ export default function RootLayout({
           <div className="w-full h-full">{children}</div>
         </NextUIProvider>
       </div>
-    </div>
+    </div>)
   );
 }
