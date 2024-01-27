@@ -36,10 +36,17 @@ const login = () => {
           const user_Data = {
             name: user.displayName,
             email: user.email,
-            // photoURL: user.photoURL,
+            // profile_picture: user.photoURL,
             // uid: user.uid,
           };
           localStorage.setItem("token", userCredential._tokenResponse.idToken);
+          localStorage.setItem("user", user.email);
+          localStorage.setItem("name", user.displayName);
+          setTimeout(() => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("name");
+          },1*60*60*1000)
           const response: any = await loginUser(
             user_Data,
             userCredential._tokenResponse.idToken

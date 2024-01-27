@@ -21,6 +21,7 @@ const NavBar = () => {
             href="https://iiita.ac.in"
             aria-current="page"
             className="flex justify-center items-center"
+            target="_blank"
           >
             <Image src="/iiita.png" alt="iiita" width={45} height={45} />
           </Link>

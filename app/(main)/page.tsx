@@ -5,13 +5,21 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 const HomePage = () => {
   const router = useRouter();
-  const [show, setShow] = useState(false);
- 
+  function toTitleCase(str:string) {
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  }
+  const name = localStorage.getItem("name"); 
   return (
-    show &&  
-    (<div>
-      <div>HomePage</div> 
-    </div>)
+    <div className="p-3">
+      <div className="text-3xl font-semibold">
+        Welcome{" "}
+        <span className="font-semibold text-[#]">
+          {toTitleCase(name as string)}!!{" "}
+        </span>
+      </div>
+    </div>
   );
 }
 

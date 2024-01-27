@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 interface userDataProps {
   name: string;
   email: string;
-//   profilePic: string;
+//   profile_picture: string;
 }
 
 export const loginUser = async (user_data: userDataProps, credentials: string) => {

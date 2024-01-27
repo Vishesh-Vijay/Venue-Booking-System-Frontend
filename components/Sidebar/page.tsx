@@ -13,6 +13,8 @@ import { HiOutlinePaintBrush } from "react-icons/hi2";
 import { GrChannel } from "react-icons/gr";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+import { RiBook2Line } from "react-icons/ri";
+import { MdOutlinePostAdd } from "react-icons/md";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -36,15 +38,20 @@ const Sidebar = () => {
               Booker
             </p>
           </div>
-          <div>
-            <div>
-
-            </div>
+          <div className="space-y-1 px-3 mt-12">
+            <Button
+              variant={pathname === "/" ? "secondary" : "ghost"}
+              className="w-full flex items-center justify-start"
+              onClick={() => {
+                router.push("/");
+              }}
+            >
+              <HiOutlineHome className="mr-2 h-4 w-4" />
+              Home
+            </Button>
           </div>
-          <h2 className="mb-2 mt-8 px-4 text-lg font-semibold tracking-tight">
-            Discover
-          </h2>
-          <div className="space-y-1 px-3">
+
+          {/* <div className="space-y-1 px-3">
             <Button
               variant={pathname === "/" ? "secondary" : "ghost"}
               className="w-full flex items-center justify-start"
@@ -56,59 +63,45 @@ const Sidebar = () => {
               Home
             </Button>
             <Button
-              variant={pathname === "/browse" ? "secondary" : "ghost"}
+              variant={pathname === "/bookings" ? "secondary" : "ghost"}
               className="w-full flex items-center justify-start"
-              onClick={() => {}}
+              onClick={() => {router.push("/bookings")}}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mr-2 h-4 w-4"
-              >
-                <rect width="7" height="7" x="3" y="3" rx="1" />
-                <rect width="7" height="7" x="14" y="3" rx="1" />
-                <rect width="7" height="7" x="14" y="14" rx="1" />
-                <rect width="7" height="7" x="3" y="14" rx="1" />
-              </svg>
-              Browse
+              <RiBook2Line className="mr-2 h-4 w-4" />
+              Bookings
             </Button>
             <Button
-              variant={pathname === "/prime" ? "secondary" : "ghost"}
+              variant={pathname === "/requests" ? "secondary" : "ghost"}
               className="w-full flex items-center justify-start"
               onClick={() => {
-                router.push("/prime");
+                router.push("/requests");
               }}
             >
               <MdOutlineWorkspacePremium className="mr-2 h-4 w-4" />
               Atlantis Prime
             </Button>
-          </div>
+          </div> */}
         </div>
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Categories
+            Bookings
           </h2>
           <ScrollArea className="space-y-1 h-28 px-3">
             <Button
-              variant={pathname === "/categories/games" ? "secondary" : "ghost"}
+              variant={pathname === "/bookings" ? "secondary" : "ghost"}
               className="w-full flex items-center justify-start"
-              onClick={() => {}}
+              onClick={() => {router.push("/bookings")}}
             >
-              <CgGames className="mr-2 h-4 w-4" />
-              Games
+              <RiBook2Line className="mr-2 h-4 w-4" />
+              Bookings
             </Button>
             <Button
-              variant={pathname === "/categories/irl" ? "secondary" : "ghost"}
+              variant={pathname === "/bookings/new" ? "secondary" : "ghost"}
               className="w-full flex items-center justify-start"
-              onClick={() => {}}
+              onClick={() => {router.push("/bookings/new")}}
             >
-              <CiMicrophoneOn className="mr-2 h-4 w-4" />
-              IRL
+              <MdOutlinePostAdd className="mr-2 h-4 w-4" />
+              Add a Booking
             </Button>
             <Button
               variant={pathname === "/categories/music" ? "secondary" : "ghost"}
