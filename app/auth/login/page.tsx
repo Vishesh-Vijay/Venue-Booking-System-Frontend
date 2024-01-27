@@ -42,6 +42,7 @@ const login = () => {
           localStorage.setItem("token", userCredential._tokenResponse.idToken);
           localStorage.setItem("user", user.email);
           localStorage.setItem("name", user.displayName);
+          localStorage.setItem("profile_picture", user.photoURL);
           setTimeout(() => {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
