@@ -12,6 +12,7 @@ import { auth } from "../../firebase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Alert from "@mui/material/Alert";
 import { loginUser } from "@/utils/utils";
+import { CircularProgress } from "@mui/material";
 const login = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [loading, setLoading] = useState(false);
@@ -50,9 +51,8 @@ const login = () => {
                   setShowAlert(true);
                   setTimeout(() => {
                     setShowAlert(false);
-                  }, 3000);
-                        router.replace("/")
-
+                    router.replace("/");
+                  }, 1000);
                 }
               } 
           )
@@ -97,15 +97,15 @@ const login = () => {
       >
         Login with Google
       </Button>
-      {loading && <Spinner label="loading..." className="mt-4" />}
+      {loading && <CircularProgress  className="mt-4" variant='indeterminate' color="primary" />}
       {showAlert && !isError && (
-        <Alert severity="success" className="mt-4">
+        <Alert severity="success" className="mt-4 absolute right-1 top-8">
           Login Successful
         </Alert>
       )}
       {
         isError && (
-          <Alert severity="error">
+          <Alert severity="error" className="absolute right-1 top-8">
             {error}
           </Alert>
         )
