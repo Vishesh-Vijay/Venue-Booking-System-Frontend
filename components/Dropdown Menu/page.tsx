@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect } from "react";
 import {
   Dropdown,
@@ -15,12 +15,11 @@ import { Alert, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { Spinner } from "@nextui-org/react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-
+import Image from "next/image";
 const DropdownComponent = () => {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const [open, setOpen] = React.useState(false);
-
 
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,8 +29,8 @@ const DropdownComponent = () => {
 
   const handleLogout = () => {
     setTimeout(() => {
-      setShowAlert(true)
-    },3000)
+      setShowAlert(true);
+    }, 3000);
     signOut(auth)
       .then(() => {
         localStorage.removeItem("token");
@@ -54,16 +53,21 @@ const DropdownComponent = () => {
         setLoading(false);
       });
   };
+  const profile_picture = localStorage.getItem("profile_picture");
   return (
     <div className="flex items-center gap-4">
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <Avatar
-            isBordered
-            as="button"
-            className="transition-transform"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-          />
+          {profile_picture == "" ? (
+            <Avatar
+              isBordered
+              as="button"
+              className="transition-transform"
+              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            />
+          ) :   (
+            <Image src={profile_picture as string} alt="profile" width={45} height={45} className="rounded-full" />
+          )}
         </DropdownTrigger>
         <DropdownMenu
           aria-label="Profile Actions"
@@ -84,7 +88,7 @@ const DropdownComponent = () => {
             color="danger"
             onClick={handleLogout}
           >
-           Logout
+            Logout
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

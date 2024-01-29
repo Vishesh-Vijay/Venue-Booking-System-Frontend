@@ -47,6 +47,7 @@ const login = () => {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             localStorage.removeItem("name");
+            localStorage.removeItem("profile_picture");
           },1*60*60*1000)
           const response: any = await loginUser(
             user_Data,
