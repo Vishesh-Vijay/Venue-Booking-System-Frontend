@@ -99,7 +99,7 @@ const login = () => {
       />
       <h1 className="font-bold text-[#323263] text-3xl mt-5">LOGIN</h1>
       <Button
-        className="bg-[#313465] flex items-center mt-6 px-3 py-2 text-white rounded-xl"
+        className="bg-[#313465] flex items-center mt-6 px-3 py-2 text-white rounded-xl p-4"
         startContent={<FcGoogle />}
         radius="md"
         onClick={handleLogin}
