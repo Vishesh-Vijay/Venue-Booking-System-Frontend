@@ -80,7 +80,7 @@ const Sidebar = () => {
           <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
             Bookings
           </h2>
-          <ScrollArea className=" px-3">
+          <ScrollArea className=" px-3 ">
             <Button
               variant={pathname === "/bookings" ? "secondary" : "ghost"}
               className="w-full flex items-center justify-start"
@@ -93,7 +93,7 @@ const Sidebar = () => {
             </Button>
             <Button
               variant={pathname === "/bookings/new" ? "secondary" : "ghost"}
-              className="w-full flex items-center justify-start"
+              className="w-full flex items-center justify-start mt-2"
               onClick={() => {
                 router.push("/bookings/new");
               }}

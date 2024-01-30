@@ -2,7 +2,7 @@
 import React, { useState, ChangeEvent } from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface Event {
   name: string;
   type: string;
@@ -99,71 +99,69 @@ const Bookings: React.FC = () => {
   return (
     <div className="p-4">
       <h1 className="text-center font-semibold text-4xl mt-3">My Bookings</h1>
-      <div className="flex justify-around items-center mt-6">
-        <ToggleButtonGroup
-          value={bookingType}
-          exclusive
-          onChange={handleChangeBookingType}
-          aria-label="text formatting"
+      <div className="flex justify-around items-center mt-8">
+        <Tabs
+          defaultValue="upcoming"
+          className="w-full flex flex-col justify-around items-center "
         >
-          <ToggleButton
-            value="upcoming"
-            aria-label="bold"
-            color={bookingType === "upcoming" ? "primary" : "standard"}
-          >
-            <span className={bookingType === "upcoming" ? "font-semibold" : ""}>
-              Upcoming
-            </span>
-          </ToggleButton>
-          <ToggleButton
-            value="past"
-            aria-label="italic"
-            color={bookingType === "past" ? "primary" : "standard"}
-          >
-            <span className={bookingType === "past" ? "font-semibold" : ""}>
-              Past
-            </span>
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </div>
-      <div>
-        {bookingType === "upcoming" ? (
-          <div>
-            {upcomingEvents.map((event, index) => (
-              <div
-                key={index}
-                className="mt-2 flex flex-col justify-center items-center"
-              >
-                <BookingCard
-                  name={event.name}
-                  type={event.type}
-                  location={event.location}
-                  date={event.date}
-                  time={event.time}
-                  approval={event.approval}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {pastEvents.map((event, index) => (
-              <div
-                key={index}
-                className="mt-2 flex flex-col justify-center items-center"
-              >
-                <BookingCard
-                  name={event.name}
-                  type={event.type}
-                  location={event.location}
-                  date={event.date}
-                  time={event.time}
-                  approval={event.approval}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+          <TabsList className="grid  grid-cols-2 w-1/2 bg-[#313465] px-2 py-1 text-white">
+            <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
+            <TabsTrigger value="past">Past</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="upcoming" className="w-full">
+            <div>
+              {upcomingEvents.length > 0 ? (
+                upcomingEvents.map((event, index) => (
+                  <div
+                    key={index}
+                    className="mt-2 flex flex-col justify-center items-center"
+                  >
+                    <BookingCard
+                      name={event.name}
+                      type={event.type}
+                      location={event.location}
+                      date={event.date}
+                      time={event.time}
+                      approval={event.approval}
+                      Btype="upcoming"
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="w-full mt-12 text-center font-bold text-2xl">
+                  No bookings found!!
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="past" className="w-full">
+            <div>
+              {pastEvents.length > 0 ? (
+                pastEvents.map((event, index) => (
+                  <div
+                    key={index}
+                    className="mt-2 flex flex-col justify-center items-center"
+                  >
+                    <BookingCard
+                      name={event.name}
+                      type={event.type}
+                      location={event.location}
+                      date={event.date}
+                      time={event.time}
+                      approval={event.approval}
+                      Btype="past"
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="w-full mt-12 text-center font-bold text-2xl">
+                  No bookings found!!
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
