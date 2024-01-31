@@ -9,7 +9,10 @@ import { RiBook2Line } from "react-icons/ri";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 
-const Sidebar = () => {
+interface SidebarProps{
+  admin:string
+}
+const Sidebar = ({admin}:SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const channels = [
@@ -19,6 +22,7 @@ const Sidebar = () => {
     "Channel 4",
     "Channel 5",
   ];
+
   return (
     <div className="bg-[#598dcd] h-full text-[#fff]">
       {" "}
@@ -101,6 +105,16 @@ const Sidebar = () => {
               <MdOutlinePostAdd className="mr-2 h-4 w-4" />
               Add a Booking
             </Button>
+            {admin=="admin" && <Button
+              variant={pathname === "/bookings/requests" ? "secondary" : "ghost"}
+              className="w-full flex items-center justify-start mt-2"
+              onClick={() => {
+                router.push("/bookings/requests");
+              }}
+            >
+              <MdOutlinePostAdd className="mr-2 h-4 w-4" />
+              Booking Requests
+            </Button>}
           </ScrollArea>
         </div>
         <div className="py-2">

@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar/page";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { getUserDetailsByEmail } from "@/utils/utils";
 export default function RootLayout({
   children,
 }: {
@@ -16,7 +17,33 @@ export default function RootLayout({
 }) {
   const router = useRouter();
   const [show, setShow] = useState(false);
+  const [isAdmin,setIsAdmin] = useState("user");
   useEffect(() => {
+     const getUserDetails = async () => {
+       // setLoading(true);
+       try {
+         const email = localStorage.getItem("user");
+         const userDetails: any = await getUserDetailsByEmail(
+           email as string,
+           token as string
+         ).then((res) => {
+           const resp = res;
+           if (resp.status == 200) {
+             const data = resp.data.response_data;
+             // console.log(data);
+
+             if (data.is_admin) {
+               setIsAdmin("admin");
+             }
+           }
+         });
+
+         // console.log(userDetails);
+       } catch (error: any) {
+         // Handle error
+         console.log(error);
+       }
+     };
     const token = localStorage.getItem("token");
     if (token == null) {
       setShow(false);
@@ -24,11 +51,13 @@ export default function RootLayout({
     } else {
       setShow(true);
     }
+   
+    getUserDetails()
   }, [router]);
   return (
     show && (<div className="w-full h-[100vh] flex justify-between items-center">
       <div className="w-1/4 h-full">
-        <Sidebar />
+        <Sidebar admin={isAdmin} />
       </div>
 
       <div className="w-full h-full flex flex-col justify-between items-center">
