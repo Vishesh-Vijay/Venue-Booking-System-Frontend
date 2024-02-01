@@ -62,23 +62,16 @@ const BookingCard = (props: BookingCardProps) => {
           {props.approval[0].toUpperCase() +
             props.approval.slice(1, props.approval.length)}
         </CardFooter>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost">
-              <CiMenuKebab />
+        <div className="flex justify-between items-center">
+          <Button variant="default" className="mr-2 bg-green-600">
+            View Details
+          </Button>
+          {props.Btype == "upcoming" && (
+            <Button variant="destructive" className="">
+              Delete
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-36 flex flex-col justify-between items-center ">
-            <Button variant="default" className="mb-2 w-full bg-green-600">
-              View Details
-            </Button>
-            {props.Btype == "upcoming" && (
-              <Button variant="destructive" className="w-full">
-                delete
-              </Button>
-            )}
-          </PopoverContent>
-        </Popover>
+          )}
+        </div>
       </div>
     </Card>
   );

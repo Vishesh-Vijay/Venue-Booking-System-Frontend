@@ -22,6 +22,7 @@ export default function RootLayout({
      const getUserDetails = async () => {
        // setLoading(true);
        try {
+         
          const email = localStorage.getItem("user");
          const userDetails: any = await getUserDetailsByEmail(
            email as string,
@@ -34,6 +35,11 @@ export default function RootLayout({
 
              if (data.is_admin) {
                setIsAdmin("admin");
+               localStorage.setItem("admin","yes")
+
+             }
+             else{
+               localStorage.setItem("admin", "no"); 
              }
            }
          });
