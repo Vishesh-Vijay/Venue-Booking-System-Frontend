@@ -47,25 +47,26 @@ const Building = () => {
   const [addBuildingAlert, setAddBuildingAlert] = useState(false);
   const [isNewBuildingError, setIsNewBuildingError] = React.useState(false);
   const [newBuildingError, setNewBuildingError] = React.useState("");
-  const [open,setOpen] = useState(false)
-  const [resetBuildings,setResetBuildings] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [resetBuildings, setResetBuildings] = useState(false);
   const handleCreateBuilding = async () => {
-    setOpen(false)
+    setOpen(false);
     setAddBuildingLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response: any = addNewBuilding(newBuilding, token as string).then((res)=>{
-        if (res.status == 200) {
-          setAddBuildingLoading(false);
-          setAddBuildingAlert(true);
-          setNewBuilding("")
-          setResetBuildings((val)=>!val)
-          setTimeout(() => {
-            setAddBuildingAlert(false);
-          }, 2000);
-         }
-      })
-      
+      const response: any = addNewBuilding(newBuilding, token as string).then(
+        (res: any) => {
+          if (res.status == 200) {
+            setAddBuildingLoading(false);
+            setAddBuildingAlert(true);
+            setNewBuilding("");
+            setResetBuildings((val) => !val);
+            setTimeout(() => {
+              setAddBuildingAlert(false);
+            }, 2000);
+          }
+        }
+      );
     } catch (error: any) {
       setIsNewBuildingError(true);
       setNewBuildingError(error.response.data.response_message);
@@ -73,9 +74,8 @@ const Building = () => {
         setIsNewBuildingError(false);
         setNewBuildingError("");
       }, 3000);
-    }
-    finally{
-        setAddBuildingLoading(false)
+    } finally {
+      setAddBuildingLoading(false);
     }
   };
   useEffect(() => {
@@ -85,7 +85,7 @@ const Building = () => {
         const token = localStorage.getItem("token");
         const userDetails: any = await getAllBuildings(token as string).then(
           (res) => {
-            const resp = res;
+            const resp: any = res;
             if (resp.status == 200) {
               const data = resp.data.response_data;
               // console.log(data);
@@ -115,18 +115,22 @@ const Building = () => {
     };
     getBuildings();
   }, [resetBuildings]);
-  console.log(buildings);
+  // console.log(buildings);
   return (
     <div className="p-4">
       <h1 className="text-center mt-4 font-semibold text-4xl">Buildings</h1>
       <div className="w-full flex justify-center mt-6">
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger>
-            <Button className="bg-green-400 flex items-center justify-center">
-              <IoAddCircleOutline className="mr-1 w-4 h-4 mt-0.5" />
-              <span>Add New Building</span>
-            </Button>
-          </DialogTrigger>
+          {addBuildingLoading == true ? (
+            <CircularProgress />
+          ) : (
+            <DialogTrigger>
+              <Button className="bg-green-400 flex items-center justify-center">
+                <IoAddCircleOutline className="mr-1 w-4 h-4 mt-0.5" />
+                <span>Add New Building</span>
+              </Button>
+            </DialogTrigger>
+          )}
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create New Building</DialogTitle>
@@ -158,7 +162,13 @@ const Building = () => {
               >
                 Create
               </Button>
-              <Button type="reset" onClick={() => setNewBuilding("")}>
+              <Button
+                type="reset"
+                onClick={() => {
+                  setNewBuilding("");
+                  setOpen((val) => !val);
+                }}
+              >
                 Cancel
               </Button>
             </DialogFooter>
@@ -174,7 +184,12 @@ const Building = () => {
                   key={index}
                   className="mt-2 flex flex-col justify-center items-center"
                 >
-                  <BuildingCard name={building.name as string} />
+                  <BuildingCard
+                    name={building.name as string}
+                    id={building.id as string}
+                    resetBuilding = {resetBuildings}
+                    setResetBuilding = {()=>setResetBuildings((val)=>!val) }
+                  />
                 </div>
               ))
             ) : (

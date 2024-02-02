@@ -48,7 +48,7 @@ const login = () => {
             user_Data,
             userCredential._tokenResponse.idToken
           ).then(
-            (res) => {
+            (res:any) => {
               const resp = res
               if(resp.status==200){
                   setLoading(false);

@@ -36,7 +36,7 @@ const Profile = () => {
         const userDetails: any = await getUserDetailsByEmail(
           email,
           token as string
-        ).then((res) => {
+        ).then((res:any) => {
           const resp = res;
           if (resp.status == 200) {
             const data = resp.data.response_data;

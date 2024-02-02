@@ -21,7 +21,7 @@ export const loginUser = async (user_data: userDataProps, credentials: string) =
     } catch (error) {
         console.error("Error:", error);
 
-        throw error;
+        // throw error;
     }
 };
 
@@ -39,7 +39,7 @@ export const getUserDetailsByEmail = async (email:string,credentials:string)=>{
     return response 
     } catch (error) {
         console.log(error)
-        throw error
+        // throw error
     } 
 }
 
@@ -57,7 +57,7 @@ export const getAllBuildings = async (credentials:string) =>{
     return response;
   } catch (error) {
     console.log(error);
-    throw error;
+    // throw error;
   }  
 }
 
@@ -75,6 +75,49 @@ export const addNewBuilding = async(name:string,credentials:string) =>{
    return response;
  } catch (error) {
    console.log(error);
-   throw error;
+  //  throw error;
  }   
+}
+
+export const UpdateExistingBuilding = async (id:string,name: string, credentials: string) => {
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/buildings/update/`,
+      { 
+        id:id,
+        name: name 
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    //  throw error;
+  }
+};
+
+export const DeleteBuilding = async (id:string,credentials:string)=>{
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/buildings/remove/`,
+      {
+        id: id,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    //  throw error;
+  } 
 }
