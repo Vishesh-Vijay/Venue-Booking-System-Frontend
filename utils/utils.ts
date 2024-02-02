@@ -42,3 +42,21 @@ export const getUserDetailsByEmail = async (email:string,credentials:string)=>{
         throw error
     } 
 }
+
+export const getAllBuildings = async (credentials:string) =>{
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/buildings/details/all/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }  
+}
