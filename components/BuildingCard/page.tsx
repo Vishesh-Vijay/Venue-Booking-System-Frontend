@@ -12,6 +12,7 @@ import {
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { MdDeleteOutline } from "react-icons/md";
+import { HiOutlinePencil } from "react-icons/hi";
 
 interface BuildingCardProps {
   name: string;
@@ -30,7 +31,10 @@ const BuildingCard = ({ name }: BuildingCardProps) => {
         <CardHeader>
           <CardTitle>{name}</CardTitle>
         </CardHeader>
-        <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
+        <div className=" flex justify-between items-center">
+          <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
+          <HiOutlinePencil className="text-blue-500 w-5 h-5 mr-4" />
+        </div>
       </div>
     </Card>
   );
