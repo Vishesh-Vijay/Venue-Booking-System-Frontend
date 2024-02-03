@@ -30,7 +30,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
   return (
     <div className="bg-[#598dcd] h-full text-[#fff]">
       {" "}
-      <div className=" py-4">
+      <div className="pt-4">
         <div className="px-3 py-2">
           <div className="flex flex-col justify-evenly items-center gap-1 my-4">
             <Image src="/logo.png" alt="logo" width={50} height={50} />
@@ -71,7 +71,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
             </Button>
           </div> */}
         </div>
-        <ScrollArea className=" h-[580px] mt-4">
+        <ScrollArea className=" h-[550px] mt-4">
           <div className="px-3 py-2">
             <h2 className=" px-4 text-lg font-semibold ">Explore</h2>
             <div className="space-y-1 px-3 mt-2">

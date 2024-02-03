@@ -27,7 +27,7 @@ export default function RootLayout({
          const userDetails: any = await getUserDetailsByEmail(
            email as string,
            token as string
-         ).then((res) => {
+         ).then((res:any) => {
            const resp = res;
            if (resp.status == 200) {
              const data = resp.data.response_data;
@@ -62,7 +62,7 @@ export default function RootLayout({
   }, [router]);
   return (
     show && (<div className="w-full h-[100vh] flex justify-between items-center">
-      <div className="w-1/4 h-full">
+      <div className="w-1/4 h-full ">
         <Sidebar admin={isAdmin} />
       </div>
 
