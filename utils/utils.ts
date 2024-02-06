@@ -199,6 +199,23 @@ export const getAllVenues = async (credentials: string) => {
   }
 };
 
+export const getVenueDetailsById = async(venue_id:string,credentials:string)=>{
+ try {
+   const response = await axios.get(
+     `http://127.0.0.1:8000/venues/details/${venue_id}/`,
+     {
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: credentials,
+       },
+     }
+   );
+   return response;
+ } catch (error) {
+   console.log(error);
+   // throw error;
+ } 
+}
 export const addNewVenue = async (props: addNewVenueProps,credentials:string) => {
   try {
     const response = await axios.post(
@@ -236,3 +253,21 @@ export const createBooking = async(props:createBookingProps,credentials:string) 
   }
   
 }
+
+export const getAllBookings = async(user_id:string,credentials:string)=>{
+  try {
+       const response = await axios.get(
+         `http://127.0.0.1:8000/bookings/details/byUser/${user_id}/`,
+         {
+           headers: {
+             "Content-Type": "application/json",
+             Authorization: credentials,
+           },
+         }
+       );
+       return response;
+  } catch (error:any) {
+      return error
+  }
+}
+

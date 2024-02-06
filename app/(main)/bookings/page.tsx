@@ -1,99 +1,54 @@
 "use client";
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent,useEffect } from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface Event {
-  name: string;
-  type: string;
-  location: string;
-  time: string;
-  date: Date;
-  approval: string;
+  booking_status: string;
+  booking_time: string;
+  booking_type: string;
+  description: string;
+  event_duration: Number;
+  event_time: string;
+  expected_strength: Number;
+  id: string;
+  last_updated_time: string;
+  title: string;
+  user_id:string;
+  venue_id: string;
 }
-
 import BookingCard from "@/components/BookingCard/page";
-const Bookings: React.FC = () => {
-  const [bookingType, setBookingType] = useState<string>("upcoming");
+import { getAllBookings } from "@/utils/utils";
 
-  const handleChangeBookingType = (
-    event: ChangeEvent<{}>,
-    newBookingType: string
-  ) => {
-    if (newBookingType != null) {
-      setBookingType(newBookingType);
-    }
-  };
+const Bookings: React.FC = () => {
+
   const today = new Date();
 
-  const bookingData: Event[] = [
-    {
-      name: "Seminar on Machine Learning",
-      type: "seminar",
-      location: "Conference Hall",
-      time: "10:00 am",
-      date: new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() - 7
-      ),
-      approval: "approved",
-    },
-    {
-      name: "Conference Meet",
-      type: "academic",
-      location: "CC-3, IIITA",
-      time: "12:30 pm",
-      date: today,
-      approval: "approved",
-    },
-    {
-      name: "Workshop on React Development",
-      type: "workshop",
-      location: "Room 102",
-      time: "2:00 pm",
-      date: today,
-      approval: "received",
-    },
-    {
-      name: "Hackathon Finals",
-      type: "competition",
-      location: "Coding Lab",
-      time: "1:30 pm",
-      date: new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() + 7
-      ),
-      approval: "rejected",
-    },
-    {
-      name: "Project Presentation",
-      type: "academic",
-      location: "Auditorium",
-      time: "3:45 pm",
-      date: today,
-      approval: "cancelled",
-    },
-    {
-      name: "Project Demo Day",
-      type: "academic",
-      location: "Room 205",
-      time: "4:15 pm",
-      date: new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() - 21
-      ),
-      approval: "received",
-    },
-  ];
+  const [bookingData,setBookingData] = useState<Array<Event>>([])
+  useEffect(()=>{
+    const getBookings = async()=>{
+      try {
+        const user_id = localStorage.getItem("user")
+        const token = localStorage.getItem("token")
+        const response = await getAllBookings(user_id as string,token as string).then((res:any)=>{
+          const resp=res;
+          if(resp.status==200){
+            const data = resp.data.response_data
+            setBookingData(data)
+          }
+        })
+      } catch (error:any) {
+        console.log(error) 
+      }
+    }
+    getBookings()
+  },[]) 
   const upcomingEvents: Event[] = bookingData.filter(
-    (event) => event.date > today
+    (event) => new Date(event.event_time) > today
   );
 
   const pastEvents: Event[] = bookingData.filter(
-    (event) => event.date <= today
+    (event) => new Date(event.event_time) <= today
   );
 
   return (
@@ -118,12 +73,12 @@ const Bookings: React.FC = () => {
                     className="mt-2 flex flex-col justify-center items-center"
                   >
                     <BookingCard
-                      name={event.name}
-                      type={event.type}
-                      location={event.location}
-                      date={event.date}
-                      time={event.time}
-                      approval={event.approval}
+                      name={event.title}
+                      type={event.booking_type}
+                      location={event.venue_id}
+                      date={event.event_time}
+                      id={event.id}
+                      approval={event.booking_status}
                       Btype="upcoming"
                     />
                   </div>
@@ -144,12 +99,12 @@ const Bookings: React.FC = () => {
                     className="mt-2 flex flex-col justify-center items-center"
                   >
                     <BookingCard
-                      name={event.name}
-                      type={event.type}
-                      location={event.location}
-                      date={event.date}
-                      time={event.time}
-                      approval={event.approval}
+                      id={event.id}
+                      name={event.title}
+                      type={event.booking_type}
+                      location={event.venue_id}
+                      date={event.event_time}
+                      approval={event.booking_status}
                       Btype="past"
                     />
                   </div>
