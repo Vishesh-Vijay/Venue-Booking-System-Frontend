@@ -71,7 +71,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
             </Button>
           </div> */}
         </div>
-        <ScrollArea className=" h-[550px] mt-4">
+        <ScrollArea className="h-[605px] mt-4">
           <div className="px-3 py-2">
             <h2 className=" px-4 text-lg font-semibold ">Explore</h2>
             <div className="space-y-1 px-3 mt-2">

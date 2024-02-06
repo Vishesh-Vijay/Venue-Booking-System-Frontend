@@ -19,6 +19,17 @@ interface addNewVenueProps {
   has_whiteboard: Boolean;
 }
 
+interface createBookingProps{
+  title:string,
+  description:string,
+  user_id:string,
+  venue_id:string,
+  booking_type:string,
+  event_time:Date,
+  event_duration:Number,
+  expected_strength:Number,
+
+}
 export const loginUser = async (
   user_data: userDataProps,
   credentials: string
@@ -206,3 +217,22 @@ export const addNewVenue = async (props: addNewVenueProps,credentials:string) =>
     //  throw error;
   }
 };
+
+export const createBooking = async(props:createBookingProps,credentials:string) =>{
+  try {
+   const response = await axios.post(
+     `http://127.0.0.1:8000/bookings/add/`,
+     props,
+     {
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: credentials,
+       },
+     }
+   );
+   return response;  
+  } catch (error:any) {
+    return error 
+  }
+  
+}
