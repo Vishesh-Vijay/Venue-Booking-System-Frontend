@@ -91,7 +91,12 @@ const Sidebar = ({ admin }: SidebarProps) => {
             </h2>
             <ScrollArea className=" px-3 ">
               <Button
-                variant={pathname === "/bookings" ? "secondary" : "ghost"}
+                variant={
+                  pathname.startsWith("/bookings") &&
+                  pathname !== "/bookings/new" && pathname!=="/bookings/requests"
+                    ? "secondary"
+                    : "ghost"
+                }
                 className="w-full flex items-center justify-start"
                 onClick={() => {
                   router.push("/bookings");
@@ -145,7 +150,6 @@ const Sidebar = ({ admin }: SidebarProps) => {
                       View/Add Venues
                     </Button>
                   </div>
-                 
                 </ScrollArea>
               </div>
               <div className="py-2">
@@ -165,7 +169,6 @@ const Sidebar = ({ admin }: SidebarProps) => {
                       View/Add Building
                     </Button>
                   </div>
-                  
                 </ScrollArea>
               </div>
             </>

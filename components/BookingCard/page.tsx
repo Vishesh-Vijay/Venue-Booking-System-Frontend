@@ -28,9 +28,10 @@ import { MdOutlineTimer } from "react-icons/md";
 
 import { Button } from "../ui/button";
 import { getVenueDetailsById } from "@/utils/utils";
+import { useRouter } from "next/navigation";
 const BookingCard = (props: BookingCardProps) => {
   const inputDate = new Date(props.date);
-
+  const router = useRouter()
   // Months and their respective names
   const months = [
     "January",
@@ -98,6 +99,9 @@ const BookingCard = (props: BookingCardProps) => {
     }
     getVenueById()
   },[props.location])
+  const handleViewDetails = () =>{
+    router.push(`/bookings/${props.id}`)
+  }
   return (
     <Card className="bg-[#313465] text-white w-11/12 rounded-2xl flex justify-between items-start">
       <div>
@@ -134,7 +138,7 @@ const BookingCard = (props: BookingCardProps) => {
             props.approval.slice(1, props.approval.length)}
         </CardFooter>
         <div className="flex justify-between items-center">
-          <Button variant="default" className="mr-2 bg-green-600">
+          <Button variant="default" className="mr-2 bg-green-600" onClick={()=>handleViewDetails()}>
             View Details
           </Button>
           {props.Btype == "upcoming" && (
