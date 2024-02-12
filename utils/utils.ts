@@ -235,6 +235,74 @@ export const addNewVenue = async (props: addNewVenueProps,credentials:string) =>
   }
 };
 
+export const UpdateExistingVenue = async (
+  id: string,
+  newVenue: string,
+  authority: string,
+  building_id: string,
+  floor: string,
+  capacity: string,
+  venueType: string,
+  accessible: string,
+  airConditioner: string,
+  projectors: string,
+  speakers: string,
+  whiteboard: string,
+  credentials: string
+) => {
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/venues/update/`,
+      {
+        id: id,
+        name: newVenue,
+        authority_id: authority,
+        building_id,
+        floor_number: floor,
+        seating_capacity: capacity,
+        venue_type: venueType,
+        is_accessible: accessible,
+        has_air_conditioner: airConditioner,
+        has_projectors: projectors,
+        has_speakers: speakers,
+        has_whiteboard: whiteboard,
+        credentials
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    //  throw error;
+  }
+};
+
+export const DeleteVenue = async (id: string, credentials: string) => {
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/venues/remove/`,
+      {
+        id: id,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    //  throw error;
+  }
+};
+
 export const createBooking = async(props:createBookingProps,credentials:string) =>{
   try {
    const response = await axios.post(
