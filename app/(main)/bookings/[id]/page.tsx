@@ -106,31 +106,29 @@ const BookingDetails = ({params}:{params:{id:string}}) => {
                 {bookingDetails.booking_status}
               </Badge>
             </div>
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center mt-4 text-xl">
               <div className="flex justify-left items-center">
-                <IoCalendarOutline className="w-4 h-4 text-gray-400 mr-1" />
+                <IoCalendarOutline className="w-5 h-5 text-gray-400 mr-1" />
                 <span className="text-gray-400">{dateString}</span>
               </div>
               <div className="flex flex-col justify-center items-center mr-2">
                 <div className="flex items-center justify-center">
-                  <CiTimer className="w-4 h-4 text-gray-400 mr-1 mt-0.5" />
+                  <CiTimer className="w-5 h-5 text-gray-400 mr-1 mt-0.5" />
                   <span className="text-gray-400">{timeString} hrs</span>
-                </div>
-
-                <div className="flex items-center justify-center">
-                  <GiDuration className="w-4 h-4 text-gray-400 mr-1 mt-0.5" />
-                  <span className="text-gray-400">
-                    {String(bookingDetails.event_duration)} hrs
-                  </span>
                 </div>
               </div>
             </div>
-            <div className="w-full flex flex-col justify-center items-start space-y-4">
+            <div className="w-full flex flex-col justify-center items-start space-y-4 mt-4">
               <h1>{bookingDetails.description}</h1>
               <h1>
                 {" "}
                 <span className="font-semibold">Expected Strength:</span>{" "}
                 {String(bookingDetails.expected_strength)}
+              </h1>
+              <h1>
+                {" "}
+                <span className="font-semibold">Duration:</span>{" "}
+                {String(bookingDetails.event_duration)} hrs
               </h1>
               <h1>
                 {" "}
