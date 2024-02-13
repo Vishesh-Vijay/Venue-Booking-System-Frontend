@@ -9,6 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { MdDeleteOutline } from "react-icons/md";
@@ -27,10 +36,15 @@ import { Input } from "../ui/input";
 // import { UpdateExistingVenue, DeleteVenue } from "@/utils/utils";
 import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
-import { getBuildingDetailsById, getUserDetailsByEmail } from "@/utils/utils";
+import { getBuildingDetailsById, getUserDetailsByEmail, DeleteVenue, UpdateExistingVenue } from "@/utils/utils";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
+
+interface Building {
+  id: string;
+  name: string;
+}
 
 interface VenueCardProps {
   authority_id: string; //email
@@ -64,9 +78,9 @@ const VenueCard = ({
   resetVenue,
   setResetVenue,
 }: VenueCardProps) => {
-  const [authority, setAuthority] = useState("");
+  const [authority, setAuthority] = useState(authority_id);
   const [detailsDialogueOpen, setDetailsDialogueOpen] = useState(false);
-  const [building, setBuilding] = useState("");
+  const [building, setBuilding] = useState(building_id);
   const [buildingLoading, setBuildingLoading] = useState(false);
   const [isBuildingError, setIsBuildingError] = useState(false);
   const [buildingError, setBuildingError] = useState("");
@@ -82,6 +96,18 @@ const VenueCard = ({
   const [deleteVenueAlert, setDeleteVenueAlert] = useState(false);
   const [isDeleteVenueError, setIsDeleteVenueError] = useState(false);
   const [deleteVenueError, setDeleteVenueError] = useState("");
+
+  const [buildings, setBuildings] = useState<Array<Building>>([]);
+  const [floor, setFloor] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [venueType, setVenueType] = useState("");
+  const [accessible, setAccesible] = useState("false");
+  const [projectors, setProjectors] = useState("false");
+  const [whiteboard, setWhiteboard] = useState("false");
+  const [speakers, setSpeakers] = useState("false");
+  const [airConditioner,setAirConditioner] = useState("false")
+
+
   useEffect(() => {
     const getBuilding = async () => {
       setBuildingLoading(true);
@@ -123,68 +149,78 @@ const VenueCard = ({
     getAuthorityDetails();
   }, [authority_id]);
   const handleUpdateVenue = async () => {
-    // setUpdateDialogueOpen(false);
-    // setUpdateVenueLoading(true);
-    // try {
-    //   const token = localStorage.getItem("token");
-    //   const response: any = UpdateExistingVenue(
-    //     id,
-    //     newVenue,
-    //     token as string
-    //   ).then((res: any) => {
-    //     const resp = res;
-    //     if (resp.status == 200) {
-    //       console.log(resp);
-    //       setUpdateVenueLoading(false);
-    //       setUpdateVenueAlert(true);
-    //       setNewVenue("");
-    //       setResetVenue();
-    //       setTimeout(() => {
-    //         setUpdateVenueAlert(false);
-    //       }, 2000);
-    //     }
-    //   });
-    // } catch (error: any) {
-    //   setIsUpdateVenueError(true);
-    //   setUpdateVenueError(error.response.data.response_message);
-    //   setTimeout(() => {
-    //     setIsUpdateVenueError(false);
-    //     setUpdateVenueError("");
-    //   }, 3000);
-    // } finally {
-    //   setUpdateVenueLoading(false);
-    // }
+    setUpdateDialogueOpen(false);
+    setUpdateVenueLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response: any = UpdateExistingVenue(
+        id,
+        newVenue,
+        authority,
+        building_id,
+        floor,
+        capacity,
+        venueType,
+        accessible,
+        projectors,
+        whiteboard,
+        speakers,
+        airConditioner,
+        token as string
+      ).then((res: any) => {
+        const resp = res;
+        if (resp.status == 200) {
+          console.log(resp);
+          setUpdateVenueLoading(false);
+          setUpdateVenueAlert(true);
+          setNewVenue("");
+          setResetVenue();
+          setTimeout(() => {
+            setUpdateVenueAlert(false);
+          }, 2000);
+        }
+      });
+    } catch (error: any) {
+      setIsUpdateVenueError(true);
+      setUpdateVenueError(error.response.data.response_message);
+      setTimeout(() => {
+        setIsUpdateVenueError(false);
+        setUpdateVenueError("");
+      }, 3000);
+    } finally {
+      setUpdateVenueLoading(false);
+    }
   };
   const handleDeleteVenue = async () => {
-    // setDeleteDialogueOpen(false);
-    // setDeleteVenueLoading(true);
-    // try {
-    //   const token = localStorage.getItem("token");
-    //   const response: any = DeleteVenue(id, token as string).then(
-    //     (res: any) => {
-    //       const resp = res;
-    //       if (resp.status == 200) {
-    //         console.log(resp);
-    //         setDeleteVenueLoading(false);
-    //         setDeleteVenueAlert(true);
-    //         // setNewVenue("");
-    //         setResetVenue();
-    //         setTimeout(() => {
-    //           setDeleteVenueAlert(false);
-    //         }, 2000);
-    //       }
-    //     }
-    //   );
-    // } catch (error: any) {
-    //   setIsDeleteVenueError(true);
-    //   setDeleteVenueError(error.response.data.response_message);
-    //   setTimeout(() => {
-    //     setIsDeleteVenueError(false);
-    //     setDeleteVenueError("");
-    //   }, 3000);
-    // } finally {
-    //   setDeleteVenueLoading(false);
-    // }
+    setDeleteDialogueOpen(false);
+    setDeleteVenueLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response: any = DeleteVenue(id, token as string).then(
+        (res: any) => {
+          const resp = res;
+          if (resp.status == 200) {
+            console.log(resp);
+            setDeleteVenueLoading(false);
+            setDeleteVenueAlert(true);
+            // setNewVenue("");
+            setResetVenue();
+            setTimeout(() => {
+              setDeleteVenueAlert(false);
+            }, 2000);
+          }
+        }
+      );
+    } catch (error: any) {
+      setIsDeleteVenueError(true);
+      setDeleteVenueError(error.response.data.response_message);
+      setTimeout(() => {
+        setIsDeleteVenueError(false);
+        setDeleteVenueError("");
+      }, 3000);
+    } finally {
+      setDeleteVenueLoading(false);
+    }
   };
   return (
     <>
@@ -249,25 +285,250 @@ const VenueCard = ({
                 <DialogHeader>
                   <DialogTitle>Update Venue</DialogTitle>
                   <DialogDescription>
-                    Enter the name of the Venue you want to update to!
+                    Enter the details of the Venue for the fields you want to update!
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-center">
-                      Name:
-                    </Label>
-                    <Input
-                      id="name"
-                      placeholder="New Venue"
-                      value={newVenue}
-                      className="col-span-3"
-                      onChange={(e) => {
-                        setNewVenue(e.target.value);
-                      }}
-                    />
-                  </div>
-                </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-center">
+                  Name:
+                </Label>
+                <Input
+                  id="name"
+                  placeholder="New Venue"
+                  value={newVenue}
+                  className="col-span-3"
+                  onChange={(e) => {
+                    setNewVenue(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="building" className="text-center">
+                  Building:
+                </Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Select</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={building}
+                      onValueChange={setBuilding}
+                    >
+                      {buildings.length > 0 ? (
+                        buildings.map((build, index) => (
+                          <div key={index}>
+                            <DropdownMenuRadioItem value={build.name}>
+                              {build.name}
+                            </DropdownMenuRadioItem>
+                            ;
+                          </div>
+                        ))
+                      ) : (
+                        <span>No buildings yet! Create one first</span>
+                      )}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="floor" className="text-center">
+                  Floor:
+                </Label>
+                <Input
+                  id="floor"
+                  placeholder="Floor"
+                  value={String(floor_number)}
+                  className="col-span-3"
+                  onChange={(e) => {
+                    setFloor(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="capacity" className="text-center">
+                  Capacity:
+                </Label>
+                <Input
+                  id="capacity"
+                  placeholder="Capacity"
+                  value={String(seating_capacity)}
+                  className="col-span-3"
+                  onChange={(e) => {
+                    setCapacity(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-center">
+                  Type:
+                </Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Select</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={venueType}
+                      onValueChange={setVenueType}
+                    >
+                      <DropdownMenuRadioItem value="Classroom">
+                        Classroom
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="Meeting Room">
+                        Meeting Room
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="Lab">
+                        Lab
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="Auditorium">
+                        Auditorium
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="Other">
+                        Other
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="authority" className="text-center">
+                  Authority Email:
+                </Label>
+                <Input
+                  id="authority"
+                  placeholder="Authority Email"
+                  value={authority}
+                  className="col-span-3"
+                  onChange={(e) => {
+                    setAuthority(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-center">
+                  Is Accessible?:
+                </Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Select</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={accessible}
+                      onValueChange={setAccesible}
+                    >
+                      <DropdownMenuRadioItem value="true">
+                        Yes
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="false">
+                        No
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-center">
+                  Has Air Conditioner?:
+                </Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Select</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={airConditioner}
+                      onValueChange={setAirConditioner}
+                    >
+                      <DropdownMenuRadioItem value="true">
+                        Yes
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="false">
+                        No
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-center">
+                  Has Projectors?:
+                </Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Select</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={projectors}
+                      onValueChange={setProjectors}
+                    >
+                      <DropdownMenuRadioItem value="true">
+                        Yes
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="false">
+                        No
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-center">
+                  Has White Board?:
+                </Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Select</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={whiteboard}
+                      onValueChange={setWhiteboard}
+                    >
+                      <DropdownMenuRadioItem value="true">
+                        Yes
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="false">
+                        No
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-center">
+                  Has Speakers?:
+                </Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Select</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={speakers}
+                      onValueChange={setSpeakers}
+                    >
+                      <DropdownMenuRadioItem value="true">
+                        Yes
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="false">
+                        No
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
                 <DialogFooter>
                   <Button
                     type="submit"
