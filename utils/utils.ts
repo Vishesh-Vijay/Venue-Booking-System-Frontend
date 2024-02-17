@@ -355,3 +355,20 @@ export const getBookingDetails = async(id:string,credentials:string)=>{
       return error
   } 
 }
+
+export const getBookingRequestsByUser = async(receiver_id:string,credentials:string) => {
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/bookings/bookingRequests/byReceiver/${receiver_id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error: any) {
+    return error;
+  }  
+}

@@ -36,7 +36,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
             <Image src="/logo.png" alt="logo" width={50} height={50} />
             <p className="font-bold text-inherit ml-2 text-xl text-white">
               <span className="text-[#313465] mr-1">Venue</span>
-              Booker
+                Booker
             </p>
           </div>
 
