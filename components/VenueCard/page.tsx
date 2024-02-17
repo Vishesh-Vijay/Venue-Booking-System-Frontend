@@ -36,7 +36,7 @@ import { Input } from "../ui/input";
 // import { UpdateExistingVenue, DeleteVenue } from "@/utils/utils";
 import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
-import { getBuildingDetailsById, getUserDetailsByEmail, DeleteVenue, UpdateExistingVenue } from "@/utils/utils";
+import { getBuildingDetailsById, getAllBuildings,getUserDetailsByEmail, DeleteVenue, UpdateExistingVenue } from "@/utils/utils";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
@@ -78,9 +78,10 @@ const VenueCard = ({
   resetVenue,
   setResetVenue,
 }: VenueCardProps) => {
+  // console.log(authority_id)
   const [authority, setAuthority] = useState(authority_id);
   const [detailsDialogueOpen, setDetailsDialogueOpen] = useState(false);
-  const [building, setBuilding] = useState(building_id);
+  const [building, setBuilding] = useState("");
   const [buildingLoading, setBuildingLoading] = useState(false);
   const [isBuildingError, setIsBuildingError] = useState(false);
   const [buildingError, setBuildingError] = useState("");
@@ -90,6 +91,7 @@ const VenueCard = ({
   const [updateVenueAlert, setUpdateVenueAlert] = useState(false);
   const [isUpdateVenueError, setIsUpdateVenueError] = useState(false);
   const [updateVenueError, setUpdateVenueError] = useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const [deleteDialogueOpen, setDeleteDialogueOpen] = useState(false);
   const [deleteVenueLoading, setDeleteVenueLoading] = useState(false);
@@ -98,9 +100,9 @@ const VenueCard = ({
   const [deleteVenueError, setDeleteVenueError] = useState("");
 
   const [buildings, setBuildings] = useState<Array<Building>>([]);
-  const [floor, setFloor] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [venueType, setVenueType] = useState("");
+  const [floor, setFloor] = useState(String(floor_number));
+  const [capacity, setCapacity] = useState(String(seating_capacity));
+  const [venueType, setVenueType] = useState(venue_type);
   const [accessible, setAccesible] = useState("false");
   const [projectors, setProjectors] = useState("false");
   const [whiteboard, setWhiteboard] = useState("false");
@@ -132,32 +134,52 @@ const VenueCard = ({
     getBuilding();
   }, [building_id]);
   useEffect(() => {
-    const getAuthorityDetails = async () => {
+    const getBuildings = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response: any = getUserDetailsByEmail(
-          authority_id as string,
-          token as string
-        ).then((res: any) => {
-          const resp = res;
-          setAuthority(resp.data.response_data.name);
-        });
+        const userDetails: any = await getAllBuildings(token as string).then(
+          (res: any) => {
+            const resp: any = res;
+            if (resp.status == 200) {
+              const data = resp.data.response_data;
+              // console.log(data);
+
+              setBuildings(data);
+              // setLoading(false);
+              // setShowAlert(true);
+              // setTimeout(() => {
+              //   setShowAlert(false);
+              // }, 1000);
+            }
+          }
+        );
       } catch (error: any) {
-        console.log(error.response.data.response_message);
+        // Handle error
+        console.log(error);
+        // setIsError(true);
+        // setError(error.response.data.response_message);
+        // setTimeout(() => {
+        //   setIsError(false);
+        //   setError("");
+        // }, 3000);
+      } finally {
+        setLoading(false);
       }
     };
-    getAuthorityDetails();
-  }, [authority_id]);
+    getBuildings();
+  },[]);
   const handleUpdateVenue = async () => {
     setUpdateDialogueOpen(false);
     setUpdateVenueLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const authority_email = localStorage.getItem("user")
+      const build_id:string = buildings.find((ele)=>ele.name==building).id
       const response: any = UpdateExistingVenue(
         id,
         newVenue,
         authority,
-        building_id,
+        build_id,
         floor,
         capacity,
         venueType,
@@ -281,7 +303,7 @@ const VenueCard = ({
                 {" "}
                 <HiOutlinePencil className="text-blue-500 w-5 h-5 mr-4" />
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent style={{maxHeight:"70vh",overflowY:"auto"}}>
                 <DialogHeader>
                   <DialogTitle>Update Venue</DialogTitle>
                   <DialogDescription>
@@ -340,7 +362,7 @@ const VenueCard = ({
                 <Input
                   id="floor"
                   placeholder="Floor"
-                  value={String(floor_number)}
+                  value={floor}
                   className="col-span-3"
                   onChange={(e) => {
                     setFloor(e.target.value);
@@ -354,7 +376,7 @@ const VenueCard = ({
                 <Input
                   id="capacity"
                   placeholder="Capacity"
-                  value={String(seating_capacity)}
+                  value={capacity}
                   className="col-span-3"
                   onChange={(e) => {
                     setCapacity(e.target.value);
