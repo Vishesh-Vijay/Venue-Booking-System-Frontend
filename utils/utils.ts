@@ -29,7 +29,14 @@ interface createBookingProps {
     event_duration: Number;
     expected_strength: Number;
 }
-interface addNewUserProps {}
+interface addNewUserProps {
+    email: string;
+    name: string;
+    parent: string;
+    require_parent_permission: Boolean;
+    is_admin: Boolean;
+    is_authority: Boolean;
+}
 export const loginUser = async (
     user_data: userDataProps,
     credentials: string
