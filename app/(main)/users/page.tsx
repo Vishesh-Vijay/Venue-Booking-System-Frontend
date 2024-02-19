@@ -325,7 +325,7 @@ const Users = () => {
                 </div>
                 {loading == false ? (
                     <>
-                        <div className="grid grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
                             {users.length > 0 ? (
                                 users.map((User, index) => (
                                     <div

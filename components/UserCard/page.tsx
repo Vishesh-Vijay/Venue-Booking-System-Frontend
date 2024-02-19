@@ -101,7 +101,7 @@ const UserCard = ({
     };
     return (
         <>
-            <Card className="w-full bg-[#313465] text-white">
+            <Card className="w-full bg-[#313465] text-white h-40">
                 <div className="flex justify-between items-center w-full">
                     <div className="flex flex-col justify-between items-start p-5">
                         <CardHeader className="p-0 mb-1">
