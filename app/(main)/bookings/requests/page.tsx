@@ -2,6 +2,7 @@
 import React,{useEffect, useState} from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBookingRequestsByUser } from '@/utils/utils';
+import BookingRequestCard from '@/components/BookingRequestCard/page';
 interface BookingRequestProps {
   booking_id: string;
   id: string;
@@ -19,20 +20,21 @@ const BookingRequests = () => {
         const resp=res;
         if(resp.status==200){
           const data = resp.data.response_data
+          console.log(data)
           setBookingRequests(data)
         }
       })
     }
     getBookingRequests();
   },[])
-  const pendingRequests = bookingRequests?.filter((request)=>request.request_status == "RECEIVED")
-  const resolvedRequests = bookingRequests?.filter((request)=>request.request_status !== "RECEIVED")
+  const pendingRequests = bookingRequests?.filter((request)=>request.request_status !== "APPROVED")
+  const resolvedRequests = bookingRequests?.filter((request)=>request.request_status === "APPROVED")
   return (
     <div className="p-4">
       <h1 className="text-4xl font-semibold text-center mt-6">
         Booking Requests
       </h1>
-      <div className="flex justify-around items-center mt-8">
+      <div className="flex justify-around items-center mt-8 w-full">
         <Tabs
           defaultValue="pending"
           className="w-full flex flex-col justify-around items-center "
@@ -41,7 +43,34 @@ const BookingRequests = () => {
             <TabsTrigger value="pending">Pending</TabsTrigger>
             <TabsTrigger value="resolved">Resolved</TabsTrigger>
           </TabsList>
-          
+          <TabsContent value="pending" className="w-full">
+            {pendingRequests && pendingRequests.length > 0 ? (
+              pendingRequests.map((request) => (
+                <div key={request.id} className="mt-4 px-20 w-full">
+                  <BookingRequestCard
+                    BookingId={request.booking_id}
+                    // status={request.request_status}
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="mt-4 w-full text-center">No pending requests</p>
+            )}
+          </TabsContent>
+          <TabsContent value="resolved" className="w-full">
+            {resolvedRequests && resolvedRequests.length > 0 ? (
+              resolvedRequests.map((request) => (
+                <div key={request.id} className="mt-4 px-20 w-full">
+                  <BookingRequestCard
+                    BookingId={request.booking_id}
+                    // status={request.request_status}
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="mt-4 w-full text-center">No resolved requests</p>
+            )}
+          </TabsContent>
         </Tabs>
       </div>
     </div>

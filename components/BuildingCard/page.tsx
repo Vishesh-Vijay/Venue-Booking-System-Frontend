@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-no-undef */
+import { toast } from "sonner";
 
 import React, { useState } from "react";
 import {
@@ -69,6 +70,8 @@ const BuildingCard = ({
           setUpdateBuildingAlert(true);
           setNewBuilding("");
           setResetBuilding();
+          toast("Building has been updated")
+
           setTimeout(() => {
             setUpdateBuildingAlert(false);
           }, 2000);
@@ -77,6 +80,7 @@ const BuildingCard = ({
     } catch (error: any) {
       setIsUpdateBuildingError(true);
       setUpdateBuildingError(error.response.data.response_message);
+
       setTimeout(() => {
         setIsUpdateBuildingError(false);
         setUpdateBuildingError("");
@@ -101,6 +105,11 @@ const BuildingCard = ({
               setDeleteBuildingLoading(false);
               setDeleteBuildingAlert(true);
               // setNewBuilding("");
+              toast("Building has been deleted", {
+                style: {
+                  backgroundColor: "#00fa9a",
+                },
+              });
               setResetBuilding();
               setTimeout(() => {
                 setDeleteBuildingAlert(false);

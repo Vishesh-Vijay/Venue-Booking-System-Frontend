@@ -30,6 +30,7 @@ import { Button } from "../ui/button";
 import { getVenueDetailsById } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 const BookingCard = (props: BookingCardProps) => {
+  // props.approval == "PENDING"? props.approval="Received":props.approval="PENDING"
   const inputDate = new Date(props.date);
   const router = useRouter()
   // Months and their respective names
@@ -134,8 +135,8 @@ const BookingCard = (props: BookingCardProps) => {
               : "text-[#5DB4F7]  bg-white p-3 rounded-2xl font-bold"
           }
         >
-          {props.approval[0].toUpperCase() +
-            props.approval.slice(1, props.approval.length)}
+          {props.approval=="PENDING"?"Received":props.approval[0].toUpperCase() +
+            props.approval.slice(1, props.approval.length).toLowerCase()}
         </CardFooter>
         <div className="flex justify-between items-center">
           <Button variant="default" className="mr-2 bg-green-600" onClick={()=>handleViewDetails()}>

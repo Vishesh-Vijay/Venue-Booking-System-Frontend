@@ -27,8 +27,6 @@ interface createBookingProps{
   booking_type:string,
   event_time:Date,
   event_duration:Number,
-  expected_strength:Number,
-
 }
 export const loginUser = async (
   user_data: userDataProps,
@@ -371,4 +369,21 @@ export const getBookingRequestsByUser = async(receiver_id:string,credentials:str
   } catch (error: any) {
     return error;
   }  
+}
+
+export const getBookingRequestDetails = async(bookingRequestId:string,credentials:string) =>{
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/bookings/bookingRequests/details/${bookingRequestId}/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error: any) {
+    return error;
+  }   
 }

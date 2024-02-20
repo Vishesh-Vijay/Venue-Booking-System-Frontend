@@ -36,7 +36,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
             <Image src="/logo.png" alt="logo" width={50} height={50} />
             <p className="font-bold text-inherit ml-2 text-xl text-white">
               <span className="text-[#313465] mr-1">Venue</span>
-                Booker
+              Booker
             </p>
           </div>
 
@@ -93,7 +93,9 @@ const Sidebar = ({ admin }: SidebarProps) => {
               <Button
                 variant={
                   pathname.startsWith("/bookings") &&
-                  pathname !== "/bookings/new" && pathname!=="/bookings/requests"
+                  !pathname.startsWith("/bookings/requests") &&
+                  pathname !== "/bookings/new" &&
+                  pathname !== "/bookings/requests"
                     ? "secondary"
                     : "ghost"
                 }
@@ -118,7 +120,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
               {admin == "admin" && (
                 <Button
                   variant={
-                    pathname === "/bookings/requests" ? "secondary" : "ghost"
+                    pathname.startsWith("/bookings/requests") ? "secondary" : "ghost"
                   }
                   className="w-full flex items-center justify-start mt-2"
                   onClick={() => {
