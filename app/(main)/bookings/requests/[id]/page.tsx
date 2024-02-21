@@ -111,7 +111,7 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
         const resp = res;
         if (resp.status == 200) { 
           setUpdatePage((val) => !val);
-          toast("Updated Booking Request", {
+          toast("Updated Booking Request!", {
             style: {
               backgroundColor: "#00fa9a",
             },

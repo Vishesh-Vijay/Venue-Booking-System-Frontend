@@ -24,6 +24,7 @@ import TimePicker from "react-time-picker";
 import Alert from "@mui/material/Alert";
 import { Textarea } from "@/components/ui/textarea";
 import { createBooking, getAllVenues } from "@/utils/utils";
+import { toast } from "sonner";
 interface Venue {
   authority_id: string; //email
   building_id: string; //id
@@ -125,7 +126,11 @@ const AddNewBooking = () => {
         ).then((res: any) => {
           const resp = res;
           if (resp.status == 200) {
-            setShowAlert(true);
+            toast("Booking Created Sucessfully! \n Please check the status of your booking for further updates", {
+              style: {
+                backgroundColor: "#00fa9a",
+              },
+            }); 
             setTitle("");
             setDescription("");
             setIsError(false)
@@ -135,20 +140,18 @@ const AddNewBooking = () => {
             setDate(new Date());
             setExpectedStrength("");
             setBookingType("");
-            setTimeout(() => {
-              setShowAlert(false);
-            }, 2000);
+            
           }
         });
       } catch (error: any) {
-        setShowAlert(true);
-        setIsError(true);
-        setError(error.response.data.response_message);
-        setTimeout(() => {
-          setShowAlert(false);
-          setIsError(false);
-          setError("");
-        }, 1500);
+        toast(
+          `${error.response?.data?.response_message || "An error occured"}`,
+          {
+            style: {
+              backgroundColor: "red",
+            },
+          }
+        );
       }
     }
     //
@@ -276,16 +279,7 @@ const AddNewBooking = () => {
       <div className="text-center mt-6">
         <Button onClick={handleSubmit}>Submit</Button>
       </div>
-      {showAlert && !isError && (
-        <Alert severity="success" className="mt-4 absolute right-1 top-8">
-          Booking Created
-        </Alert>
-      )}
-      {isError && (
-        <Alert severity="error" className="absolute right-1 top-8">
-          {error}
-        </Alert>
-      )}
+     
     </div>
   );
 };

@@ -136,7 +136,7 @@ const BookingDetails = ({params}:{params:{id:string}}) => {
                 {bookingDateString.date +
                   " at " +
                   bookingDateString.time +
-                  " hrs"}
+                   " hrs"}
               </h1>
               <h1>
                 {" "}

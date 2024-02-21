@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 interface Building {
     id: string;
     name: string;
@@ -60,21 +61,25 @@ const Building = () => {
             ).then((res: any) => {
                 if (res.status == 200) {
                     setAddBuildingLoading(false);
-                    setAddBuildingAlert(true);
+                    toast("Building Added Sucessfully!", {
+                    style: {
+                        backgroundColor: "#00fa9a",
+                    },
+                    }); 
                     setNewBuilding("");
                     setResetBuildings((val) => !val);
-                    setTimeout(() => {
-                        setAddBuildingAlert(false);
-                    }, 2000);
+                    
                 }
             });
         } catch (error: any) {
-            setIsNewBuildingError(true);
-            setNewBuildingError(error.response.data.response_message);
-            setTimeout(() => {
-                setIsNewBuildingError(false);
-                setNewBuildingError("");
-            }, 3000);
+            toast(
+              `${error.response?.data?.response_message || "An error occured"}`,
+              {
+                style: {
+                  backgroundColor: "red",
+                },
+              }
+            );
         } finally {
             setAddBuildingLoading(false);
         }
@@ -206,24 +211,6 @@ const Building = () => {
                 </>
             ) : (
                 <CircularProgress />
-            )}
-            {addBuildingAlert && !isNewBuildingError && (
-                <Alert
-                    severity="success"
-                    className="mt-4 absolute right-1 top-8"
-                >
-                    Building Created
-                </Alert>
-            )}
-            {isError && (
-                <Alert severity="error" className="absolute right-1 top-8">
-                    {error}
-                </Alert>
-            )}
-            {isNewBuildingError && (
-                <Alert severity="error" className="absolute right-1 top-8">
-                    {newBuildingError}
-                </Alert>
             )}
         </div>
     );

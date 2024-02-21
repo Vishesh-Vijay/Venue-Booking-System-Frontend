@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React, { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 interface User {
     email: string;
     name: string;
@@ -79,22 +81,25 @@ const Users = () => {
                 (res: any) => {
                     if (res.status == 200) {
                         setAddUserLoading(false);
-                        setAddUserAlert(true);
+                      toast("User Added Sucessfully!", {
+                        style: {
+                          backgroundColor: "#00fa9a",
+                        },
+                      });
                         setNewUser("");
                         setResetUsers((val) => !val);
-                        setTimeout(() => {
-                            setAddUserAlert(false);
-                        }, 2000);
                     }
                 }
             );
         } catch (error: any) {
-            setIsNewUserError(true);
-            setNewUserError(error.response.data.response_message);
-            setTimeout(() => {
-                setIsNewUserError(false);
-                setNewUserError("");
-            }, 3000);
+            toast(
+              `${error.response?.data?.response_message || "An error occured"}`,
+              {
+                style: {
+                  backgroundColor: "red",
+                },
+              }
+            );
         } finally {
             setAddUserLoading(false);
         }

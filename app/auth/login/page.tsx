@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "@nextui-org/react";
-
+import { toast } from "sonner";
 import { userAgent } from "next/server";
 import { Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -18,13 +18,9 @@ const login = () => {
     const [loading, setLoading] = useState(false);
     const googleAuth = new GoogleAuthProvider();
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [showAlert, setShowAlert] = useState(false);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [isError, setIsError] = useState(false);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const router = useRouter();
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [error, setError] = useState("");
     const handleLogin = async () => {
         setLoading(true);
         try {
@@ -54,32 +50,43 @@ const login = () => {
                         const resp = res;
                         if (resp.status == 200) {
                             setLoading(false);
-                            setShowAlert(true);
-                            setTimeout(() => {
-                                setShowAlert(false);
+                            toast("Login Sucessfull!", {
+                              style: {
+                                backgroundColor: "#00fa9a",
+                              },
+                            });
+                             setTimeout(() => {
+                                // setShowAlert(false);
                                 router.replace("/");
                             }, 1000);
                         }
                     });
                 } catch (error: any) {
-                    console.log(error.response.data.response_message);
-                    setIsError(true);
-                    setError(error.response.data.response_message);
-                    setTimeout(() => {
-                        setIsError(false);
-                        setError("");
-                    }, 3000);
+                   toast(
+                     `${
+                       error.response?.data?.response_message ||
+                       "An error occured"
+                     }`,
+                     {
+                       style: {
+                         backgroundColor: "red",
+                       },
+                     }
+                   );
                 }
                 setLoading(false);
             }
         } catch (error: any) {
-            console.log(error);
-            setIsError(true);
-            setError(error.response.data.response_message);
-            setTimeout(() => {
-                setIsError(false);
-                setError("");
-            }, 3000);
+             toast(
+               `${
+                 error.response?.data?.response_message || "An error occured"
+               }`,
+               {
+                 style: {
+                   backgroundColor: "red",
+                 },
+               }
+             );
         }
     };
     return (
@@ -105,19 +112,6 @@ const login = () => {
                     variant="indeterminate"
                     color="primary"
                 />
-            )}
-            {showAlert && !isError && (
-                <Alert
-                    severity="success"
-                    className="mt-4 absolute right-1 top-8"
-                >
-                    Login Successful
-                </Alert>
-            )}
-            {isError && (
-                <Alert severity="error" className="absolute right-1 top-8">
-                    {error}
-                </Alert>
             )}
         </div>
     );
