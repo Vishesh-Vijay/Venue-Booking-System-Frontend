@@ -29,9 +29,6 @@ const DropdownComponent = () => {
   const token = localStorage.getItem("token");
 
   const handleLogout = () => {
-    setTimeout(() => {
-      setShowAlert(true);
-    }, 3000);
     signOut(auth)
       .then(() => {
         localStorage.removeItem("token");
@@ -110,11 +107,6 @@ const DropdownComponent = () => {
           color="primary"
           className="mt-4 absolute top-40 right-40"
         />
-      )}
-      {showAlert && (
-        <Alert severity="success" className="absolute right-1 top-8">
-          Logout Successful
-        </Alert>
       )}
     </div>
   );
