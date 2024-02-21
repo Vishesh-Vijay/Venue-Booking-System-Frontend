@@ -50,6 +50,7 @@ interface Building {
   name: string;
 }
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 const Venue = () => {
   const router = useRouter();
   if (localStorage.getItem("admin") == "no") {
@@ -481,7 +482,7 @@ const Venue = () => {
         </Dialog>
       </div>
       {loading == false ? (
-        <>
+        <ScrollArea className="h-[550px] mt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
             {venues.length > 0 ? (
               venues.map((Venue, index) => (
@@ -513,7 +514,7 @@ const Venue = () => {
               </div>
             )}
           </div>
-        </>
+        </ScrollArea>
       ) : (
         <CircularProgress />
       )}

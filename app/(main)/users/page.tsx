@@ -29,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 interface User {
     email: string;
     name: string;
@@ -329,7 +330,7 @@ const Users = () => {
                     </Dialog>
                 </div>
                 {loading == false ? (
-                    <>
+                    <ScrollArea className="h-[550px] mt-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
                             {users.length > 0 ? (
                                 users.map((User, index) => (
@@ -361,7 +362,7 @@ const Users = () => {
                                 </div>
                             )}
                         </div>
-                    </>
+                    </ScrollArea>
                 ) : (
                     <CircularProgress />
                 )}

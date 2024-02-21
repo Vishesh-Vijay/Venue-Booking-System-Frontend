@@ -45,7 +45,7 @@ const BookingRequests = () => {
             <TabsTrigger value="resolved">Resolved</TabsTrigger>
           </TabsList>
           <TabsContent value="pending" className="w-full">
-            <ScrollArea className='h-[550px]'>
+            <ScrollArea className="h-[550px]">
               {pendingRequests && pendingRequests.length > 0 ? (
                 pendingRequests.map((request) => (
                   <div key={request.id} className="mt-4 px-20 w-full">
@@ -62,19 +62,21 @@ const BookingRequests = () => {
             </ScrollArea>
           </TabsContent>
           <TabsContent value="resolved" className="w-full">
-            {resolvedRequests && resolvedRequests.length > 0 ? (
-              resolvedRequests.map((request) => (
-                <div key={request.id} className="mt-4 px-20 w-full">
-                  <BookingRequestCard
-                    BookingId={request.booking_id}
-                    request_id={request.id}
-                    // status={request.request_status}
-                  />
-                </div>
-              ))
-            ) : (
-              <p className="mt-4 w-full text-center">No resolved requests</p>
-            )}
+            <ScrollArea className='h-[550px]'>
+              {resolvedRequests && resolvedRequests.length > 0 ? (
+                resolvedRequests.map((request) => (
+                  <div key={request.id} className="mt-4 px-20 w-full">
+                    <BookingRequestCard
+                      BookingId={request.booking_id}
+                      request_id={request.id}
+                      // status={request.request_status}
+                    />
+                  </div>
+                ))
+              ) : (
+                <p className="mt-4 w-full text-center">No resolved requests</p>
+              )}
+            </ScrollArea>
           </TabsContent>
         </Tabs>
       </div>

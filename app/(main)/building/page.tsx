@@ -8,7 +8,7 @@ import { addNewBuilding, getAllBuildings } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { IoAddCircleOutline } from "react-icons/io5";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     Dialog,
     DialogContent,
@@ -184,7 +184,7 @@ const Building = () => {
                 </Dialog>
             </div>
             {loading == false ? (
-                <>
+                <ScrollArea className="h-[580px] mt-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
                         {buildings.length > 0 ? (
                             buildings.map((building, index) => (
@@ -208,7 +208,7 @@ const Building = () => {
                             </div>
                         )}
                     </div>
-                </>
+                </ScrollArea>
             ) : (
                 <CircularProgress />
             )}

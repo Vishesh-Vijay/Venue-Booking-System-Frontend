@@ -67,7 +67,7 @@ const Bookings: React.FC = () => {
           </TabsList>
 
           <TabsContent value="upcoming" className="w-full">
-            <ScrollArea className="h-[520px]">
+            <ScrollArea className="h-[520px] mt-4">
               {upcomingEvents.length > 0 ? (
                 upcomingEvents.map((event, index) => (
                   <div
@@ -94,7 +94,7 @@ const Bookings: React.FC = () => {
             </ScrollArea>
           </TabsContent>
           <TabsContent value="past" className="w-full">
-            <div>
+            <ScrollArea className="h-[550px] mt-4">
               {pastEvents.length > 0 ? (
                 pastEvents.map((event, index) => (
                   <div
@@ -118,7 +118,7 @@ const Bookings: React.FC = () => {
                   No bookings found!!
                 </div>
               )}
-            </div>
+            </ScrollArea>
           </TabsContent>
         </Tabs>
       </div>
