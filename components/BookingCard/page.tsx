@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -131,11 +132,21 @@ const BookingCard = (props: BookingCardProps) => {
         const resp=res;
         if(resp.status==200){
           props.setResetBookings()
+          toast("Booking has been successfully cancelled!", {
+            style: {
+              backgroundColor: "#00fa9a",
+            },
+          });
         }
       })
     } 
     catch(error:any){
-      console.log(error.response.response_data.message)
+      // console.log(error.response.response_data.message)
+      toast(`${error.response?.data?.response_message || "An error occured"}`, {
+        style: {
+          backgroundColor: "red",
+        },
+      });
     }
   }
   return (

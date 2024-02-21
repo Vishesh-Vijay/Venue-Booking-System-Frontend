@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlinePencil } from "react-icons/hi";
+import { toast } from "sonner";
 import {
     Dialog,
     DialogContent,
@@ -65,21 +66,21 @@ const BuildingCard = ({
                 if (resp.status == 200) {
                     console.log(resp);
                     setUpdateBuildingLoading(false);
-                    setUpdateBuildingAlert(true);
+                   toast("Building has been successfully updated", {
+                     style: {
+                       backgroundColor: "#00fa9a",
+                     },
+                   });
                     setNewBuilding("");
                     setResetBuilding();
-                    setTimeout(() => {
-                        setUpdateBuildingAlert(false);
-                    }, 2000);
                 }
             });
         } catch (error: any) {
-            setIsUpdateBuildingError(true);
-            setUpdateBuildingError(error.response.data.response_message);
-            setTimeout(() => {
-                setIsUpdateBuildingError(false);
-                setUpdateBuildingError("");
-            }, 3000);
+           toast(`${error.response.data.response_message}`, {
+             style: {
+               backgroundColor: "red",
+             },
+           });
         } finally {
             setUpdateBuildingLoading(false);
         }
@@ -96,21 +97,22 @@ const BuildingCard = ({
                     if (resp.status == 200) {
                         console.log(resp);
                         setDeleteBuildingLoading(false);
-                        setDeleteBuildingAlert(true);
+                        toast("Building has been successfully Deleted", {
+                          style: {
+                            backgroundColor: "#00fa9a",
+                          },
+                        });
                         setResetBuilding();
-                        setTimeout(() => {
-                            setDeleteBuildingAlert(false);
-                        }, 2000);
+                        
                     }
                 }
             );
         } catch (error: any) {
-            setIsDeleteBuildingError(true);
-            setDeleteBuildingError(error.response.data.response_message);
-            setTimeout(() => {
-                setIsDeleteBuildingError(false);
-                setDeleteBuildingError("");
-            }, 3000);
+           toast(`${error.response?.data?.response_message || "An error occured"}`, {
+             style: {
+               backgroundColor: "red",
+             },
+           });
         } finally {
             setDeleteBuildingLoading(false);
         }
@@ -133,39 +135,6 @@ const BuildingCard = ({
                             <CardTitle>{name}</CardTitle>
                         ) : (
                             <CircularProgress />
-                        )}
-                        {updateBuildingAlert && !isUpdateBuildingError && (
-                            <Alert
-                                severity="success"
-                                className="mt-4 absolute right-1 top-8"
-                            >
-                                Building Updated
-                            </Alert>
-                        )}
-                        {isUpdateBuildingError && (
-                            <Alert
-                                severity="error"
-                                className="absolute right-1 top-8"
-                            >
-                                {updateBuildingError}
-                            </Alert>
-                        )}
-
-                        {deleteBuildingAlert && !isDeleteBuildingError && (
-                            <Alert
-                                severity="success"
-                                className="mt-4 absolute right-1 top-8"
-                            >
-                                Building Deleted
-                            </Alert>
-                        )}
-                        {isDeleteBuildingError && (
-                            <Alert
-                                severity="error"
-                                className="absolute right-1 top-8"
-                            >
-                                {deleteBuildingError}
-                            </Alert>
                         )}
                     </CardHeader>
                     <div className="flex items-center">
