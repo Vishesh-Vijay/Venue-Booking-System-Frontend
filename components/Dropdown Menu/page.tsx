@@ -32,6 +32,11 @@ const DropdownComponent = () => {
     signOut(auth)
       .then(() => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("admin")
+        localStorage.removeItem("authority")
+        localStorage.removeItem("name")
+        localStorage.removeItem("profile_picture");
         toast("Logout Sucessfull!", {
           style: {
             backgroundColor: "#00fa9a",

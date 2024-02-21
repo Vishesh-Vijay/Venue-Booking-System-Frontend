@@ -13,9 +13,10 @@ import { FaRegBuilding } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 
 interface SidebarProps {
-    admin: string;
+    admin: Boolean;
+    authority:Boolean;
 }
-const Sidebar = ({ admin }: SidebarProps) => {
+const Sidebar = ({ admin,authority }: SidebarProps) => {
     const router = useRouter();
     const pathname = usePathname();
     const channels = [
@@ -96,7 +97,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
                                 <IoIosAddCircleOutline className="mr-2 h-4 w-4" />
                                 Add a Booking
                             </Button>
-                            {admin == "admin" && (
+                            {(admin == true || authority==true) && (
                                 <Button
                                     variant={
                                         pathname === "/bookings/requests"
@@ -114,7 +115,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
                             )}
                         </ScrollArea>
                     </div>
-                    {admin === "admin" && (
+                    {(admin === true || authority==true) && (
                         <>
                             <div className="py-2">
                                 <h2 className="relative px-7 text-lg font-semibold tracking-tight">
@@ -139,6 +140,8 @@ const Sidebar = ({ admin }: SidebarProps) => {
                                     </div>
                                 </ScrollArea>
                             </div>
+                            {admin == true && (
+                            <>
                             <div className="py-2">
                                 <h2 className="relative px-7 text-lg font-semibold tracking-tight">
                                     Building
@@ -185,6 +188,7 @@ const Sidebar = ({ admin }: SidebarProps) => {
                                     </div>
                                 </ScrollArea>
                             </div>
+                            </>)}
                         </>
                     )}
                     <div className="py-2">

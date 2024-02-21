@@ -53,7 +53,7 @@ import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 const Venue = () => {
   const router = useRouter();
-  if (localStorage.getItem("admin") == "no") {
+  if (localStorage.getItem("admin") == "no" && localStorage.getItem("Authority")=="no") {
     router.push("/");
     return null;
   }

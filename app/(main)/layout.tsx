@@ -17,7 +17,8 @@ export default function RootLayout({
 }) {
     const router = useRouter();
     const [show, setShow] = useState(false);
-    const [isAdmin, setIsAdmin] = useState("user");
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAuthority,setIsAuthority] = useState(false);
     useEffect(() => {
         const getUserDetails = async () => {
             // setLoading(true);
@@ -33,10 +34,18 @@ export default function RootLayout({
                         // console.log(data);
 
                         if (data.is_admin) {
-                            setIsAdmin("admin");
-                            localStorage.setItem("admin", "yes");
-                        } else {
-                            localStorage.setItem("admin", "no");
+                            setIsAdmin(true); 
+                            localStorage.setItem("admin","yes")
+                        }
+                        else{
+                           localStorage.setItem("admin", "no"); 
+                        }
+                        if(data.is_authority){
+                            setIsAuthority(true)
+                            localStorage.setItem("authority","yes")
+                        }
+                        else{
+                            localStorage.setItem("authority","no")
                         }
                     }
                 });
@@ -61,7 +70,7 @@ export default function RootLayout({
         show && (
             <div className="w-full h-[100vh] flex justify-between items-center">
                 <div className="w-1/4 ">
-                    <Sidebar admin={isAdmin} />
+                    <Sidebar admin={isAdmin} authority={isAuthority} />
                 </div>
 
                 <div className="w-full h-full flex flex-col justify-between items-center">
