@@ -3,6 +3,7 @@ import React,{useEffect, useState} from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBookingRequestsByUser } from '@/utils/utils';
 import BookingRequestCard from '@/components/BookingRequestCard/page';
+import { ScrollArea } from '@/components/ui/scroll-area';
 interface BookingRequestProps {
   booking_id: string;
   id: string;
@@ -44,19 +45,21 @@ const BookingRequests = () => {
             <TabsTrigger value="resolved">Resolved</TabsTrigger>
           </TabsList>
           <TabsContent value="pending" className="w-full">
-            {pendingRequests && pendingRequests.length > 0 ? (
-              pendingRequests.map((request) => (
-                <div key={request.id} className="mt-4 px-20 w-full">
-                  <BookingRequestCard
-                    BookingId={request.booking_id}
-                    // status={request.request_status}
-                    request_id={request.id}
-                  />
-                </div>
-              ))
-            ) : (
-              <p className="mt-4 w-full text-center">No pending requests</p>
-            )}
+            <ScrollArea className='h-[550px]'>
+              {pendingRequests && pendingRequests.length > 0 ? (
+                pendingRequests.map((request) => (
+                  <div key={request.id} className="mt-4 px-20 w-full">
+                    <BookingRequestCard
+                      BookingId={request.booking_id}
+                      // status={request.request_status}
+                      request_id={request.id}
+                    />
+                  </div>
+                ))
+              ) : (
+                <p className="mt-4 w-full text-center">No pending requests</p>
+              )}
+            </ScrollArea>
           </TabsContent>
           <TabsContent value="resolved" className="w-full">
             {resolvedRequests && resolvedRequests.length > 0 ? (

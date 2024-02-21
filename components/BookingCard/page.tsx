@@ -1,5 +1,5 @@
-"use client"
-import React, { useEffect,useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,14 +8,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 interface BookingCardProps {
-  id:string
+  id: string;
   name: string;
   type: string;
   location: string;
   date: string;
   approval: string;
-  Btype:string
+  Btype: string;
+  setResetBookings:()=>void;
 }
 import {
   Popover,
@@ -27,12 +39,12 @@ import { IoLocationOutline } from "react-icons/io5";
 import { MdOutlineTimer } from "react-icons/md";
 
 import { Button } from "../ui/button";
-import { getVenueDetailsById } from "@/utils/utils";
+import { cancelBooking, getVenueDetailsById } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 const BookingCard = (props: BookingCardProps) => {
   // props.approval == "PENDING"? props.approval="Received":props.approval="PENDING"
   const inputDate = new Date(props.date);
-  const router = useRouter()
+  const router = useRouter();
   // Months and their respective names
   const months = [
     "January",
@@ -53,8 +65,14 @@ const BookingCard = (props: BookingCardProps) => {
   const monthIndex = inputDate.getMonth();
   const day = inputDate.getDate();
   const year = inputDate.getFullYear();
-  let hours = inputDate.getMinutes()>=30?inputDate.getHours()-5:inputDate.getHours()-6;
-  const minutes = inputDate.getMinutes()>=30?inputDate.getMinutes()-30:inputDate.getMinutes()+30;
+  let hours =
+    inputDate.getMinutes() >= 30
+      ? inputDate.getHours() - 5
+      : inputDate.getHours() - 6;
+  const minutes =
+    inputDate.getMinutes() >= 30
+      ? inputDate.getMinutes() - 30
+      : inputDate.getMinutes() + 30;
 
   // Convert hours to 12-hour format and determine AM/PM
   const amPm = hours >= 12 ? "pm" : "am";
@@ -63,7 +81,7 @@ const BookingCard = (props: BookingCardProps) => {
   // Format the date and time
   const formattedDateTime = `${months[monthIndex]} ${day}${getDaySuffix(
     day
-  )}, ${year} at ${hours}:${(minutes).toString().padStart(2, "0")} ${amPm}`;
+  )}, ${year} at ${hours}:${minutes.toString().padStart(2, "0")} ${amPm}`;
 
   // Function to get the day suffix (e.g., 1st, 2nd, 3rd, etc.)
   function getDaySuffix(day: number): string {
@@ -81,27 +99,44 @@ const BookingCard = (props: BookingCardProps) => {
         return "th";
     }
   }
-  const [venue,setVenue] = useState("")
-  useEffect(()=>{
-    const getVenueById=async()=>{
+  const [venue, setVenue] = useState("");
+  useEffect(() => {
+    const getVenueById = async () => {
       try {
-        const token = localStorage.getItem("token")
-        const response = await getVenueDetailsById(props.location,token as string).then((res:any)=>{
-          const resp=res
-          if(resp.status==200){
-            const data=resp.data.response_data;
-            setVenue(data.name)
+        const token = localStorage.getItem("token");
+        const response = await getVenueDetailsById(
+          props.location,
+          token as string
+        ).then((res: any) => {
+          const resp = res;
+          if (resp.status == 200) {
+            const data = resp.data.response_data;
+            setVenue(data.name);
           }
-          ;
-        })
-      } catch (error:any) {
-       console.log(error) 
-      } 
+        });
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+    getVenueById();
+  }, [props.location]);
+  const handleViewDetails = () => {
+    router.push(`/bookings/${props.id}`);
+  };
+
+  const handleCancelBooking = async() =>{
+    try{
+      const token = localStorage.getItem("token")
+      const response = await cancelBooking(props.id as string,token as string).then((res:any)=>{
+        const resp=res;
+        if(resp.status==200){
+          props.setResetBookings()
+        }
+      })
+    } 
+    catch(error:any){
+      console.log(error.response.response_data.message)
     }
-    getVenueById()
-  },[props.location])
-  const handleViewDetails = () =>{
-    router.push(`/bookings/${props.id}`)
   }
   return (
     <Card className="bg-[#313465] text-white w-11/12 rounded-2xl flex justify-between items-start">
@@ -135,18 +170,44 @@ const BookingCard = (props: BookingCardProps) => {
               : "text-[#5DB4F7]  bg-white p-3 rounded-2xl font-bold"
           }
         >
-          {props.approval=="PENDING"?"Received":props.approval[0].toUpperCase() +
-            props.approval.slice(1, props.approval.length).toLowerCase()}
+          {props.approval == "PENDING"
+            ? "Received"
+            : props.approval[0].toUpperCase() +
+              props.approval.slice(1, props.approval.length).toLowerCase()}
         </CardFooter>
         <div className="flex justify-between items-center">
-          <Button variant="default" className="mr-2 bg-green-600" onClick={()=>handleViewDetails()}>
+          <Button
+            variant="default"
+            className="mr-2 bg-green-600"
+            onClick={() => handleViewDetails()}
+          >
             View Details
           </Button>
-          {props.Btype == "upcoming" && (props.approval=="APPROVED" || props.approval=="PENDING") && (
-            <Button variant="destructive" className="">
-              Cancel
-            </Button>
-          )}
+          {props.Btype == "upcoming" &&
+            (props.approval == "APPROVED" || props.approval == "PENDING") && (
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <Button variant="destructive" className="">
+                    Cancel
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently cancel
+                      your booking request.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>No</AlertDialogCancel>
+                    <AlertDialogAction onClick={()=>handleCancelBooking()}>Yes</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
         </div>
       </div>
     </Card>

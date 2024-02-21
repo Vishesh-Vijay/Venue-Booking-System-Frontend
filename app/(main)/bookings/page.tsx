@@ -3,6 +3,7 @@ import React, { useState, ChangeEvent,useEffect } from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 interface Event {
   booking_status: string;
   booking_time: string;
@@ -25,6 +26,7 @@ const Bookings: React.FC = () => {
   const today = new Date();
 
   const [bookingData,setBookingData] = useState<Array<Event>>([])
+  const [resetBookings,setResetBookings] = useState(false)
   useEffect(()=>{
     const getBookings = async()=>{
       try {
@@ -42,7 +44,7 @@ const Bookings: React.FC = () => {
       }
     }
     getBookings()
-  },[]) 
+  },[resetBookings]) 
   const upcomingEvents: Event[] = bookingData.filter(
     (event) => new Date(event.event_time) > today
   );
@@ -65,7 +67,7 @@ const Bookings: React.FC = () => {
           </TabsList>
 
           <TabsContent value="upcoming" className="w-full">
-            <div>
+            <ScrollArea className="h-[520px]">
               {upcomingEvents.length > 0 ? (
                 upcomingEvents.map((event, index) => (
                   <div
@@ -80,6 +82,7 @@ const Bookings: React.FC = () => {
                       id={event.id}
                       approval={event.booking_status}
                       Btype="upcoming"
+                      setResetBookings={() => setResetBookings((val) => !val)}
                     />
                   </div>
                 ))
@@ -88,7 +91,7 @@ const Bookings: React.FC = () => {
                   No bookings found!!
                 </div>
               )}
-            </div>
+            </ScrollArea>
           </TabsContent>
           <TabsContent value="past" className="w-full">
             <div>
@@ -106,6 +109,7 @@ const Bookings: React.FC = () => {
                       date={event.event_time}
                       approval={event.booking_status}
                       Btype="past"
+                      setResetBookings={() => setResetBookings((val) => !val)}
                     />
                   </div>
                 ))

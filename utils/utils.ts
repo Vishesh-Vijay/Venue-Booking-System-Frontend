@@ -507,3 +507,21 @@ export const getBookingRequestDetails = async(id:string, credentials:string) =>{
      return error;
    } 
 }
+
+export const cancelBooking = async(booking_id:string,credentials:string)=>{
+   try {
+     const response = await axios.post(
+       `http://127.0.0.1:8000/bookings/cancel/`,
+       { booking_id },
+       {
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: credentials,
+         },
+       }
+     );
+     return response;
+   } catch (error) {
+     return error;
+   } 
+}
