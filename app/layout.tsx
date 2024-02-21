@@ -32,6 +32,7 @@ export default function RootLayout({
             </Head>
             <body className={poppins.variable}>
                 <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+                <Toaster />
             </body>
         </html>
     );

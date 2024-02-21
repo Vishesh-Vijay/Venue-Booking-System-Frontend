@@ -467,3 +467,43 @@ export const getBookingRequestsByUser = async (
         return error;
     }
 };
+
+export const updateBookingRequest = async (
+  id: string,
+  request_status: string,
+  credentials: string
+) => {
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/bookings/bookingRequests/update/`,
+      { id, request_status },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getBookingRequestDetails = async(id:string, credentials:string) =>{
+   try {
+     const response = await axios.get(
+       `http://127.0.0.1:8000/bookings/bookingRequests/details/${id}/`,
+
+       {
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: credentials,
+         },
+       }
+     );
+     return response;
+   } catch (error) {
+     return error;
+   } 
+}

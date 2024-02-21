@@ -142,9 +142,9 @@ const BookingCard = (props: BookingCardProps) => {
           <Button variant="default" className="mr-2 bg-green-600" onClick={()=>handleViewDetails()}>
             View Details
           </Button>
-          {props.Btype == "upcoming" && (
+          {props.Btype == "upcoming" && (props.approval=="APPROVED" || props.approval=="PENDING") && (
             <Button variant="destructive" className="">
-              Delete
+              Cancel
             </Button>
           )}
         </div>

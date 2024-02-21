@@ -1,6 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
-import { toast } from "sonner";
-
 import React, { useState } from "react";
 import {
     Card,
@@ -92,23 +89,21 @@ const BuildingCard = ({
         setDeleteDialogueOpen(false);
         setDeleteBuildingLoading(true);
         try {
-          const token = localStorage.getItem("token");
-          const response: any = DeleteBuilding(
-            id,
-            token as string
-          ).then((res: any) => {
-            const resp = res;
-            if (resp.status == 200) {
-              console.log(resp);
-              setDeleteBuildingLoading(false);
-              setDeleteBuildingAlert(true);
-              // setNewBuilding("");
-              setResetBuilding();
-              setTimeout(() => {
-                setDeleteBuildingAlert(false);
-              }, 2000);
-            }
-          });
+            const token = localStorage.getItem("token");
+            const response: any = DeleteBuilding(id, token as string).then(
+                (res: any) => {
+                    const resp = res;
+                    if (resp.status == 200) {
+                        console.log(resp);
+                        setDeleteBuildingLoading(false);
+                        setDeleteBuildingAlert(true);
+                        setResetBuilding();
+                        setTimeout(() => {
+                            setDeleteBuildingAlert(false);
+                        }, 2000);
+                    }
+                }
+            );
         } catch (error: any) {
             setIsDeleteBuildingError(true);
             setDeleteBuildingError(error.response.data.response_message);

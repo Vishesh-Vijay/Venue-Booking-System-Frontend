@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 interface BookingRequestCardProps {
   BookingId: string;
 //   status:string
+request_id:string
 }
 import { useRouter } from "next/navigation";
 import { IoLocateOutline, IoLocationOutline } from "react-icons/io5";
@@ -132,7 +133,7 @@ const BookingRequestCard = (props: BookingRequestCardProps) => {
     }
   }
   const handleViewDetails = () => {
-    router.push(`/bookings/requests/${props.BookingId}`);
+    router.push(`/bookings/requests/${props.request_id}`);
   };
   return (
     <div className="w-full">

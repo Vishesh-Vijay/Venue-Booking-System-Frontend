@@ -50,6 +50,7 @@ const BookingRequests = () => {
                   <BookingRequestCard
                     BookingId={request.booking_id}
                     // status={request.request_status}
+                    request_id={request.id}
                   />
                 </div>
               ))
@@ -63,6 +64,7 @@ const BookingRequests = () => {
                 <div key={request.id} className="mt-4 px-20 w-full">
                   <BookingRequestCard
                     BookingId={request.booking_id}
+                    request_id={request.id}
                     // status={request.request_status}
                   />
                 </div>
