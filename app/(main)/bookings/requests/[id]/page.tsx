@@ -14,6 +14,7 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { CiTimer } from "react-icons/ci";
 import { GiDuration } from "react-icons/gi";
 import { toast } from "sonner";
+import moment from "moment-timezone"
 interface BookingDetailsProps {
   booking_status?: string;
   booking_time?: string;
@@ -66,7 +67,7 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
         const resp = res;
         if (resp.status == 200) {
           const data = resp.data.response_data;
-          // console.log(data);
+          console.log(data);
           setBookingDetails(data);
           //   bookingDetails?.booking_status==""?bookingDetails.booking_status = ""
         }
@@ -76,20 +77,24 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
   }, [params.id, updatePage,bookingRequestDetails?.booking_id]);
   function convertISOToUTC(isoTimeString: Date) {
     const date = new Date(isoTimeString);
+    console.log(date)
+    // const year = date.getUTCFullYear();
+    // const month = date.getUTCMonth() + 1; // Adding 1 because getUTCMonth() returns zero-based month index
+    // const day = date.getUTCDate();
+    // const dateString = moment(date).tz('Asia/Kolkata').format('YYYY-MM-DD');
+    const dateString = moment(date).utc().format('YYYY-MM-DD');
+    // const hourString = moment(date).tz('Asia/Kolkata').format('HH:mm');
+    const hourString = moment(date).utc().format('HH:mm');
 
-    const year = date.getUTCFullYear();
-    const month = date.getUTCMonth() + 1; // Adding 1 because getUTCMonth() returns zero-based month index
-    const day = date.getUTCDate();
-
-    const hours =
-      date.getMinutes() >= 30 ? date.getHours() - 5 : date.getHours() - 6;
-    const minutes =
-      date.getMinutes() >= 30 ? date.getMinutes() - 30 : 30 + date.getMinutes();
+    // const hours =
+    //   date.getMinutes() >= 30 ? date.getHours() - 5 : date.getHours() - 6;
+    // const minutes =
+    //   date.getMinutes() >= 30 ? date.getMinutes() - 30 : 30 + date.getMinutes();
     // const seconds = date.getUTCSeconds();
 
     return {
-      date: year + "-" + month + "-" + day,
-      time: hours + ":" + (minutes < 10 ? "0" + minutes : minutes),
+      date: dateString,
+      time: hourString,
     };
   }
   const date = new Date(bookingDetails?.event_time as string);
@@ -175,7 +180,7 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
               <div className="flex flex-col justify-center items-center mr-2">
                 <div className="flex items-center justify-center">
                   <CiTimer className="w-5 h-5 text-gray-400 mr-1 mt-0.5" />
-                  <span className="text-gray-400">{timeString} hrs</span>
+                  <span className="text-gray-400">{String(bookingDetails.event_duration)} hrs</span>
                 </div>
               </div>
             </div>
