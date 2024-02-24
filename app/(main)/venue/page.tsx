@@ -141,7 +141,7 @@ const Venue = () => {
             const resp: any = res;
             if (resp.status == 200) {
               const data = resp.data.response_data;
-              // console.log(data);
+              // console.log(data)  ;
 
               setBuildings(data);
               // setLoading(false);
@@ -169,17 +169,30 @@ const Venue = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const userDetails: any = await getAllVenues(token as string).then(
-          (res: any) => {
-            const resp: any = res;
-            if (resp.status == 200) {
-              const data = resp.data.response_data;
-              setVenues(data);
-              setLoading(false);
+        if(localStorage.getItem("admin")=="yes"){
+          const response: any = await getAllVenues(token as string).then(
+            (res: any) => {
+              const resp: any = res;
+              if (resp.status == 200) {
+                const data = resp.data.response_data;
+                setVenues(data);
+                setLoading(false);
+              }
             }
-          }
-        );
-
+          );
+        }
+        else{
+         const response: any = await getVenuesByAuthority(token as string).then(
+           (res: any) => {
+             const resp: any = res;
+             if (resp.status == 200) {
+               const data = resp.data.response_data;
+               setVenues(data);
+               setLoading(false);
+             }
+           }
+         ); 
+        }
         // console.log(userDetails);
       } catch (error: any) {
         // Handle error
@@ -197,16 +210,14 @@ const Venue = () => {
       <h1 className="text-center mt-4 font-semibold text-4xl">Venues</h1>
       <div className="w-full flex justify-center mt-6">
         <Dialog open={open} onOpenChange={setOpen}>
-          {addVenueLoading == true ? (
-            <CircularProgress />
-          ) : (
+          {localStorage.getItem("admin")=="yes" && 
             <DialogTrigger>
               <Button className="bg-green-400 flex items-center justify-center">
                 <IoAddCircleOutline className="mr-1 w-4 h-4 mt-0.5" />
                 <span>Add New Venue</span>
               </Button>
             </DialogTrigger>
-          )}
+          }
           <DialogContent style={{ maxHeight: "70vh", overflowY: "auto" }}>
             <DialogHeader>
               <DialogTitle>Create New Venue</DialogTitle>

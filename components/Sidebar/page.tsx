@@ -71,7 +71,7 @@ const Sidebar = ({ admin,authority }: SidebarProps) => {
                                 variant={
                                     pathname.startsWith("/bookings") &&
                                     pathname !== "/bookings/new" &&
-                                    pathname !== "/bookings/requests"
+                                    !pathname.startsWith("/bookings/requests")
                                         ? "secondary"
                                         : "ghost"
                                 }
@@ -100,7 +100,7 @@ const Sidebar = ({ admin,authority }: SidebarProps) => {
                             {(admin == true || authority==true) && (
                                 <Button
                                     variant={
-                                        pathname === "/bookings/requests"
+                                        pathname === "/bookings/requests" || pathname.startsWith("/bookings/requests")
                                             ? "secondary"
                                             : "ghost"
                                     }

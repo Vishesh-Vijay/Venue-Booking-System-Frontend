@@ -283,6 +283,7 @@ export const getAllVenues = async (credentials: string) => {
     }
 };
 
+// export const getVenuesByAuthority = async()
 export const getVenueDetailsById = async (
     venue_id: string,
     credentials: string
