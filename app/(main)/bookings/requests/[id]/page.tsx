@@ -180,7 +180,7 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
               <div className="flex flex-col justify-center items-center mr-2">
                 <div className="flex items-center justify-center">
                   <CiTimer className="w-5 h-5 text-gray-400 mr-1 mt-0.5" />
-                  <span className="text-gray-400">{String(bookingDetails.event_duration)} hrs</span>
+                  <span className="text-gray-400">{timeString} hrs</span>
                 </div>
               </div>
             </div>

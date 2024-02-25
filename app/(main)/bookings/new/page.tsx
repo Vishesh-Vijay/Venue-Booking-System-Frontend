@@ -125,22 +125,31 @@ const AddNewBooking = () => {
           token as string
         ).then((res: any) => {
           const resp = res;
+          console.log(resp.data.response_data)
           if (resp.status == 200) {
-            toast("Booking Created Sucessfully! \n Please check the status of your booking for further updates", {
-              style: {
-                backgroundColor: "#00fa9a",
-              },
-            }); 
-            setTitle("");
-            setDescription("");
-            setIsError(false)
-            setVenueType("");
-            setStartTime("00:00");
-            setDuration("");
-            setDate(new Date());
-            setExpectedStrength("");
-            setBookingType("");
-            
+            if(resp.data.response_data.booking_status==="AUTOMATICALLY_DECLINED"){
+              toast("Booking Declined Automatically due to conflicting time with another event! \n", {
+                style: {
+                  backgroundColor: "#eb575a",
+                },
+              }); 
+            }
+            else{
+              toast("Booking Created Sucessfully! \n Please check the status of your booking for further updates", {
+                style: {
+                  backgroundColor: "#00fa9a",
+                },
+              }); 
+              setTitle("");
+              setDescription("");
+              setIsError(false)
+              setVenueType("");
+              setStartTime("00:00");
+              setDuration("");
+              setDate(new Date());
+              setExpectedStrength("");
+              setBookingType("");
+            }
           }
         });
       } catch (error: any) {
