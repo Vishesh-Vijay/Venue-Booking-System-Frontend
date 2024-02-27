@@ -33,10 +33,11 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
-import { DeleteUser } from "@/utils/utils";
+import { DeleteUser, UpdateExistingUser } from "@/utils/utils";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
+import { toast } from "sonner";
 interface UserCardProps {
     email: string;
     name: string;
@@ -68,6 +69,50 @@ const UserCard = ({
         [isDeleteUserError, setIsDeleteUserError] = useState(false),
         [deleteUserError, setDeleteUserError] = useState(""),
         [detailsDialogueOpen, setDetailsDialogueOpen] = useState(false);
+
+    const [newEmail, setNewEmail] = useState(email),
+        [newName, setNewName] = useState(name),
+        [newParent, setNewParent] = useState(parent),
+        [admin, setAdmin] = useState(String(is_admin)),
+        [authority, setAuthority] = useState(String(is_authority)),
+        [parentPermisssion, setParentPermission] = useState(
+            String(require_parent_permission)
+        );
+    const handleUpdateUser = async () => {
+        setUpdateDialogueOpen(false);
+        setUpdateUserLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            const response: any = UpdateExistingUser(
+                newEmail,
+                newName,
+                newParent,
+                parentPermisssion,
+                admin,
+                authority,
+                token as string
+            ).then((res: any) => {
+                const resp = res;
+                if (resp.status === 200) {
+                    console.log(resp);
+                    setUpdateUserLoading(false);
+                    setUpdateUserAlert(true);
+                    setResetUser();
+                    setTimeout(() => {
+                        setUpdateUserAlert(false);
+                    }, 2000);
+                }
+            });
+        } catch (error: any) {
+            toast(`${error.response.data.response_message}`, {
+                style: {
+                    backgroundColor: "red",
+                },
+            });
+        } finally {
+            setUpdateUserLoading(false);
+        }
+    };
     const handleDeleteUser = async () => {
         setDeleteDialogueOpen(false);
         setDeleteUserLoading(true);
@@ -169,7 +214,149 @@ const UserCard = ({
                                         fields you want to update!
                                     </DialogDescription>
                                 </DialogHeader>
-                                {/* <DialogFooter>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label
+                                            htmlFor="email"
+                                            className="text-center"
+                                        >
+                                            Email:
+                                        </Label>
+                                        <Input
+                                            id="email"
+                                            placeholder="New Email"
+                                            value={newEmail}
+                                            className="col-span-3"
+                                            onChange={(e) => {
+                                                setNewEmail(e.target.value);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label
+                                            htmlFor="name"
+                                            className="text-center"
+                                        >
+                                            Name:
+                                        </Label>
+                                        <Input
+                                            id="name"
+                                            placeholder="New Name"
+                                            value={newName}
+                                            className="col-span-3"
+                                            onChange={(e) => {
+                                                setNewName(e.target.value);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label
+                                            htmlFor="parent"
+                                            className="text-center"
+                                        >
+                                            Parent:
+                                        </Label>
+                                        <Input
+                                            id="name"
+                                            placeholder="New Parent"
+                                            value={newParent}
+                                            className="col-span-3"
+                                            onChange={(e) => {
+                                                setNewParent(e.target.value);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label
+                                            htmlFor="type"
+                                            className="text-center"
+                                        >
+                                            Parent Permission?:
+                                        </Label>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="outline">
+                                                    Select
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-56">
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuRadioGroup
+                                                    value={parentPermisssion}
+                                                    onValueChange={
+                                                        setParentPermission
+                                                    }
+                                                >
+                                                    <DropdownMenuRadioItem value="true">
+                                                        Yes
+                                                    </DropdownMenuRadioItem>
+                                                    <DropdownMenuRadioItem value="false">
+                                                        No
+                                                    </DropdownMenuRadioItem>
+                                                </DropdownMenuRadioGroup>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label
+                                            htmlFor="type"
+                                            className="text-center"
+                                        >
+                                            is Admin?:
+                                        </Label>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="outline">
+                                                    Select
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-56">
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuRadioGroup
+                                                    value={admin}
+                                                    onValueChange={setAdmin}
+                                                >
+                                                    <DropdownMenuRadioItem value="true">
+                                                        Yes
+                                                    </DropdownMenuRadioItem>
+                                                    <DropdownMenuRadioItem value="false">
+                                                        No
+                                                    </DropdownMenuRadioItem>
+                                                </DropdownMenuRadioGroup>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label
+                                            htmlFor="type"
+                                            className="text-center"
+                                        >
+                                            is Authority?:
+                                        </Label>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="outline">
+                                                    Select
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-56">
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuRadioGroup
+                                                    value={authority}
+                                                    onValueChange={setAuthority}
+                                                >
+                                                    <DropdownMenuRadioItem value="true">
+                                                        Yes
+                                                    </DropdownMenuRadioItem>
+                                                    <DropdownMenuRadioItem value="false">
+                                                        No
+                                                    </DropdownMenuRadioItem>
+                                                </DropdownMenuRadioGroup>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                </div>
+                                <DialogFooter>
                                     <Button
                                         type="submit"
                                         className="bg-green-400"
@@ -180,7 +367,6 @@ const UserCard = ({
                                     <Button
                                         type="reset"
                                         onClick={() => {
-                                            setNewVenue(name);
                                             setUpdateDialogueOpen(
                                                 (val) => !val
                                             );
@@ -188,7 +374,7 @@ const UserCard = ({
                                     >
                                         Cancel
                                     </Button>
-                                </DialogFooter> */}
+                                </DialogFooter>
                             </DialogContent>
                         </Dialog>
                         <Dialog

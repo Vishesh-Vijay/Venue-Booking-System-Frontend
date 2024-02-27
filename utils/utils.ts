@@ -142,11 +142,28 @@ export const addNewUser = async (
         //  throw error;
     }
 };
-export const UpdateExistingUser = async (credentials: string) => {
+export const UpdateExistingUser = async (
+    email: string,
+    name: string,
+    parent: string,
+    require_parent_permission: string,
+    is_admin: string,
+    is_authority: string,
+    credentials: string
+) => {
     try {
         const response = await axios.post(
             `http://127.0.0.1:8000/users/update/`,
-            {},
+            {
+                email,
+                name,
+                parent,
+                require_parent_permission:
+                    require_parent_permission === "true" ? true : false,
+                is_admin: is_admin === "true" ? true : false,
+                is_authority: is_authority === "true" ? true : false,
+                credentials,
+            },
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -470,59 +487,65 @@ export const getBookingRequestsByUser = async (
 };
 
 export const updateBookingRequest = async (
-  id: string,
-  request_status: string,
-  credentials: string
+    id: string,
+    request_status: string,
+    credentials: string
 ) => {
-  try {
-    const response = await axios.post(
-      `http://127.0.0.1:8000/bookings/bookingRequests/update/`,
-      { id, request_status },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: credentials,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    return error;
-  }
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/bookings/bookingRequests/update/`,
+            { id, request_status },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
 };
 
-export const getBookingRequestDetails = async(id:string, credentials:string) =>{
-   try {
-     const response = await axios.get(
-       `http://127.0.0.1:8000/bookings/bookingRequests/details/${id}/`,
+export const getBookingRequestDetails = async (
+    id: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.get(
+            `http://127.0.0.1:8000/bookings/bookingRequests/details/${id}/`,
 
-       {
-         headers: {
-           "Content-Type": "application/json",
-           Authorization: credentials,
-         },
-       }
-     );
-     return response;
-   } catch (error) {
-     return error;
-   } 
-}
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
 
-export const cancelBooking = async(booking_id:string,credentials:string)=>{
-   try {
-     const response = await axios.post(
-       `http://127.0.0.1:8000/bookings/cancel/`,
-       { booking_id },
-       {
-         headers: {
-           "Content-Type": "application/json",
-           Authorization: credentials,
-         },
-       }
-     );
-     return response;
-   } catch (error) {
-     return error;
-   } 
-}
+export const cancelBooking = async (
+    booking_id: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/bookings/cancel/`,
+            { booking_id },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
