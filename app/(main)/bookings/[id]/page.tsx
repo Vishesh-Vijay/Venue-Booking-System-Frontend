@@ -127,7 +127,7 @@ const BookingDetails = ({params}:{params:{id:string}}) => {
               <h1>
                 {" "}
                 <span className="font-semibold">Duration:</span>{" "}
-                {String(bookingDetails.event_duration)} hrs
+                {String(bookingDetails.event_duration)} Minutes
               </h1>
               <h1>
                 {" "}
