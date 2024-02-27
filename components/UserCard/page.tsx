@@ -389,7 +389,7 @@ const UserCard = ({
                                 <DialogHeader>
                                     <DialogTitle>Delete User</DialogTitle>
                                     <DialogDescription>
-                                        Are you sure you want to Delete this
+                                        Are you sure you want to delete this
                                         User?
                                     </DialogDescription>
                                 </DialogHeader>
