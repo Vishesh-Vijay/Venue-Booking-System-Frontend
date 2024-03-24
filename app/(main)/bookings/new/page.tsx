@@ -198,128 +198,132 @@ const AddNewBooking = () => {
 
         {showDetailsForm && (
           <>
-          <div>
-            <div className="grid grid-cols-2 gap-y-12 gap-x-12 w-full p-5 mt-6">
-              <div className="w-full h-full">
-                <Label>Title</Label>
-                <Input
-                  name="Title"
-                  onChange={(e) => setTitle(e.target.value)}
-                  value={title}
-                  className="w-2/3"
-                />
-              </div>
-              <div className="w-full h-full">
-                <Label htmlFor="message">Description</Label>
-                <Textarea
-                  placeholder="Type your message here."
-                  id="message"
-                  className="w-2/3"
-                  value={description}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                />
-              </div>
-              <div className="w-full h-full">
-                <Label>Event Date</Label>
-                <br />
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-2/3 justify-start text-left font-normal"
-                      )}
-                    >
-                      <IoCalendarOutline className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="w-full h-full">
-                <Label>Start Time (24 HR format)</Label>
-                <Input
-                  type="time"
-                  name="StartTime"
-                  onChange={(e: {
-                    target: { value: React.SetStateAction<string> };
-                  }) => setStartTime(e.target.value)}
-                  value={startTime}
-                  className="w-2/3"
-                />
-              </div>
+              <div className="grid grid-cols-2 gap-y-12 gap-x-12 w-full p-5 mt-6">
+                <div className="w-full h-full">
+                  <Label>Title</Label>
+                  <Input
+                    name="Title"
+                    onChange={(e) => setTitle(e.target.value)}
+                    value={title}
+                    className="w-2/3"
+                  />
+                </div>
+                <div className="w-full h-full">
+                  <Label htmlFor="message">Description</Label>
+                  <Textarea
+                    placeholder="Type your message here."
+                    id="message"
+                    className="w-2/3"
+                    value={description}
+                    onChange={(e) => {
+                      setDescription(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="w-full h-full">
+                  <Label>Event Date</Label>
+                  <br />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-2/3 justify-start text-left font-normal"
+                        )}
+                      >
+                        <IoCalendarOutline className="mr-2 h-4 w-4" />
+                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="w-full h-full">
+                  <Label>Start Time (24 HR format)</Label>
+                  <Input
+                    type="time"
+                    name="StartTime"
+                    onChange={(e: {
+                      target: { value: React.SetStateAction<string> };
+                    }) => setStartTime(e.target.value)}
+                    value={startTime}
+                    className="w-2/3"
+                  />
+                </div>
 
-          <div className="w-full h-full">
-            <Label>Booking Type</Label>
-            <Select value={bookingType} onValueChange={setBookingType}>
-              <SelectTrigger className="w-2/3">
-                <SelectValue placeholder="Select Booking Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="academic">Academic</SelectItem>
-                <SelectItem value="workshop">Workshop</SelectItem>
-                <SelectItem value="event">Event</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="w-full h-full">
-            <Label>Event Duration</Label>
-            <Input
-              name="Duration"
-              onChange={(e) => setDuration(e.target.value)}
-              value={duration}
-              className="w-2/3"
-            />
-          </div>
-          <div className="w-full h-full">
-            <Label>Venue</Label>
-            <Select value={venueType} onValueChange={setVenueType}>
-              <SelectTrigger className="w-2/3">
-                <SelectValue placeholder="Select Venue" />
-              </SelectTrigger>
-              <SelectContent>
-                {venues.length > 0 ? (
-                  venues.map((venue, index) => (
-                    <div key={index}>
-                      <SelectItem value={venue.name}>{venue.name}</SelectItem>
-                    </div>
-                  ))
-                ) : (
-                  <p>No venues to select! Create one first</p>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="w-full h-full">
-            <Label>Expected Strength</Label>
-            <Input
-              type="textbox"
-              name="expectedStrength"
-              placeholder="Expected Strength"
-              onChange={(e) => setExpectedStrength(e.target.value)}
-              value={expectedStrength}
-              className="w-2/3"
-            />
-          </div>
-        </div>
+                <div className="w-full h-full">
+                  <Label>Booking Type</Label>
+                  <Select value={bookingType} onValueChange={setBookingType}>
+                    <SelectTrigger className="w-2/3">
+                      <SelectValue placeholder="Select Booking Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="academic">Academic</SelectItem>
+                      <SelectItem value="workshop">Workshop</SelectItem>
+                      <SelectItem value="event">Event</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="w-full h-full">
+                  <Label>Event Duration</Label>
+                  <Input
+                    name="Duration"
+                    onChange={(e) => setDuration(e.target.value)}
+                    value={duration}
+                    className="w-2/3"
+                  />
+                </div>
+                <div className="w-full h-full">
+                  <Label>Venue</Label>
+                  <Select value={venueType} onValueChange={setVenueType}>
+                    <SelectTrigger className="w-2/3">
+                      <SelectValue placeholder="Select Venue" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {venues.length > 0 ? (
+                        venues.map((venue, index) => (
+                          <div key={index}>
+                            <SelectItem value={venue.name}>
+                              {venue.name}
+                            </SelectItem>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No venues to select! Create one first</p>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="w-full h-full">
+                  <Label>Expected Strength</Label>
+                  <Input
+                    type="textbox"
+                    name="expectedStrength"
+                    placeholder="Expected Strength"
+                    onChange={(e) => setExpectedStrength(e.target.value)}
+                    value={expectedStrength}
+                    className="w-2/3"
+                  />
+                </div>
+              </div>
+            <div className="text-center mt-6 flex justify-center items-center gap-x-4">
+              <Button onClick={handleSubmit}>Submit</Button>
+              <Button onClick={()=>{
+                setSelectedVenue("");
+                setShowDetailsForm(false);
+              }}>Back</Button>
+            </div>
+          </>
+        )}
       </div>
-      <div className="text-center mt-6">
-        <Button onClick={handleSubmit}>Submit</Button>
-      </div>
-      </>
-        )} 
-    </div>
     </div>
   );
 };
