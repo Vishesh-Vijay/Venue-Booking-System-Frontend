@@ -301,23 +301,7 @@ export const getAllVenues = async (credentials: string) => {
   }
 };
 
-export const getVenuesByAuthority = async (credentials:string,authority_id:string) => {
-  try {
-    const response = await axios.get(
-      `http://127.0.0.1:8000/venues/details/byAuthority/${authority_id}/`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: credentials,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    console.log(error);
-    // throw error;
-  }
-};
+
 export const getVenueDetailsById = async (
   venue_id: string,
   credentials: string
@@ -337,25 +321,6 @@ export const getVenueDetailsById = async (
     console.log(error);
     // throw error;
   }
-};
-export const getVenuesByAuthority = async (
-    authority_id: string,
-    credentials: string
-) => {
-    try {
-        const response = await axios.get(
-            `http://127.0.0.1:8000/venues/details/byAuthority/${authority_id}/`,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: credentials,
-                },
-            }
-        );
-        return response;
-    } catch (error) {
-        console.log(error);
-    }
 };
 export const getVenuesByAuthority = async (
     authority_id: string,

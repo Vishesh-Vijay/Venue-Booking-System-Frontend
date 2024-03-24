@@ -141,7 +141,7 @@ const AddNewBooking = () => {
                             );
                             setTitle("");
                             setDescription("");
-                            setIsError(false);
+                            // setIsError(false);
                             setVenueType("");
                             setStartTime("00:00");
                             setDuration("");
@@ -198,6 +198,7 @@ const AddNewBooking = () => {
 
         {showDetailsForm && (
           <>
+          <div>
             <div className="grid grid-cols-2 gap-y-12 gap-x-12 w-full p-5 mt-6">
               <div className="w-full h-full">
                 <Label>Title</Label>
@@ -316,7 +317,9 @@ const AddNewBooking = () => {
       <div className="text-center mt-6">
         <Button onClick={handleSubmit}>Submit</Button>
       </div>
-     
+      </>
+        )} 
+    </div>
     </div>
   );
 };
