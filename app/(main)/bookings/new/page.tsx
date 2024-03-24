@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { IoCalendarOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { format, isPast } from "date-fns";
+import { format } from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -20,11 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import TimePicker from "react-time-picker";
-import Alert from "@mui/material/Alert";
 import { Textarea } from "@/components/ui/textarea";
 import { createBooking, getAllVenues } from "@/utils/utils";
 import { toast } from "sonner";
+
 interface Venue {
   authority_id: string; //email
   building_id: string; //id
@@ -39,33 +37,19 @@ interface Venue {
   seating_capacity: Number;
   venue_type: string;
 }
+
 const AddNewBooking = () => {
   const [date, setDate] = React.useState<Date>();
   const [startTime, setStartTime] = React.useState("00:00");
-  // const [endTime, setEndTime] = React.useState("00:00");
   const [expectedStrength, setExpectedStrength] = React.useState("");
   const [bookingType, setBookingType] = React.useState("");
-  const [venueType, setVenueType] = React.useState("");
-  const [showAlert, setShowAlert] = React.useState(false);
-
-  const [isError, setIsError] = React.useState(false);
-  const [error, setError] = React.useState("");
-  const currentDate = new Date();
+  const [selectedVenue, setSelectedVenue] = useState("");
+  const [showDetailsForm, setShowDetailsForm] = useState(false);
   const [duration, setDuration] = useState("0");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [venues, setVenues] = useState<Array<Venue>>([]);
-
-  // console.log(
-  //   title,
-  //   description,
-  //   date,
-  //   startTime,
-  //   // endTime,
-  //   bookingType,
-  //   venueType,
-  //   expectedStrength
-  // );
+  const [venueType, setVenueType] = useState("");
   useEffect(() => {
     const getAllVenue = async () => {
       try {
@@ -73,9 +57,8 @@ const AddNewBooking = () => {
         const response = await getAllVenues(token as string).then(
           (res: any) => {
             const resp = res;
-            if (resp.status == 200) {
+            if (resp.status === 200) {
               const data = resp.data.response_data;
-              console.log(data);
               setVenues(data);
             }
           }
@@ -86,7 +69,13 @@ const AddNewBooking = () => {
     };
     getAllVenue();
   }, []);
-  const handleSubmit = async () => {
+
+  const handleVenueSelect = (venue: string) => {
+    setSelectedVenue(venue);
+    setShowDetailsForm(true);
+  };
+
+  const handleSubmit:any = async () => {
     if (date != null && startTime != null) {
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
@@ -105,12 +94,13 @@ const AddNewBooking = () => {
         second: "2-digit",
         timeZone: "UTC",
       }).format(combinedDateTime);
-      console.log(formattedDateTime);
-      // console.log("Form submitted")
+
       try {
         const token = localStorage.getItem("token");
         const user = localStorage.getItem("user") as string;
-        const venueId = venues.find((venu) => venu.name === venueType) as Venue;
+        const venueId = venues.find(
+          (venu) => venu.name === selectedVenue
+        ) as Venue;
         const response = await createBooking(
           {
             title: title,
@@ -120,32 +110,35 @@ const AddNewBooking = () => {
             booking_type: bookingType.toUpperCase(),
             event_time: combinedDateTime,
             event_duration: parseInt(duration, 10),
-            expected_strength: parseInt(duration, 10),
+            expected_strength: parseInt(expectedStrength, 10),
           },
           token as string
         ).then((res: any) => {
           const resp = res;
-          if (resp.status == 200) {
-            toast("Booking Created Sucessfully! \n Please check the status of your booking for further updates", {
-              style: {
-                backgroundColor: "#00fa9a",
-              },
-            }); 
+          if (resp.status === 200) {
+            toast(
+              "Booking Created Successfully! \n Please check the status of your booking for further updates",
+              {
+                style: {
+                  backgroundColor: "#00fa9a",
+                },
+              }
+            );
             setTitle("");
             setDescription("");
-            setIsError(false)
+            setSelectedVenue("");
+            setShowDetailsForm(false);
             setVenueType("");
             setStartTime("00:00");
             setDuration("");
             setDate(new Date());
             setExpectedStrength("");
             setBookingType("");
-            
           }
         });
       } catch (error: any) {
         toast(
-          `${error.response?.data?.response_message || "An error occured"}`,
+          `${error.response?.data?.response_message || "An error occurred"}`,
           {
             style: {
               backgroundColor: "red",
@@ -154,7 +147,6 @@ const AddNewBooking = () => {
         );
       }
     }
-    //
   };
 
   return (
@@ -163,90 +155,10 @@ const AddNewBooking = () => {
         Create New Booking
       </h1>
       <div className="flex flex-col justify-center items-center w-full">
-        <div className="grid grid-cols-2 gap-y-12 gap-x-12 w-full  p-5 mt-6">
-          <div className="w-full h-full">
-            <Label>Title</Label>
-            <Input
-              name="Title"
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-              className="w-2/3"
-            />
-          </div>
-          <div className="w-full h-full">
-            <Label htmlFor="message">Description</Label>
-            <Textarea
-              placeholder="Type your message here."
-              id="message"
-              className="w-2/3"
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            />
-          </div>
-          <div className="w-full h-full">
-            <Label>Event Date</Label>
-            <br />
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn("w-2/3 justify-start text-left font-normal")}
-                >
-                  <IoCalendarOutline className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <div className="w-full h-full">
-            <Label>Start Time (24 HR format)</Label>
-            <Input
-              type="time"
-              name="StartTime"
-              onChange={(e: {
-                target: { value: React.SetStateAction<string> };
-              }) => setStartTime(e.target.value)}
-              value={startTime}
-              className="w-2/3"
-            />
-          </div>
-
-          <div className="w-full h-full">
-            <Label>Booking Type</Label>
-            <Select value={bookingType} onValueChange={setBookingType}>
-              <SelectTrigger className="w-2/3">
-                <SelectValue placeholder="Select Booking Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="academic">Academic</SelectItem>
-                <SelectItem value="workshop">Workshop</SelectItem>
-                <SelectItem value="event">Event</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="w-full h-full">
-            <Label>Event Duration</Label>
-            <Input
-              name="Duration"
-              onChange={(e) => setDuration(e.target.value)}
-              value={duration}
-              className="w-2/3"
-            />
-          </div>
-          <div className="w-full h-full">
-            <Label>Venue</Label>
-            <Select value={venueType} onValueChange={setVenueType}>
+        {!showDetailsForm && (
+          <div className="w-48 flex justify-center items-center h-48 ">
+            <Label className="mr-2">Venue</Label>
+            <Select value={selectedVenue} onValueChange={handleVenueSelect}>
               <SelectTrigger className="w-2/3">
                 <SelectValue placeholder="Select Venue" />
               </SelectTrigger>
@@ -263,23 +175,115 @@ const AddNewBooking = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="w-full h-full">
-            <Label>Expected Strength</Label>
-            <Input
-              type="textbox"
-              name="expectedStrength"
-              placeholder="Expected Strength"
-              onChange={(e) => setExpectedStrength(e.target.value)}
-              value={expectedStrength}
-              className="w-2/3"
-            />
-          </div>
-        </div>
+        )}
+
+        {showDetailsForm && (
+          <>
+            <div className="grid grid-cols-2 gap-y-12 gap-x-12 w-full p-5 mt-6">
+              <div className="w-full h-full">
+                <Label>Title</Label>
+                <Input
+                  name="Title"
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title}
+                  className="w-2/3"
+                />
+              </div>
+              <div className="w-full h-full">
+                <Label htmlFor="message">Description</Label>
+                <Textarea
+                  placeholder="Type your message here."
+                  id="message"
+                  className="w-2/3"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="w-full h-full">
+                <Label>Event Date</Label>
+                <br />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-2/3 justify-start text-left font-normal"
+                      )}
+                    >
+                      <IoCalendarOutline className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="w-full h-full">
+                <Label>Start Time (24 HR format)</Label>
+                <Input
+                  type="time"
+                  name="StartTime"
+                  onChange={(e: {
+                    target: { value: React.SetStateAction<string> };
+                  }) => setStartTime(e.target.value)}
+                  value={startTime}
+                  className="w-2/3"
+                />
+              </div>
+
+              <div className="w-full h-full">
+                <Label>Booking Type</Label>
+                <Select value={bookingType} onValueChange={setBookingType}>
+                  <SelectTrigger className="w-2/3">
+                    <SelectValue placeholder="Select Booking Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="academic">Academic</SelectItem>
+                    <SelectItem value="workshop">Workshop</SelectItem>
+                    <SelectItem value="event">Event</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full h-full">
+                <Label>Event Duration</Label>
+                <Input
+                  name="Duration"
+                  onChange={(e) => setDuration(e.target.value)}
+                  value={duration}
+                  className="w-2/3"
+                />
+              </div>
+              <div className="w-full h-full">
+                <Label>Expected Strength</Label>
+                <Input
+                  type="textbox"
+                  name="expectedStrength"
+                  placeholder="Expected Strength"
+                  onChange={(e) => setExpectedStrength(e.target.value)}
+                  value={expectedStrength}
+                  className="w-2/3"
+                />
+              </div>
+            </div>
+            <div className="text-center mt-6 flex justify-center items-center gap-x-4">
+              <Button onClick={handleSubmit}>Submit</Button>
+              <Button onClick={()=>{
+               setSelectedVenue("")
+               setShowDetailsForm(false); 
+              }}>Back</Button>
+            </div>
+          </>
+        )}
       </div>
-      <div className="text-center mt-6">
-        <Button onClick={handleSubmit}>Submit</Button>
-      </div>
-     
     </div>
   );
 };

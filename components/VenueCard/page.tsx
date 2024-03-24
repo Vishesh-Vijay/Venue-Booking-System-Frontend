@@ -46,6 +46,7 @@ import {
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
+import { toast } from "sonner";
 
 interface Building {
     id: string;
@@ -179,9 +180,9 @@ const VenueCard = ({
         try {
             const token = localStorage.getItem("token");
             const authority_email = localStorage.getItem("user");
-            const build_id: string = buildings.find(
+            const build_id: string = buildings.length>0?buildings.find(
                 (ele) => ele.name == building
-            ).id;
+            )?.id as string:"";
             const response: any = UpdateExistingVenue(
                 id,
                 newVenue,
@@ -201,21 +202,25 @@ const VenueCard = ({
                 if (resp.status == 200) {
                     console.log(resp);
                     setUpdateVenueLoading(false);
-                    setUpdateVenueAlert(true);
+                    toast("Venue Upated Sucessfully!", {
+                      style: {
+                        backgroundColor: "#00fa9a",
+                      },
+                    });
                     setNewVenue("");
                     setResetVenue();
-                    setTimeout(() => {
-                        setUpdateVenueAlert(false);
-                    }, 2000);
+                    
                 }
             });
         } catch (error: any) {
-            setIsUpdateVenueError(true);
-            setUpdateVenueError(error.response.data.response_message);
-            setTimeout(() => {
-                setIsUpdateVenueError(false);
-                setUpdateVenueError("");
-            }, 3000);
+            toast(
+              `${error.response?.data?.response_message || "An error occured"}`,
+              {
+                style: {
+                  backgroundColor: "red",
+                },
+              }
+            );
         } finally {
             setUpdateVenueLoading(false);
         }
@@ -231,22 +236,26 @@ const VenueCard = ({
                     if (resp.status == 200) {
                         console.log(resp);
                         setDeleteVenueLoading(false);
-                        setDeleteVenueAlert(true);
+                        toast("Venue Deleted Sucessfully!", {
+                          style: {
+                            backgroundColor: "#00fa9a",
+                          },
+                        });
                         // setNewVenue("");
                         setResetVenue();
-                        setTimeout(() => {
-                            setDeleteVenueAlert(false);
-                        }, 2000);
+                        
                     }
                 }
             );
         } catch (error: any) {
-            setIsDeleteVenueError(true);
-            setDeleteVenueError(error.response.data.response_message);
-            setTimeout(() => {
-                setIsDeleteVenueError(false);
-                setDeleteVenueError("");
-            }, 3000);
+            toast(
+              `${error.response?.data?.response_message || "An error occured"}`,
+              {
+                style: {
+                  backgroundColor: "red",
+                },
+              }
+            );
         } finally {
             setDeleteVenueLoading(false);
         }
@@ -270,39 +279,7 @@ const VenueCard = ({
                             ) : (
                                 <CircularProgress />
                             )}
-                            {updateVenueAlert && !isUpdateVenueError && (
-                                <Alert
-                                    severity="success"
-                                    className="mt-4 absolute right-1 top-8"
-                                >
-                                    Venue Updated
-                                </Alert>
-                            )}
-                            {isUpdateVenueError && (
-                                <Alert
-                                    severity="error"
-                                    className="absolute right-1 top-8"
-                                >
-                                    {updateVenueError}
-                                </Alert>
-                            )}
-
-                            {deleteVenueAlert && !isDeleteVenueError && (
-                                <Alert
-                                    severity="success"
-                                    className="mt-4 absolute right-1 top-8"
-                                >
-                                    Venue Deleted
-                                </Alert>
-                            )}
-                            {isDeleteVenueError && (
-                                <Alert
-                                    severity="error"
-                                    className="absolute right-1 top-8"
-                                >
-                                    {deleteVenueError}
-                                </Alert>
-                            )}
+                           
                         </CardHeader>
                         <CardDescription className="p-0 font-bold">
                             {building}
@@ -656,7 +633,7 @@ const VenueCard = ({
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                        <Dialog
+                        {localStorage.getItem("admin")=="yes" && <Dialog
                             open={deleteDialogueOpen}
                             onOpenChange={setDeleteDialogueOpen}
                         >
@@ -692,7 +669,7 @@ const VenueCard = ({
                                     </Button>
                                 </DialogFooter>
                             </DialogContent>
-                        </Dialog>
+                        </Dialog>}
                         <Dialog
                             open={detailsDialogueOpen}
                             onOpenChange={setDetailsDialogueOpen}

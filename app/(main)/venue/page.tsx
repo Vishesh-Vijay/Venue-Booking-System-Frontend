@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import VenueCard from "@/components/VenueCard/page";
-import { addNewVenue, getAllBuildings, getAllVenues } from "@/utils/utils";
+import { addNewVenue, getAllBuildings, getAllVenues, getVenuesByAuthority } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { IoAddCircleOutline } from "react-icons/io5";
@@ -182,7 +182,8 @@ const Venue = () => {
           );
         }
         else{
-         const response: any = await getVenuesByAuthority(token as string).then(
+          const auth_id = localStorage.getItem("user")
+         const response: any = await getVenuesByAuthority(token as string,auth_id as string).then(
            (res: any) => {
              const resp: any = res;
              if (resp.status == 200) {
@@ -210,14 +211,14 @@ const Venue = () => {
       <h1 className="text-center mt-4 font-semibold text-4xl">Venues</h1>
       <div className="w-full flex justify-center mt-6">
         <Dialog open={open} onOpenChange={setOpen}>
-          {localStorage.getItem("admin")=="yes" && 
+          {localStorage.getItem("admin") == "yes" && (
             <DialogTrigger>
               <Button className="bg-green-400 flex items-center justify-center">
                 <IoAddCircleOutline className="mr-1 w-4 h-4 mt-0.5" />
                 <span>Add New Venue</span>
               </Button>
             </DialogTrigger>
-          }
+          )}
           <DialogContent style={{ maxHeight: "70vh", overflowY: "auto" }}>
             <DialogHeader>
               <DialogTitle>Create New Venue</DialogTitle>
@@ -493,9 +494,9 @@ const Venue = () => {
         </Dialog>
       </div>
       {loading == false ? (
-        <ScrollArea className="h-[550px] mt-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
-            {venues.length > 0 ? (
+        <ScrollArea className="h-[550px] mt-4 w-full">
+          <div className=" w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
+            {venues.length > 0 &&
               venues.map((Venue, index) => (
                 <div
                   key={index}
@@ -518,18 +519,19 @@ const Venue = () => {
                     setResetVenue={() => setResetVenues((val) => !val)}
                   />
                 </div>
-              ))
-            ) : (
+              ))}
+          </div>
+          {
+            venues.length === 0 && (
               <div className="w-full mt-12 text-center font-bold text-2xl">
                 No Venues found
               </div>
-            )}
-          </div>
+            )
+          }
         </ScrollArea>
       ) : (
         <CircularProgress />
       )}
-      
     </div>
   );
 };
