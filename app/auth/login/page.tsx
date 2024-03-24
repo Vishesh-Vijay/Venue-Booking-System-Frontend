@@ -14,13 +14,9 @@ import Alert from "@mui/material/Alert";
 import { loginUser } from "@/utils/utils";
 import { CircularProgress } from "@mui/material";
 const login = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [loading, setLoading] = useState(false);
     const googleAuth = new GoogleAuthProvider();
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const router = useRouter();
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const handleLogin = async () => {
         setLoading(true);
         try {
@@ -32,8 +28,6 @@ const login = () => {
                     const user_Data = {
                         name: user.displayName,
                         email: user.email,
-                        // profile_picture: user.photoURL,
-                        // uid: user.uid,
                     };
                     localStorage.setItem(
                         "token",
@@ -50,43 +44,44 @@ const login = () => {
                         const resp = res;
                         if (resp.status == 200) {
                             setLoading(false);
-                            toast("Login Sucessfull!", {
-                              style: {
-                                backgroundColor: "#00fa9a",
-                              },
+                            toast("Login Successfull!", {
+                                style: {
+                                    backgroundColor: "#00fa9a",
+                                },
                             });
-                             setTimeout(() => {
-                                // setShowAlert(false);
+                            setTimeout(() => {
                                 router.replace("/");
                             }, 1000);
                         }
                     });
                 } catch (error: any) {
-                   toast(
-                     `${
-                       error.response?.data?.response_message ||
-                       "An error occured"
-                     }`,
-                     {
-                       style: {
-                         backgroundColor: "red",
-                       },
-                     }
-                   );
+                    toast(
+                        `${
+                            error.response?.data?.response_message ||
+                            "An error occured"
+                        }`,
+                        {
+                            style: {
+                                backgroundColor: "red",
+                            },
+                        }
+                    );
+                    setLoading(false);
                 }
                 setLoading(false);
             }
         } catch (error: any) {
-             toast(
-               `${
-                 error.response?.data?.response_message || "An error occured"
-               }`,
-               {
-                 style: {
-                   backgroundColor: "red",
-                 },
-               }
-             );
+            toast(
+                `${
+                    error.response?.data?.response_message || "An error occured"
+                }`,
+                {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                }
+            );
+            setLoading(false);
         }
     };
     return (

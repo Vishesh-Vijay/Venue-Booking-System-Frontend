@@ -62,23 +62,24 @@ const Building = () => {
                 if (res.status == 200) {
                     setAddBuildingLoading(false);
                     toast("Building Added Sucessfully!", {
-                    style: {
-                        backgroundColor: "#00fa9a",
-                    },
-                    }); 
+                        style: {
+                            backgroundColor: "#00fa9a",
+                        },
+                    });
                     setNewBuilding("");
                     setResetBuildings((val) => !val);
-                    
                 }
             });
         } catch (error: any) {
             toast(
-              `${error.response?.data?.response_message || "An error occured"}`,
-              {
-                style: {
-                  backgroundColor: "red",
-                },
-              }
+                `${
+                    error.response?.data?.response_message || "An error occured"
+                }`,
+                {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                }
             );
         } finally {
             setAddBuildingLoading(false);
@@ -184,7 +185,7 @@ const Building = () => {
                 </Dialog>
             </div>
             {loading == false ? (
-                <ScrollArea className="h-[580px] mt-4">
+                <ScrollArea className="mt-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
                         {buildings.length > 0 ? (
                             buildings.map((building, index) => (

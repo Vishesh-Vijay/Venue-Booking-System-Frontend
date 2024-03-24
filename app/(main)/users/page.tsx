@@ -82,11 +82,11 @@ const Users = () => {
                 (res: any) => {
                     if (res.status == 200) {
                         setAddUserLoading(false);
-                      toast("User Added Sucessfully!", {
-                        style: {
-                          backgroundColor: "#00fa9a",
-                        },
-                      });
+                        toast("User Added Sucessfully!", {
+                            style: {
+                                backgroundColor: "#00fa9a",
+                            },
+                        });
                         setNewUser("");
                         setResetUsers((val) => !val);
                     }
@@ -94,12 +94,14 @@ const Users = () => {
             );
         } catch (error: any) {
             toast(
-              `${error.response?.data?.response_message || "An error occured"}`,
-              {
-                style: {
-                  backgroundColor: "red",
-                },
-              }
+                `${
+                    error.response?.data?.response_message || "An error occured"
+                }`,
+                {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                }
             );
         } finally {
             setAddUserLoading(false);
@@ -333,29 +335,33 @@ const Users = () => {
                     <ScrollArea className="h-[550px] mt-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
                             {users.length > 0 ? (
-                                users.map((User, index) => (
-                                    <div
-                                        key={index}
-                                        className="mt-2 flex flex-col justify-center items-center"
-                                    >
-                                        <UserCard
-                                            email={User.email as string}
-                                            name={User.name as string}
-                                            parent={User.parent as string}
-                                            require_parent_permission={
-                                                User.require_parent_permission as Boolean
-                                            }
-                                            is_admin={User.is_admin as Boolean}
-                                            is_authority={
-                                                User.is_authority as Boolean
-                                            }
-                                            resetUser={resetUsers}
-                                            setResetUser={() =>
-                                                setResetUsers((val) => !val)
-                                            }
-                                        />
-                                    </div>
-                                ))
+                                users
+                                    .filter((User, index) => !User.is_admin)
+                                    .map((User, index) => (
+                                        <div
+                                            key={index}
+                                            className="mt-2 flex flex-col justify-center items-center"
+                                        >
+                                            <UserCard
+                                                email={User.email as string}
+                                                name={User.name as string}
+                                                parent={User.parent as string}
+                                                require_parent_permission={
+                                                    User.require_parent_permission as Boolean
+                                                }
+                                                is_admin={
+                                                    User.is_admin as Boolean
+                                                }
+                                                is_authority={
+                                                    User.is_authority as Boolean
+                                                }
+                                                resetUser={resetUsers}
+                                                setResetUser={() =>
+                                                    setResetUsers((val) => !val)
+                                                }
+                                            />
+                                        </div>
+                                    ))
                             ) : (
                                 <div className="w-full mt-12 text-center font-bold text-2xl">
                                     No Users found

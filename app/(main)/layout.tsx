@@ -18,7 +18,7 @@ export default function RootLayout({
     const router = useRouter();
     const [show, setShow] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isAuthority,setIsAuthority] = useState(false);
+    const [isAuthority, setIsAuthority] = useState(false);
     useEffect(() => {
         const getUserDetails = async () => {
             // setLoading(true);
@@ -34,18 +34,16 @@ export default function RootLayout({
                         // console.log(data);
 
                         if (data.is_admin) {
-                            setIsAdmin(true); 
-                            localStorage.setItem("admin","yes")
+                            setIsAdmin(true);
+                            localStorage.setItem("admin", "yes");
+                        } else {
+                            localStorage.setItem("admin", "no");
                         }
-                        else{
-                           localStorage.setItem("admin", "no"); 
-                        }
-                        if(data.is_authority){
-                            setIsAuthority(true)
-                            localStorage.setItem("authority","yes")
-                        }
-                        else{
-                            localStorage.setItem("authority","no")
+                        if (data.is_authority) {
+                            setIsAuthority(true);
+                            localStorage.setItem("authority", "yes");
+                        } else {
+                            localStorage.setItem("authority", "no");
                         }
                     }
                 });
@@ -68,8 +66,8 @@ export default function RootLayout({
     }, [router]);
     return (
         show && (
-            <div className="w-full h-[100vh] flex justify-between items-center">
-                <div className="w-1/4 ">
+            <div className="w-full min-h-screen flex justify-between ">
+                <div className="w-1/4 bg-[#598dcd]">
                     <Sidebar admin={isAdmin} authority={isAuthority} />
                 </div>
 

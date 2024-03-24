@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { IoCalendarOutline } from "react-icons/io5";
 import { CiTimer } from "react-icons/ci";
 import { GiDuration } from "react-icons/gi";
+import moment from "moment-timezone"
 
 interface BookingDetailsProps {
   booking_status?:string;
@@ -43,21 +44,19 @@ const BookingDetails = ({params}:{params:{id:string}}) => {
     function convertISOToUTC(isoTimeString:Date) {
       const date = new Date(isoTimeString);
 
-      const year = date.getUTCFullYear();
-      const month = date.getUTCMonth() + 1; // Adding 1 because getUTCMonth() returns zero-based month index
-      const day = date.getUTCDate();
+      const dateString = moment(date).utc().format('YYYY-MM-DD');
+      // const hourString = moment(date).tz('Asia/Kolkata').format('HH:mm');
+      const hourString = moment(date).utc().format('HH:mm');
 
-      const hours =
-        date.getMinutes() >= 30 ? date.getHours() - 5 : date.getHours() - 6;
-      const minutes =
-        date.getMinutes() >= 30
-          ? date.getMinutes() - 30
-          : 30 + date.getMinutes();
+      // const hours =
+      //   date.getMinutes() >= 30 ? date.getHours() - 5 : date.getHours() - 6;
+      // const minutes =
+      //   date.getMinutes() >= 30 ? date.getMinutes() - 30 : 30 + date.getMinutes();
       // const seconds = date.getUTCSeconds();
 
       return {
-        date: year + "-" + month + "-" + day,
-        time:  hours+":"+ (minutes<10?"0"+minutes:minutes) 
+        date: dateString,
+        time: hourString,
       };
     }
     const date = new Date(bookingDetails?.event_time as string)
@@ -128,7 +127,7 @@ const BookingDetails = ({params}:{params:{id:string}}) => {
               <h1>
                 {" "}
                 <span className="font-semibold">Duration:</span>{" "}
-                {String(bookingDetails.event_duration)} hrs
+                {String(bookingDetails.event_duration)} Minutes
               </h1>
               <h1>
                 {" "}

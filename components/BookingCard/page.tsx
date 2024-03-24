@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import moment from "moment-timezone"
 import {
   Card,
   CardContent,
@@ -63,24 +64,18 @@ const BookingCard = (props: BookingCardProps) => {
   ];
 
   // Get the month, day, year, hours, and minutes from the parsed date
-  const monthIndex = inputDate.getMonth();
-  const day = inputDate.getDate();
-  const year = inputDate.getFullYear();
-  let hours =
-    inputDate.getMinutes() >= 30
-      ? inputDate.getHours() - 5
-      : inputDate.getHours() - 6;
-  const minutes =
-    inputDate.getMinutes() >= 30
-      ? inputDate.getMinutes() - 30
-      : inputDate.getMinutes() + 30;
+  const monthIndex = parseInt(moment(inputDate).utc().format("MM")) ;
+  const day = parseInt(moment(inputDate).utc().format("DD")) ;
+  const year = parseInt(moment(inputDate).utc().format("YYYY")) ;
+  let hours =  parseInt(moment(inputDate).utc().format("HH")) ;
+  const minutes =  parseInt(moment(inputDate).utc().format("mm")) ;
 
   // Convert hours to 12-hour format and determine AM/PM
   const amPm = hours >= 12 ? "pm" : "am";
   hours = hours % 12 || 12;
 
   // Format the date and time
-  const formattedDateTime = `${months[monthIndex]} ${day}${getDaySuffix(
+  const formattedDateTime = `${months[monthIndex-1]} ${day}${getDaySuffix(
     day
   )}, ${year} at ${hours}:${minutes.toString().padStart(2, "0")} ${amPm}`;
 

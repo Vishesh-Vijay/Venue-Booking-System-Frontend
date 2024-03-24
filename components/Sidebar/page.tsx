@@ -14,9 +14,9 @@ import { FaUsers } from "react-icons/fa";
 
 interface SidebarProps {
     admin: Boolean;
-    authority:Boolean;
+    authority: Boolean;
 }
-const Sidebar = ({ admin,authority }: SidebarProps) => {
+const Sidebar = ({ admin, authority }: SidebarProps) => {
     const router = useRouter();
     const pathname = usePathname();
     const channels = [
@@ -97,10 +97,13 @@ const Sidebar = ({ admin,authority }: SidebarProps) => {
                                 <IoIosAddCircleOutline className="mr-2 h-4 w-4" />
                                 Add a Booking
                             </Button>
-                            {(admin == true || authority==true) && (
+                            {(admin == true || authority == true) && (
                                 <Button
                                     variant={
-                                        pathname === "/bookings/requests" || pathname.startsWith("/bookings/requests")
+                                        pathname === "/bookings/requests" ||
+                                        pathname.startsWith(
+                                            "/bookings/requests"
+                                        )
                                             ? "secondary"
                                             : "ghost"
                                     }
@@ -115,7 +118,7 @@ const Sidebar = ({ admin,authority }: SidebarProps) => {
                             )}
                         </ScrollArea>
                     </div>
-                    {(admin === true || authority==true) && (
+                    {(admin === true || authority == true) && (
                         <>
                             <div className="py-2">
                                 <h2 className="relative px-7 text-lg font-semibold tracking-tight">
@@ -135,60 +138,63 @@ const Sidebar = ({ admin,authority }: SidebarProps) => {
                                             }}
                                         >
                                             <FaRegBuilding className="mr-2 h-4 w-4" />
-                                            View/Add Venues
+                                            Manage Venues
                                         </Button>
                                     </div>
                                 </ScrollArea>
                             </div>
                             {admin == true && (
-                            <>
-                            <div className="py-2">
-                                <h2 className="relative px-7 text-lg font-semibold tracking-tight">
-                                    Building
-                                </h2>
-                                <ScrollArea className=" px-3 py-2">
-                                    <div className="space-y-1 px-3 ">
-                                        <Button
-                                            variant={
-                                                pathname === "/building"
-                                                    ? "secondary"
-                                                    : "ghost"
-                                            }
-                                            className="w-full flex items-center justify-start"
-                                            onClick={() => {
-                                                router.push("/building");
-                                            }}
-                                        >
-                                            <FaRegBuilding className="mr-2 h-4 w-4" />
-                                            View/Add Building
-                                        </Button>
+                                <>
+                                    <div className="py-2">
+                                        <h2 className="relative px-7 text-lg font-semibold tracking-tight">
+                                            Building
+                                        </h2>
+                                        <ScrollArea className=" px-3 py-2">
+                                            <div className="space-y-1 px-3 ">
+                                                <Button
+                                                    variant={
+                                                        pathname === "/building"
+                                                            ? "secondary"
+                                                            : "ghost"
+                                                    }
+                                                    className="w-full flex items-center justify-start"
+                                                    onClick={() => {
+                                                        router.push(
+                                                            "/building"
+                                                        );
+                                                    }}
+                                                >
+                                                    <FaRegBuilding className="mr-2 h-4 w-4" />
+                                                    Manage Buildings
+                                                </Button>
+                                            </div>
+                                        </ScrollArea>
                                     </div>
-                                </ScrollArea>
-                            </div>
-                            <div className="py-2">
-                                <h2 className="relative px-7 text-lg font-semibold tracking-tight">
-                                    Users
-                                </h2>
-                                <ScrollArea className=" px-3 py-2">
-                                    <div className="space-y-1 px-3 ">
-                                        <Button
-                                            variant={
-                                                pathname === "/users"
-                                                    ? "secondary"
-                                                    : "ghost"
-                                            }
-                                            className="w-full flex items-center justify-start"
-                                            onClick={() => {
-                                                router.push("/users");
-                                            }}
-                                        >
-                                            <FaUsers className="mr-2 h-4 w-4" />
-                                            View/Add Users
-                                        </Button>
+                                    <div className="py-2">
+                                        <h2 className="relative px-7 text-lg font-semibold tracking-tight">
+                                            Users
+                                        </h2>
+                                        <ScrollArea className=" px-3 py-2">
+                                            <div className="space-y-1 px-3 ">
+                                                <Button
+                                                    variant={
+                                                        pathname === "/users"
+                                                            ? "secondary"
+                                                            : "ghost"
+                                                    }
+                                                    className="w-full flex items-center justify-start"
+                                                    onClick={() => {
+                                                        router.push("/users");
+                                                    }}
+                                                >
+                                                    <FaUsers className="mr-2 h-4 w-4" />
+                                                    Manage Users
+                                                </Button>
+                                            </div>
+                                        </ScrollArea>
                                     </div>
-                                </ScrollArea>
-                            </div>
-                            </>)}
+                                </>
+                            )}
                         </>
                     )}
                     <div className="py-2">

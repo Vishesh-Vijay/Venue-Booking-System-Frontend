@@ -33,7 +33,6 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-// import { UpdateExistingVenue, DeleteVenue } from "@/utils/utils";
 import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import {
@@ -85,7 +84,6 @@ const VenueCard = ({
     resetVenue,
     setResetVenue,
 }: VenueCardProps) => {
-    // console.log(authority_id)
     const [authority, setAuthority] = useState(authority_id);
     const [detailsDialogueOpen, setDetailsDialogueOpen] = useState(false);
     const [building, setBuilding] = useState("");
@@ -110,11 +108,13 @@ const VenueCard = ({
     const [floor, setFloor] = useState(String(floor_number));
     const [capacity, setCapacity] = useState(String(seating_capacity));
     const [venueType, setVenueType] = useState(venue_type);
-    const [accessible, setAccesible] = useState("false");
-    const [projectors, setProjectors] = useState("false");
-    const [whiteboard, setWhiteboard] = useState("false");
-    const [speakers, setSpeakers] = useState("false");
-    const [airConditioner, setAirConditioner] = useState("false");
+    const [accessible, setAccesible] = useState(String(is_accessible));
+    const [projectors, setProjectors] = useState(String(has_projectors));
+    const [whiteboard, setWhiteboard] = useState(String(has_speakers));
+    const [speakers, setSpeakers] = useState(String(has_speakers));
+    const [airConditioner, setAirConditioner] = useState(
+        String(has_air_conditioner)
+    );
 
     useEffect(() => {
         const getBuilding = async () => {
@@ -126,7 +126,6 @@ const VenueCard = ({
                     token as string
                 ).then((res: any) => {
                     const resp = res;
-                    // console.log(resp);
                     setBuilding(resp.data.response_data.name);
                 });
             } catch (error: any) {
@@ -149,25 +148,12 @@ const VenueCard = ({
                     const resp: any = res;
                     if (resp.status == 200) {
                         const data = resp.data.response_data;
-                        // console.log(data);
 
                         setBuildings(data);
-                        // setLoading(false);
-                        // setShowAlert(true);
-                        // setTimeout(() => {
-                        //   setShowAlert(false);
-                        // }, 1000);
                     }
                 });
             } catch (error: any) {
-                // Handle error
                 console.log(error);
-                // setIsError(true);
-                // setError(error.response.data.response_message);
-                // setTimeout(() => {
-                //   setIsError(false);
-                //   setError("");
-                // }, 3000);
             } finally {
                 setLoading(false);
             }
@@ -236,11 +222,7 @@ const VenueCard = ({
                     if (resp.status == 200) {
                         console.log(resp);
                         setDeleteVenueLoading(false);
-                        toast("Venue Deleted Sucessfully!", {
-                          style: {
-                            backgroundColor: "#00fa9a",
-                          },
-                        });
+                        setDeleteVenueAlert(true);
                         // setNewVenue("");
                         setResetVenue();
                         
@@ -645,7 +627,7 @@ const VenueCard = ({
                                 <DialogHeader>
                                     <DialogTitle>Delete Venue</DialogTitle>
                                     <DialogDescription>
-                                        Are you sure you want to Delete this
+                                        Are you sure you want to delete this
                                         Venue?
                                     </DialogDescription>
                                 </DialogHeader>
