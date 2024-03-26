@@ -341,6 +341,23 @@ export const getVenuesByAuthority = async (
         console.log(error);
     }
 };
+
+export const getVenueByBuilding=async (buildingId:string,credentials:string)=>{
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/venues/details/byBuilding/${buildingId}/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: credentials,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  } 
+}
 export const addNewVenue = async (
   props: addNewVenueProps,
   credentials: string
