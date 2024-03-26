@@ -47,21 +47,23 @@ interface Building {
   id: string;
   name: string;
 }
+
 const AddNewBooking = () => {
   const [date, setDate] = React.useState<Date>();
   const [startTime, setStartTime] = React.useState("00:00");
   const [expectedStrength, setExpectedStrength] = React.useState("");
   const [bookingType, setBookingType] = React.useState("");
   const [selectedVenue, setSelectedVenue] = useState("");
-  const [showDetailsForm, setShowDetailsForm] = useState(false);
   const [duration, setDuration] = useState("0");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [venues, setVenues] = useState<Array<Venue>>([]);
-  const [venueType, setVenueType] = useState("");
   const [buildings, setBuildings] = useState<Array<Building>>([]);
   const [building, setBuilding] = useState("");
   const [buildingSelected, setBuildingSelected] = useState(false);
+  const [availableVenues, setAvailableVenues] = useState<Array<Venue>>([]);
+  const [timeSelected, setTimeSelected] = useState(false);
+
   useEffect(() => {
     const getBuildings = async () => {
       try {
@@ -69,36 +71,29 @@ const AddNewBooking = () => {
         const userDetails: any = await getAllBuildings(token as string).then(
           (res) => {
             const resp: any = res;
-            if (resp.status == 200) {
+            if (resp.status === 200) {
               const data = resp.data.response_data;
-              console.log(data);
-
               setBuildings(data);
             }
           }
         );
-
-        // console.log(userDetails);
       } catch (error: any) {
-        // Handle error
         console.log(error);
       }
     };
     getBuildings();
-    // getAllVenue();
   }, []);
 
-  const handleVenueSelect = (venue: string) => {
-    setSelectedVenue(venue);
-    setShowDetailsForm(true);
-  };
   const handleBuildingSelect = async (building: string) => {
     setBuildingSelected(true);
-    const buildId = buildings.find((build) => build.name == building)?.id;
+    const buildId = buildings.find((build) => build.name === building)?.id;
     setBuilding(buildId as string);
     try {
       const token = localStorage.getItem("token");
-      const response = await getVenueByBuilding(buildId as string,token as string).then((res: any) => {
+      const response = await getVenueByBuilding(
+        buildId as string,
+        token as string
+      ).then((res: any) => {
         const resp = res;
         if (resp.status === 200) {
           const data = resp.data.response_data;
@@ -110,8 +105,23 @@ const AddNewBooking = () => {
     }
   };
 
+  const filterAvailableVenues = () => {
+    // Here you can implement the logic to filter the available venues based on the selected date, time, and duration
+    // For example, you can make an API call to get the available venues and set them to the `availableVenues` state
+    setAvailableVenues(venues);
+  };
+
   const handleSubmit: any = async () => {
-    if (date != null && startTime != null) {
+    if (
+      date &&
+      startTime &&
+      selectedVenue &&
+      title &&
+      description &&
+      bookingType &&
+      duration &&
+      expectedStrength
+    ) {
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
@@ -129,18 +139,17 @@ const AddNewBooking = () => {
         second: "2-digit",
         timeZone: "UTC",
       }).format(combinedDateTime);
-      console.log(formattedDateTime);
-      // console.log("Form submitted")
+
       try {
         const token = localStorage.getItem("token");
         const user = localStorage.getItem("user") as string;
-        const venueId = venues.find((venu) => venu.name === venueType) as Venue;
+        const venueId:string = venues.find((venu) => venu.name === selectedVenue)?.id as string;
         const response = await createBooking(
           {
-            title: title,
-            description: description,
+            title,
+            description,
             user_id: user,
-            venue_id: venueId.id,
+            venue_id: venueId,
             booking_type: bookingType.toUpperCase(),
             event_time: combinedDateTime,
             event_duration: parseInt(duration, 10),
@@ -149,14 +158,13 @@ const AddNewBooking = () => {
           token as string
         ).then((res: any) => {
           const resp = res;
-          console.log(resp.data.response_data);
-          if (resp.status == 200) {
+          if (resp.status === 200) {
             if (
               resp.data.response_data.booking_status ===
               "AUTOMATICALLY_DECLINED"
             ) {
               toast(
-                "Booking Declined Automatically due to conflicting time with another event! \n",
+                "Booking Declined Automatically due to conflicting time with another event!",
                 {
                   style: {
                     backgroundColor: "#eb575a",
@@ -165,28 +173,20 @@ const AddNewBooking = () => {
               );
             } else {
               toast(
-                "Booking Created Sucessfully! \n Check Bookings Tab for further updates",
+                "Booking Created Successfully! Check Bookings Tab for further updates",
                 {
                   style: {
                     backgroundColor: "#00fa9a",
                   },
                 }
               );
-              setTitle("");
-              setDescription("");
-              // setIsError(false);
-              setVenueType("");
-              setStartTime("00:00");
-              setDuration("");
-              setDate(new Date());
-              setExpectedStrength("");
-              setBookingType("");
+              resetForm();
             }
           }
         });
       } catch (error: any) {
         toast(
-          `${error.response?.data?.response_message || "An error occured"}`,
+          `${error.response?.data?.response_message || "An error occurred"}`,
           {
             style: {
               backgroundColor: "red",
@@ -194,8 +194,24 @@ const AddNewBooking = () => {
           }
         );
       }
+    } else {
+      toast("Please fill all required fields", {
+        style: {
+          backgroundColor: "red",
+        },
+      });
     }
-    //
+  };
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setSelectedVenue("");
+    setStartTime("00:00");
+    setDuration("0");
+    setDate(new Date());
+    setExpectedStrength("");
+    setBookingType("");
   };
 
   return (
@@ -204,85 +220,41 @@ const AddNewBooking = () => {
         Create New Booking
       </h1>
       <div className="flex flex-col justify-center items-center w-full">
-        {!showDetailsForm && !buildingSelected && (
-          <div className="w-48 flex justify-center items-center h-48 ">
-            <Label className="mr-2">Building</Label>
-            <Select value={building} onValueChange={handleBuildingSelect}>
-              <SelectTrigger className="w-2/3">
-                <SelectValue placeholder="Select Buiilding" />
-              </SelectTrigger>
-              <SelectContent>
-                {buildings.length > 0 ? (
-                  buildings.map((building, index) => (
-                    <div key={index}>
-                      <SelectItem value={building.name}>
-                        {building.name}
-                      </SelectItem>
-                    </div>
-                  ))
-                ) : (
-                  <p>No venues to select! Create one first</p>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-        {!showDetailsForm && buildingSelected && (
+        {!buildingSelected && (
           <>
-            <div className="w-48 flex justify-center items-center h-48 ">
-              <Label className="mr-2">Venue</Label>
-              <Select value={selectedVenue} onValueChange={handleVenueSelect}>
+            <h1 className="w-full text-center text-2xl mt-8">
+              Select Building
+            </h1>
+            <div className="w-48 flex justify-center items-center h-24 ">
+              <Label className="mr-2">Building</Label>
+              <Select value={building} onValueChange={handleBuildingSelect}>
                 <SelectTrigger className="w-2/3">
-                  <SelectValue placeholder="Select Venue" />
+                  <SelectValue placeholder="Select Building" />
                 </SelectTrigger>
                 <SelectContent>
-                  {venues.length > 0 ? (
-                    venues.map((venue, index) => (
+                  {buildings.length > 0 ? (
+                    buildings.map((building, index) => (
                       <div key={index}>
-                        <SelectItem value={venue.name}>{venue.name}</SelectItem>
+                        <SelectItem value={building.name}>
+                          {building.name}
+                        </SelectItem>
                       </div>
                     ))
                   ) : (
-                    <p>No venues to select! Create one first</p>
+                    <p>No buildings to select! Create one first</p>
                   )}
                 </SelectContent>
               </Select>
             </div>
-            <Button
-              onClick={() => {
-                setBuilding("");
-                setBuildingSelected(false);
-              }}
-            >
-              Back
-            </Button>
           </>
         )}
 
-        {showDetailsForm && buildingSelected && (
+        {buildingSelected && !timeSelected && (
           <>
-            <div className="grid grid-cols-2 gap-y-12 gap-x-12 w-full p-5 mt-6">
-              <div className="w-full h-full">
-                <Label>Title</Label>
-                <Input
-                  name="Title"
-                  onChange={(e) => setTitle(e.target.value)}
-                  value={title}
-                  className="w-2/3"
-                />
-              </div>
-              <div className="w-full h-full">
-                <Label htmlFor="message">Description</Label>
-                <Textarea
-                  placeholder="Type your message here."
-                  id="message"
-                  className="w-2/3"
-                  value={description}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                />
-              </div>
+            <h1 className="w-full text-center text-2xl mt-8">
+              Select Date, Time, and Duration
+            </h1>
+            <div className="grid grid-cols-3 gap-y-12 gap-x-12 w-full p-5 mt-6">
               <div className="w-full h-full">
                 <Label>Event Date</Label>
                 <br />
@@ -320,7 +292,72 @@ const AddNewBooking = () => {
                   className="w-2/3"
                 />
               </div>
+              <div className="w-full h-full">
+                <Label>Event Duration</Label>
+                <Input
+                  name="Duration"
+                  onChange={(e) => setDuration(e.target.value)}
+                  value={duration}
+                  className="w-2/3"
+                />
+              </div>
+            </div>
+            <Button
+              onClick={() => {
+                setTimeSelected(true);
+                filterAvailableVenues();
+              }}
+            >
+              Next
+            </Button>
+          </>
+        )}
 
+        {buildingSelected && timeSelected && !selectedVenue && (
+          <>
+            <h1 className="w-full text-center text-2xl mt-8">Select Venue</h1>
+            <div className="w-48 flex justify-center items-center h-48 ">
+              <Label className="mr-2">Venue</Label>
+              <Select value={selectedVenue} onValueChange={setSelectedVenue}>
+                <SelectTrigger className="w-2/3">
+                  <SelectValue placeholder="Select Venue" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableVenues.map((venue, index) => (
+                    <div key={index}>
+                      <SelectItem value={venue.name}>{venue.name}</SelectItem>
+                    </div>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
+
+        {selectedVenue && (
+          <>
+            <div className="grid grid-cols-2 gap-y-12 gap-x-12 w-full p-5 mt-6">
+              <div className="w-full h-full">
+                <Label>Title</Label>
+                <Input
+                  name="Title"
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title}
+                  className="w-2/3"
+                />
+              </div>
+              <div className="w-full h-full">
+                <Label htmlFor="message">Description</Label>
+                <Textarea
+                  placeholder="Type your message here."
+                  id="message"
+                  className="w-2/3"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                />
+              </div>
               <div className="w-full h-full">
                 <Label>Booking Type</Label>
                 <Select value={bookingType} onValueChange={setBookingType}>
@@ -336,34 +373,13 @@ const AddNewBooking = () => {
                 </Select>
               </div>
               <div className="w-full h-full">
-                <Label>Event Duration</Label>
-                <Input
-                  name="Duration"
-                  onChange={(e) => setDuration(e.target.value)}
-                  value={duration}
-                  className="w-2/3"
-                />
-              </div>
-              <div className="w-full h-full">
                 <Label>Venue</Label>
-                <Select value={venueType} onValueChange={setVenueType}>
-                  <SelectTrigger className="w-2/3">
-                    <SelectValue placeholder="Select Venue" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {venues.length > 0 ? (
-                      venues.map((venue, index) => (
-                        <div key={index}>
-                          <SelectItem value={venue.name}>
-                            {venue.name}
-                          </SelectItem>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No venues to select! Create one first</p>
-                    )}
-                  </SelectContent>
-                </Select>
+                <Input
+                  name="Venue"
+                  value={selectedVenue}
+                  className="w-2/3"
+                  disabled
+                />
               </div>
               <div className="w-full h-full">
                 <Label>Expected Strength</Label>
@@ -379,14 +395,7 @@ const AddNewBooking = () => {
             </div>
             <div className="text-center mt-6 flex justify-center items-center gap-x-4">
               <Button onClick={handleSubmit}>Submit</Button>
-              <Button
-                onClick={() => {
-                  setSelectedVenue("");
-                  setShowDetailsForm(false);
-                }}
-              >
-                Back
-              </Button>
+              <Button onClick={resetForm}>Reset</Button>
             </div>
           </>
         )}
