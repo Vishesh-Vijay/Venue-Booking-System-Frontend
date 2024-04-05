@@ -31,15 +31,22 @@ interface BuildingCardProps {
     name: string;
     id: string;
     building_picture: string;
-    resetBuilding: boolean;
-    setResetBuilding: () => void;
+    resetBuilding?: boolean;
+    setResetBuilding?: () => void;
+    showIcons?: boolean;
+    onSelect?: () => void;
+    isSelected?: boolean; // New prop to indicate whether the card is selected
 }
+
 const BuildingCard = ({
     name,
     id,
     building_picture,
     resetBuilding,
     setResetBuilding,
+    showIcons,
+    onSelect,
+    isSelected = false, // Default isSelected to false
 }: BuildingCardProps) => {
     const [updateDialogueOpen, setUpdateDialogueOpen] = useState(false);
     const [newBuilding, setNewBuilding] = useState(name);
@@ -76,7 +83,7 @@ const BuildingCard = ({
                         },
                     });
                     setNewBuilding("");
-                    setResetBuilding();
+                    if (setResetBuilding) setResetBuilding();
                 }
             });
         } catch (error: any) {
@@ -106,7 +113,7 @@ const BuildingCard = ({
                                 backgroundColor: "#00fa9a",
                             },
                         });
-                        setResetBuilding();
+                        if (setResetBuilding) setResetBuilding();
                     }
                 }
             );
@@ -131,7 +138,12 @@ const BuildingCard = ({
     };
     return (
         <>
-            <Card className="w-full bg-[#313465] text-white">
+            <Card
+                className={`w-full bg-[#313465] text-white ${
+                    isSelected ? "border-4 border-green-500" : ""
+                }`}
+                onClick={onSelect}
+            >
                 <Image
                     src={building_picture ? building_picture : "/building.jpg"}
                     alt="building"
@@ -148,114 +160,122 @@ const BuildingCard = ({
                             <CircularProgress />
                         )}
                     </CardHeader>
-                    <div className="flex items-center">
-                        <Dialog
-                            open={updateDialogueOpen}
-                            onOpenChange={setUpdateDialogueOpen}
-                        >
-                            <DialogTrigger>
-                                <HiOutlinePencil className="text-blue-500 w-5 h-5 mr-4" />
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Update Building</DialogTitle>
-                                    <DialogDescription>
-                                        Enter the name of the building you want
-                                        to update to!
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="name"
-                                            className="text-center"
+                    {showIcons && (
+                        <div className="flex items-center">
+                            <Dialog
+                                open={updateDialogueOpen}
+                                onOpenChange={setUpdateDialogueOpen}
+                            >
+                                <DialogTrigger>
+                                    <HiOutlinePencil className="text-blue-500 w-5 h-5 mr-4" />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Update Building
+                                        </DialogTitle>
+                                        <DialogDescription>
+                                            Enter the name of the building you
+                                            want to update to!
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="name"
+                                                className="text-center"
+                                            >
+                                                Name:
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                placeholder="New Building"
+                                                value={newBuilding}
+                                                className="col-span-3"
+                                                onChange={(e) => {
+                                                    setNewBuilding(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="building_picture"
+                                                className="text-center"
+                                            >
+                                                Building Picture:
+                                            </Label>
+                                            <Input
+                                                id="building_picture"
+                                                type="file"
+                                                className="col-span-3"
+                                                onChange={handleFileChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button
+                                            type="submit"
+                                            className="bg-green-400"
+                                            onClick={handleUpdateBuilding}
                                         >
-                                            Name:
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            placeholder="New Building"
-                                            value={newBuilding}
-                                            className="col-span-3"
-                                            onChange={(e) => {
-                                                setNewBuilding(e.target.value);
+                                            Update
+                                        </Button>
+                                        <Button
+                                            type="reset"
+                                            onClick={() => {
+                                                setNewBuilding(name);
+                                                setUpdateDialogueOpen(
+                                                    (val) => !val
+                                                );
                                             }}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="building_picture"
-                                            className="text-center"
                                         >
-                                            Building Picture:
-                                        </Label>
-                                        <Input
-                                            id="building_picture"
-                                            type="file"
-                                            className="col-span-3"
-                                            onChange={handleFileChange}
-                                        />
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button
-                                        type="submit"
-                                        className="bg-green-400"
-                                        onClick={handleUpdateBuilding}
-                                    >
-                                        Update
-                                    </Button>
-                                    <Button
-                                        type="reset"
-                                        onClick={() => {
-                                            setNewBuilding(name);
-                                            setUpdateDialogueOpen(
-                                                (val) => !val
-                                            );
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                        <Dialog
-                            open={deleteDialogueOpen}
-                            onOpenChange={setDeleteDialogueOpen}
-                        >
-                            <DialogTrigger>
-                                <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Delete Building</DialogTitle>
-                                    <DialogDescription>
-                                        Are you sure you want to Delete this
-                                        building?
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <DialogFooter>
-                                    <Button
-                                        type="submit"
-                                        className="bg-red-400"
-                                        onClick={handleDeleteBuilding}
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button
-                                        type="reset"
-                                        onClick={() => {
-                                            setDeleteDialogueOpen(
-                                                (val) => !val
-                                            );
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    </div>
+                                            Cancel
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                            <Dialog
+                                open={deleteDialogueOpen}
+                                onOpenChange={setDeleteDialogueOpen}
+                            >
+                                <DialogTrigger>
+                                    <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Delete Building
+                                        </DialogTitle>
+                                        <DialogDescription>
+                                            Are you sure you want to Delete this
+                                            building?
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                        <Button
+                                            type="submit"
+                                            className="bg-red-400"
+                                            onClick={handleDeleteBuilding}
+                                        >
+                                            Delete
+                                        </Button>
+                                        <Button
+                                            type="reset"
+                                            onClick={() => {
+                                                setDeleteDialogueOpen(
+                                                    (val) => !val
+                                                );
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    )}
                 </div>
             </Card>
         </>

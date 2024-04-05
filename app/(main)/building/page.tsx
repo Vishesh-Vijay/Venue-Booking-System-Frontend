@@ -223,6 +223,7 @@ const Building = () => {
                                         setResetBuilding={() =>
                                             setResetBuildings((val) => !val)
                                         }
+                                        showIcons={true}
                                     />
                                 </div>
                             ))
