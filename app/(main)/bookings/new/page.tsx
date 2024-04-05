@@ -28,6 +28,7 @@ import {
 } from "@/utils/utils";
 import { toast } from "sonner";
 import BuildingSelection from "@/components/BuildingSelection/page";
+import VenueSelection from "@/components/VenueSelection/page";
 interface Venue {
     authority_id: string;
     building_id: string;
@@ -55,6 +56,8 @@ const AddNewBooking = () => {
     const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(
         null
     );
+    const [selectedVenueId, setSelectedVenueId] = useState<string | null>(null);
+    const [venues, setVenues] = useState<Venue[]>([]);
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -64,26 +67,40 @@ const AddNewBooking = () => {
     };
 
     const handleNext = () => {
-        if (selectedBuildingId) {
-            setCurrentStep(currentStep + 1);
-        } else {
-            toast("Please select a building.", {
-                style: {
-                    backgroundColor: "red",
-                },
-            });
+        if (currentStep === 1) {
+            if (selectedBuildingId) {
+                setCurrentStep(currentStep + 1);
+            } else {
+                toast("Please select a building.", {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                });
+            }
+        } else if (currentStep === 2) {
+            if (selectedVenueId) {
+                setCurrentStep(currentStep + 1);
+            } else {
+                toast("Please select a venue.", {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                });
+            }
         }
     };
 
     const handleBuildingSelect = (buildingId: string) => {
         setSelectedBuildingId(buildingId);
     };
-
+    const handleVenueSelect = (venueId: string) => {
+        setSelectedVenueId(venueId);
+    };
     const fetchBuildings = async () => {
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
-            const userDetails: any = await getAllBuildings(
+            const buildingrDetails: any = await getAllBuildings(
                 token as string
             ).then((res) => {
                 const resp: any = res;
@@ -113,9 +130,44 @@ const AddNewBooking = () => {
             setLoading(false);
         }
     };
+    const fetchVenues = async () => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            const venueDetails: any = await getVenueByBuilding(
+                selectedBuildingId as string,
+                token as string
+            ).then((res) => {
+                const resp: any = res;
+                if (resp.status == 200) {
+                    const data = resp.data.response_data;
+                    // console.log(data);
+
+                    setVenues(data);
+                    setLoading(false);
+                    setShowAlert(true);
+                    setTimeout(() => {
+                        setShowAlert(false);
+                    }, 1000);
+                }
+            });
+        } catch (error: any) {
+            setIsError(true);
+            setError(error.response.data.response_message);
+            setTimeout(() => {
+                setIsError(false);
+                setError("");
+            }, 3000);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
         fetchBuildings();
     }, []);
+    useEffect(() => {
+        if (currentStep === 2) fetchVenues();
+    }, [currentStep]);
     return (
         <>
             <div className="text-3xl font-semibold my-4 text-center">
@@ -129,12 +181,19 @@ const AddNewBooking = () => {
                     onSelectBuilding={handleBuildingSelect}
                 />
             )}
+            {currentStep === 2 && (
+                <VenueSelection
+                    venues={venues}
+                    selectedVenueId={selectedVenueId}
+                    onSelectVenue={handleVenueSelect}
+                />
+            )}
             <div className="flex justify-center mt-8">
                 <Button className="mr-4" onClick={handleBack}>
                     Back
                 </Button>
                 <Button className="ml-4" onClick={handleNext}>
-                    Next
+                    {currentStep === 2 ? "Check Availability" : "Next"}
                 </Button>
             </div>
         </>
