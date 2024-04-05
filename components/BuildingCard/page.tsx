@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import {
     Card,
     CardContent,
@@ -30,17 +30,20 @@ import Alert from "@mui/material/Alert";
 interface BuildingCardProps {
     name: string;
     id: string;
+    building_picture: string;
     resetBuilding: boolean;
     setResetBuilding: () => void;
 }
 const BuildingCard = ({
     name,
     id,
+    building_picture,
     resetBuilding,
     setResetBuilding,
 }: BuildingCardProps) => {
     const [updateDialogueOpen, setUpdateDialogueOpen] = useState(false);
     const [newBuilding, setNewBuilding] = useState(name);
+    const [buildingPicture, setBuildingPicture] = useState<File | null>(null);
     const [updateBuildingLoading, setUpdateBuildingLoading] = useState(false);
     const [updateBuildingAlert, setUpdateBuildingAlert] = useState(false);
     const [isUpdateBuildingError, setIsUpdateBuildingError] = useState(false);
@@ -60,27 +63,28 @@ const BuildingCard = ({
             const response: any = UpdateExistingBuilding(
                 id,
                 newBuilding,
+                buildingPicture,
                 token as string
             ).then((res: any) => {
                 const resp = res;
                 if (resp.status == 200) {
                     console.log(resp);
                     setUpdateBuildingLoading(false);
-                   toast("Building has been successfully updated", {
-                     style: {
-                       backgroundColor: "#00fa9a",
-                     },
-                   });
+                    toast("Building has been successfully updated", {
+                        style: {
+                            backgroundColor: "#00fa9a",
+                        },
+                    });
                     setNewBuilding("");
                     setResetBuilding();
                 }
             });
         } catch (error: any) {
-           toast(`${error.response.data.response_message}`, {
-             style: {
-               backgroundColor: "red",
-             },
-           });
+            toast(`${error.response.data.response_message}`, {
+                style: {
+                    backgroundColor: "red",
+                },
+            });
         } finally {
             setUpdateBuildingLoading(false);
         }
@@ -98,31 +102,38 @@ const BuildingCard = ({
                         console.log(resp);
                         setDeleteBuildingLoading(false);
                         toast("Building has been successfully Deleted", {
-                          style: {
-                            backgroundColor: "#00fa9a",
-                          },
+                            style: {
+                                backgroundColor: "#00fa9a",
+                            },
                         });
                         setResetBuilding();
-                        
                     }
                 }
             );
         } catch (error: any) {
-           toast(`${error.response?.data?.response_message || "An error occured"}`, {
-             style: {
-               backgroundColor: "red",
-             },
-           });
+            toast(
+                `${
+                    error.response?.data?.response_message || "An error occured"
+                }`,
+                {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                }
+            );
         } finally {
             setDeleteBuildingLoading(false);
         }
     };
-
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        setBuildingPicture(file);
+    };
     return (
         <>
             <Card className="w-full bg-[#313465] text-white">
                 <Image
-                    src="/building.jpg"
+                    src={building_picture ? building_picture : "/building.jpg"}
                     alt="building"
                     width={400}
                     height={400}
@@ -169,6 +180,20 @@ const BuildingCard = ({
                                             onChange={(e) => {
                                                 setNewBuilding(e.target.value);
                                             }}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label
+                                            htmlFor="building_picture"
+                                            className="text-center"
+                                        >
+                                            Building Picture:
+                                        </Label>
+                                        <Input
+                                            id="building_picture"
+                                            type="file"
+                                            className="col-span-3"
+                                            onChange={handleFileChange}
                                         />
                                     </div>
                                 </div>

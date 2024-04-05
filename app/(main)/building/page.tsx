@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import BuildingCard from "@/components/BuildingCard/page";
@@ -24,6 +24,7 @@ import { toast } from "sonner";
 interface Building {
     id: string;
     name: string;
+    building_picture: string;
 }
 const Building = () => {
     const router = useRouter();
@@ -43,6 +44,7 @@ const Building = () => {
     const [error, setError] = useState("");
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [newBuilding, setNewBuilding] = useState("");
+    const [buildingPicture, setBuildingPicture] = useState<File | null>(null);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [addBuildingLoading, setAddBuildingLoading] = React.useState(false);
     const [addBuildingAlert, setAddBuildingAlert] = useState(false);
@@ -57,6 +59,7 @@ const Building = () => {
             const token = localStorage.getItem("token");
             const response: any = addNewBuilding(
                 newBuilding,
+                buildingPicture,
                 token as string
             ).then((res: any) => {
                 if (res.status == 200) {
@@ -122,7 +125,10 @@ const Building = () => {
         };
         getBuildings();
     }, [resetBuildings]);
-    // console.log(buildings);
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        setBuildingPicture(file);
+    };
     return (
         <div className="p-4">
             <h1 className="text-center mt-4 font-semibold text-4xl">
@@ -162,6 +168,20 @@ const Building = () => {
                                     }}
                                 />
                             </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label
+                                    htmlFor="building_picture"
+                                    className="text-center"
+                                >
+                                    Building Picture:
+                                </Label>
+                                <Input
+                                    id="building_picture"
+                                    type="file"
+                                    className="col-span-3"
+                                    onChange={handleFileChange}
+                                />
+                            </div>
                         </div>
                         <DialogFooter>
                             <Button
@@ -196,6 +216,9 @@ const Building = () => {
                                     <BuildingCard
                                         name={building.name as string}
                                         id={building.id as string}
+                                        building_picture={
+                                            building.building_picture as string
+                                        }
                                         resetBuilding={resetBuildings}
                                         setResetBuilding={() =>
                                             setResetBuildings((val) => !val)
