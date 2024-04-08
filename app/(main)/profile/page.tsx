@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { getUserDetailsByEmail } from "@/utils/utils";
 import { CircularProgress } from "@mui/material";
 import Alert from "@mui/material/Alert";
+import Chip from "@mui/material/Chip";
 
 const Profile = () => {
     const [userName, setUserName] = React.useState<string>("");
@@ -68,51 +69,53 @@ const Profile = () => {
     }, [email]);
 
     return (
-        <div className="p-4">
-            <h1 className="font-semibold text-center text-4xl mt-3">
-                Your Profile
-            </h1>
-            <div className="flex justify-center items-center mt-6">
+        <div className="">
+            <div className="relative">
+                <div className="w-full h-40 bg-[#598dcd] rounded-br-lg"></div>
+                <div className="absolute  bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+                    <Image
+                        src={profilePicture}
+                        alt="profilePicture"
+                        width={150}
+                        height={150}
+                        className="rounded-lg"
+                    />
+                </div>
+            </div>
+            <div className="flex justify-center flex-col m-24  ">
                 {loading === false ? (
-                    <Card className="w-full md:w-1/2 p-4">
-                        <div className="flex items-center justify-center">
-                            <Image
-                                src={profilePicture}
-                                alt="profilePicture"
-                                width={100}
-                                height={100}
-                                className="w-1/4 rounded-full"
-                            />
+                    <>
+                        <div className="flex items-center flex-col gap-2">
+                            <div className="text-3xl font-semibold">
+                                {userName}
+                            </div>
+                            <div className="text-md font-regular">{email}</div>
                         </div>
-                        <div className="flex flex-col items-center mt-6 space-y-4">
-                            <CardContent className="mt-6 space-y-4">
-                                <h1>
-                                    <span className="font-semibold">
-                                        Name:{" "}
-                                    </span>
-                                    {userName}
-                                </h1>
-                                <h1>
-                                    <span className="font-semibold">
-                                        Email:{" "}
-                                    </span>
-                                    {email}
-                                </h1>
-                                <h1>
-                                    <span className="font-semibold">
-                                        Role:{" "}
-                                    </span>
-                                    {isAdmin == true ? "Admin" : "User"}
-                                </h1>
-                                <h1>
-                                    <span className="font-semibold">
-                                        Parent Authority:{" "}
-                                    </span>
-                                    {parentAuthority}
-                                </h1>
-                            </CardContent>
+                        <div className="flex justify-self-start flex-col gap-4 mt-8">
+                            <div className="flex items-center gap-10">
+                                <div className="text-xl font-medium">Role</div>
+                                <div>
+                                    <Chip
+                                        label={isAdmin ? "Admin" : "User"}
+                                        size="medium"
+                                        variant="outlined"
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-10">
+                                <div className="text-xl font-medium">
+                                    Parent Authority
+                                </div>
+                                <div>
+                                    <Chip
+                                        label={parentAuthority}
+                                        size="medium"
+                                        variant="outlined"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </Card>
+                    </>
                 ) : (
                     <CircularProgress />
                 )}

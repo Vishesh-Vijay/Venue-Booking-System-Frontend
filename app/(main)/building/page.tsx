@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React, { useEffect, useState, ChangeEvent } from "react";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import BuildingCard from "@/components/BuildingCard/page";
 import { addNewBuilding, getAllBuildings } from "@/utils/utils";
@@ -52,6 +52,13 @@ const Building = () => {
     const [newBuildingError, setNewBuildingError] = React.useState("");
     const [open, setOpen] = useState(false);
     const [resetBuildings, setResetBuildings] = useState(false);
+
+    const [filteredBuildings, setFilteredBuildings] = useState<Array<Building>>(
+        []
+    );
+
+    const [searchQuery, setSearchQuery] = useState("");
+
     const handleCreateBuilding = async () => {
         setOpen(false);
         setAddBuildingLoading(true);
@@ -87,6 +94,16 @@ const Building = () => {
         } finally {
             setAddBuildingLoading(false);
         }
+    };
+    const filterBuildings = () => {
+        let filtered = buildings;
+        if (searchQuery.trim() !== "") {
+            filtered = filtered.filter((building) =>
+                building.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        setFilteredBuildings(filtered);
     };
     useEffect(() => {
         const getBuildings = async () => {
@@ -125,90 +142,109 @@ const Building = () => {
         };
         getBuildings();
     }, [resetBuildings]);
+    useEffect(() => {
+        filterBuildings();
+    }, [searchQuery, buildings]);
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         setBuildingPicture(file);
     };
     return (
         <div className="p-4">
-            <h1 className="text-center mt-4 font-semibold text-4xl">
-                Buildings
-            </h1>
-            <div className="w-full flex justify-center mt-6">
-                <Dialog open={open} onOpenChange={setOpen}>
-                    {addBuildingLoading == true ? (
-                        <CircularProgress />
-                    ) : (
-                        <DialogTrigger>
-                            <Button className="bg-green-400 flex items-center justify-center">
-                                <IoAddCircleOutline className="mr-1 w-4 h-4 mt-0.5" />
-                                <span>Add New Building</span>
-                            </Button>
-                        </DialogTrigger>
-                    )}
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Create New Building</DialogTitle>
-                            <DialogDescription>
-                                Enter the name of the building you want to add!
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-center">
-                                    Name:
-                                </Label>
-                                <Input
-                                    id="name"
-                                    placeholder="New Building"
-                                    value={newBuilding}
-                                    className="col-span-3"
-                                    onChange={(e) => {
-                                        setNewBuilding(e.target.value);
-                                    }}
-                                />
+            <div className="flex gap-5 items-center mt-4 px-6">
+                <h1 className="font-semibold text-4xl">Buildings</h1>
+                <div className="">
+                    <Dialog open={open} onOpenChange={setOpen}>
+                        {addBuildingLoading == true ? (
+                            <CircularProgress />
+                        ) : (
+                            <DialogTrigger>
+                                <Button className="bg-[#598dcd] flex items-center justify-center rounded-3xl">
+                                    <span>Add Building</span>
+                                    <IoAddCircleOutline className="ml-4 w-5 h-5 mt-0.5" />
+                                </Button>
+                            </DialogTrigger>
+                        )}
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Create New Building</DialogTitle>
+                                <DialogDescription>
+                                    Enter the name of the building you want to
+                                    add!
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="name"
+                                        className="text-center"
+                                    >
+                                        Name:
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        placeholder="New Building"
+                                        value={newBuilding}
+                                        className="col-span-3"
+                                        onChange={(e) => {
+                                            setNewBuilding(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="building_picture"
+                                        className="text-center"
+                                    >
+                                        Building Picture:
+                                    </Label>
+                                    <Input
+                                        id="building_picture"
+                                        type="file"
+                                        className="col-span-3"
+                                        onChange={handleFileChange}
+                                    />
+                                </div>
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="building_picture"
-                                    className="text-center"
+                            <DialogFooter>
+                                <Button
+                                    type="submit"
+                                    className="bg-[#598dcd]"
+                                    onClick={() => handleCreateBuilding()}
                                 >
-                                    Building Picture:
-                                </Label>
-                                <Input
-                                    id="building_picture"
-                                    type="file"
-                                    className="col-span-3"
-                                    onChange={handleFileChange}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button
-                                type="submit"
-                                className="bg-green-400"
-                                onClick={() => handleCreateBuilding()}
-                            >
-                                Create
-                            </Button>
-                            <Button
-                                type="reset"
-                                onClick={() => {
-                                    setNewBuilding("");
-                                    setOpen((val) => !val);
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                                    Create
+                                </Button>
+                                <Button
+                                    type="reset"
+                                    onClick={() => {
+                                        setNewBuilding("");
+                                        setOpen((val) => !val);
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div>
+            <div className="px-6 mt-6 flex items-center gap-4">
+                <div className="w-1/2">
+                    <TextField
+                        id="search"
+                        label="Search Building"
+                        variant="outlined"
+                        fullWidth
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
             </div>
             {loading == false ? (
                 <ScrollArea className="mt-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
-                        {buildings.length > 0 ? (
-                            buildings.map((building, index) => (
+                        {filteredBuildings.length > 0 ? (
+                            filteredBuildings.map((building, index) => (
                                 <div
                                     key={index}
                                     className="mt-2 flex flex-col justify-center items-center"

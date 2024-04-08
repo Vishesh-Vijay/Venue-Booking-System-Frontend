@@ -146,7 +146,7 @@ const UserCard = ({
     };
     return (
         <>
-            <Card className="w-full bg-[#313465] text-white h-40">
+            <Card className="w-full bg-[#313465] text-white h-40 shadow-xl">
                 <div className="flex justify-between items-center w-full">
                     <div className="flex flex-col justify-between items-start p-5">
                         <CardHeader className="p-0 mb-1">
@@ -198,222 +198,232 @@ const UserCard = ({
                         </CardDescription>
                     </div>
                     <div className=" flex justify-between items-center">
-                        <Dialog
-                            open={updateDialogueOpen}
-                            onOpenChange={setUpdateDialogueOpen}
-                        >
-                            <DialogTrigger>
-                                {" "}
-                                <HiOutlinePencil className="text-blue-500 w-5 h-5 mr-4" />
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Update User</DialogTitle>
-                                    <DialogDescription>
-                                        Enter the details of the User for the
-                                        fields you want to update!
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="email"
-                                            className="text-center"
+                        {!is_admin && (
+                            <Dialog
+                                open={updateDialogueOpen}
+                                onOpenChange={setUpdateDialogueOpen}
+                            >
+                                <DialogTrigger>
+                                    {" "}
+                                    <HiOutlinePencil className="text-blue-500 w-5 h-5 mr-4" />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Update User</DialogTitle>
+                                        <DialogDescription>
+                                            Enter the details of the User for
+                                            the fields you want to update!
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="email"
+                                                className="text-center"
+                                            >
+                                                Email:
+                                            </Label>
+                                            <Input
+                                                id="email"
+                                                placeholder="New Email"
+                                                value={newEmail}
+                                                className="col-span-3"
+                                                onChange={(e) => {
+                                                    setNewEmail(e.target.value);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="name"
+                                                className="text-center"
+                                            >
+                                                Name:
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                placeholder="New Name"
+                                                value={newName}
+                                                className="col-span-3"
+                                                onChange={(e) => {
+                                                    setNewName(e.target.value);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="parent"
+                                                className="text-center"
+                                            >
+                                                Parent:
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                placeholder="New Parent"
+                                                value={newParent}
+                                                className="col-span-3"
+                                                onChange={(e) => {
+                                                    setNewParent(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="type"
+                                                className="text-center"
+                                            >
+                                                Parent Permission?:
+                                            </Label>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="outline">
+                                                        Select
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent className="w-56">
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuRadioGroup
+                                                        value={
+                                                            parentPermisssion
+                                                        }
+                                                        onValueChange={
+                                                            setParentPermission
+                                                        }
+                                                    >
+                                                        <DropdownMenuRadioItem value="true">
+                                                            Yes
+                                                        </DropdownMenuRadioItem>
+                                                        <DropdownMenuRadioItem value="false">
+                                                            No
+                                                        </DropdownMenuRadioItem>
+                                                    </DropdownMenuRadioGroup>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="type"
+                                                className="text-center"
+                                            >
+                                                is Admin?:
+                                            </Label>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="outline">
+                                                        Select
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent className="w-56">
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuRadioGroup
+                                                        value={admin}
+                                                        onValueChange={setAdmin}
+                                                    >
+                                                        <DropdownMenuRadioItem value="true">
+                                                            Yes
+                                                        </DropdownMenuRadioItem>
+                                                        <DropdownMenuRadioItem value="false">
+                                                            No
+                                                        </DropdownMenuRadioItem>
+                                                    </DropdownMenuRadioGroup>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label
+                                                htmlFor="type"
+                                                className="text-center"
+                                            >
+                                                is Authority?:
+                                            </Label>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="outline">
+                                                        Select
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent className="w-56">
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuRadioGroup
+                                                        value={authority}
+                                                        onValueChange={
+                                                            setAuthority
+                                                        }
+                                                    >
+                                                        <DropdownMenuRadioItem value="true">
+                                                            Yes
+                                                        </DropdownMenuRadioItem>
+                                                        <DropdownMenuRadioItem value="false">
+                                                            No
+                                                        </DropdownMenuRadioItem>
+                                                    </DropdownMenuRadioGroup>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button
+                                            type="submit"
+                                            className="bg-[#598dcd]"
+                                            onClick={() => handleUpdateUser()}
                                         >
-                                            Email:
-                                        </Label>
-                                        <Input
-                                            id="email"
-                                            placeholder="New Email"
-                                            value={newEmail}
-                                            className="col-span-3"
-                                            onChange={(e) => {
-                                                setNewEmail(e.target.value);
+                                            Update
+                                        </Button>
+                                        <Button
+                                            type="reset"
+                                            onClick={() => {
+                                                setUpdateDialogueOpen(
+                                                    (val) => !val
+                                                );
                                             }}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="name"
-                                            className="text-center"
                                         >
-                                            Name:
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            placeholder="New Name"
-                                            value={newName}
-                                            className="col-span-3"
-                                            onChange={(e) => {
-                                                setNewName(e.target.value);
+                                            Cancel
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                        {!is_admin && (
+                            <Dialog
+                                open={deleteDialogueOpen}
+                                onOpenChange={setDeleteDialogueOpen}
+                            >
+                                <DialogTrigger>
+                                    {" "}
+                                    <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Delete User</DialogTitle>
+                                        <DialogDescription>
+                                            Are you sure you want to delete this
+                                            User?
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                        <Button
+                                            type="submit"
+                                            className="bg-red-400"
+                                            onClick={() => handleDeleteUser()}
+                                        >
+                                            Delete
+                                        </Button>
+                                        <Button
+                                            type="reset"
+                                            onClick={() => {
+                                                setDeleteDialogueOpen(
+                                                    (val) => !val
+                                                );
                                             }}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="parent"
-                                            className="text-center"
                                         >
-                                            Parent:
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            placeholder="New Parent"
-                                            value={newParent}
-                                            className="col-span-3"
-                                            onChange={(e) => {
-                                                setNewParent(e.target.value);
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="type"
-                                            className="text-center"
-                                        >
-                                            Parent Permission?:
-                                        </Label>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="outline">
-                                                    Select
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent className="w-56">
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuRadioGroup
-                                                    value={parentPermisssion}
-                                                    onValueChange={
-                                                        setParentPermission
-                                                    }
-                                                >
-                                                    <DropdownMenuRadioItem value="true">
-                                                        Yes
-                                                    </DropdownMenuRadioItem>
-                                                    <DropdownMenuRadioItem value="false">
-                                                        No
-                                                    </DropdownMenuRadioItem>
-                                                </DropdownMenuRadioGroup>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="type"
-                                            className="text-center"
-                                        >
-                                            is Admin?:
-                                        </Label>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="outline">
-                                                    Select
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent className="w-56">
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuRadioGroup
-                                                    value={admin}
-                                                    onValueChange={setAdmin}
-                                                >
-                                                    <DropdownMenuRadioItem value="true">
-                                                        Yes
-                                                    </DropdownMenuRadioItem>
-                                                    <DropdownMenuRadioItem value="false">
-                                                        No
-                                                    </DropdownMenuRadioItem>
-                                                </DropdownMenuRadioGroup>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label
-                                            htmlFor="type"
-                                            className="text-center"
-                                        >
-                                            is Authority?:
-                                        </Label>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="outline">
-                                                    Select
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent className="w-56">
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuRadioGroup
-                                                    value={authority}
-                                                    onValueChange={setAuthority}
-                                                >
-                                                    <DropdownMenuRadioItem value="true">
-                                                        Yes
-                                                    </DropdownMenuRadioItem>
-                                                    <DropdownMenuRadioItem value="false">
-                                                        No
-                                                    </DropdownMenuRadioItem>
-                                                </DropdownMenuRadioGroup>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button
-                                        type="submit"
-                                        className="bg-green-400"
-                                        onClick={() => handleUpdateUser()}
-                                    >
-                                        Update
-                                    </Button>
-                                    <Button
-                                        type="reset"
-                                        onClick={() => {
-                                            setUpdateDialogueOpen(
-                                                (val) => !val
-                                            );
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                        <Dialog
-                            open={deleteDialogueOpen}
-                            onOpenChange={setDeleteDialogueOpen}
-                        >
-                            <DialogTrigger>
-                                {" "}
-                                <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Delete User</DialogTitle>
-                                    <DialogDescription>
-                                        Are you sure you want to delete this
-                                        User?
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <DialogFooter>
-                                    <Button
-                                        type="submit"
-                                        className="bg-red-400"
-                                        onClick={() => handleDeleteUser()}
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button
-                                        type="reset"
-                                        onClick={() => {
-                                            setDeleteDialogueOpen(
-                                                (val) => !val
-                                            );
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
+                                            Cancel
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        )}
                         <Dialog
                             open={detailsDialogueOpen}
                             onOpenChange={setDetailsDialogueOpen}

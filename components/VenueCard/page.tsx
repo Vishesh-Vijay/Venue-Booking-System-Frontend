@@ -166,9 +166,11 @@ const VenueCard = ({
         try {
             const token = localStorage.getItem("token");
             const authority_email = localStorage.getItem("user");
-            const build_id: string = buildings.length>0?buildings.find(
-                (ele) => ele.name == building
-            )?.id as string:"";
+            const build_id: string =
+                buildings.length > 0
+                    ? (buildings.find((ele) => ele.name == building)
+                          ?.id as string)
+                    : "";
             const response: any = UpdateExistingVenue(
                 id,
                 newVenue,
@@ -188,24 +190,25 @@ const VenueCard = ({
                 if (resp.status == 200) {
                     console.log(resp);
                     setUpdateVenueLoading(false);
-                    toast("Venue Upated Sucessfully!", {
-                      style: {
-                        backgroundColor: "#00fa9a",
-                      },
+                    toast("Venue Updated Sucessfully!", {
+                        style: {
+                            backgroundColor: "#00fa9a",
+                        },
                     });
                     setNewVenue("");
                     setResetVenue();
-                    
                 }
             });
         } catch (error: any) {
             toast(
-              `${error.response?.data?.response_message || "An error occured"}`,
-              {
-                style: {
-                  backgroundColor: "red",
-                },
-              }
+                `${
+                    error.response?.data?.response_message || "An error occured"
+                }`,
+                {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                }
             );
         } finally {
             setUpdateVenueLoading(false);
@@ -225,18 +228,19 @@ const VenueCard = ({
                         setDeleteVenueAlert(true);
                         // setNewVenue("");
                         setResetVenue();
-                        
                     }
                 }
             );
         } catch (error: any) {
             toast(
-              `${error.response?.data?.response_message || "An error occured"}`,
-              {
-                style: {
-                  backgroundColor: "red",
-                },
-              }
+                `${
+                    error.response?.data?.response_message || "An error occured"
+                }`,
+                {
+                    style: {
+                        backgroundColor: "red",
+                    },
+                }
             );
         } finally {
             setDeleteVenueLoading(false);
@@ -261,7 +265,6 @@ const VenueCard = ({
                             ) : (
                                 <CircularProgress />
                             )}
-                           
                         </CardHeader>
                         <CardDescription className="p-0 font-bold">
                             {building}
@@ -596,7 +599,7 @@ const VenueCard = ({
                                 <DialogFooter>
                                     <Button
                                         type="submit"
-                                        className="bg-green-400"
+                                        className="bg-[#598dcd]"
                                         onClick={() => handleUpdateVenue()}
                                     >
                                         Update
@@ -615,43 +618,45 @@ const VenueCard = ({
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                        {localStorage.getItem("admin")=="yes" && <Dialog
-                            open={deleteDialogueOpen}
-                            onOpenChange={setDeleteDialogueOpen}
-                        >
-                            <DialogTrigger>
-                                {" "}
-                                <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Delete Venue</DialogTitle>
-                                    <DialogDescription>
-                                        Are you sure you want to delete this
-                                        Venue?
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <DialogFooter>
-                                    <Button
-                                        type="submit"
-                                        className="bg-red-400"
-                                        onClick={() => handleDeleteVenue()}
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button
-                                        type="reset"
-                                        onClick={() => {
-                                            setDeleteDialogueOpen(
-                                                (val) => !val
-                                            );
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>}
+                        {localStorage.getItem("admin") == "yes" && (
+                            <Dialog
+                                open={deleteDialogueOpen}
+                                onOpenChange={setDeleteDialogueOpen}
+                            >
+                                <DialogTrigger>
+                                    {" "}
+                                    <MdDeleteOutline className="text-red-500 w-5 h-5 mr-4" />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Delete Venue</DialogTitle>
+                                        <DialogDescription>
+                                            Are you sure you want to delete this
+                                            Venue?
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                        <Button
+                                            type="submit"
+                                            className="bg-red-400"
+                                            onClick={() => handleDeleteVenue()}
+                                        >
+                                            Delete
+                                        </Button>
+                                        <Button
+                                            type="reset"
+                                            onClick={() => {
+                                                setDeleteDialogueOpen(
+                                                    (val) => !val
+                                                );
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        )}
                         <Dialog
                             open={detailsDialogueOpen}
                             onOpenChange={setDetailsDialogueOpen}

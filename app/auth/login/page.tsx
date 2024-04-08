@@ -7,16 +7,18 @@ import { toast } from "sonner";
 import { userAgent } from "next/server";
 import { Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-
 import { auth } from "../../firebase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Alert from "@mui/material/Alert";
 import { loginUser } from "@/utils/utils";
 import { CircularProgress } from "@mui/material";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 const login = () => {
     const [loading, setLoading] = useState(false);
     const googleAuth = new GoogleAuthProvider();
     const router = useRouter();
+    const longText = `Utilize the IIITA official email for logging in.
+`;
     const handleLogin = async () => {
         setLoading(true);
         try {
@@ -93,14 +95,16 @@ const login = () => {
                 height={300}
             />
             <h1 className="font-bold text-[#323263] text-3xl mt-5">LOGIN</h1>
-            <Button
-                className="bg-[#313465] flex items-center mt-6 px-5 py-3 text-white rounded-xl"
-                startContent={<FcGoogle className="mr-1 mt-0.5" />}
-                radius="md"
-                onClick={handleLogin}
-            >
-                Login with Google
-            </Button>
+            <Tooltip title={longText}>
+                <Button
+                    className="bg-[#313465] flex items-center mt-6 px-8 py-3 text-white  shadow-md rounded-sm"
+                    startContent={<FcGoogle className="mr-1 mt-0.5" />}
+                    radius="md"
+                    onClick={handleLogin}
+                >
+                    Login with Google
+                </Button>
+            </Tooltip>
             {loading && (
                 <CircularProgress
                     className="mt-4"

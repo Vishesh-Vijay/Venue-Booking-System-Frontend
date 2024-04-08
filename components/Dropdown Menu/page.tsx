@@ -1,119 +1,118 @@
-"use client";
-import React, { useEffect } from "react";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Avatar,
-  User,
-} from "@nextui-org/react";
-import { toast } from "sonner";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "../../app/firebase";
-import { Alert, CircularProgress } from "@mui/material";
-import { useState } from "react";
-import { Spinner } from "@nextui-org/react";
-import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import { toast } from "sonner";
 import Image from "next/image";
+import { LuLogOut } from "react-icons/lu";
+import {
+    Alert,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+} from "@mui/material";
 const DropdownComponent = () => {
-  const router = useRouter();
-  const [show, setShow] = useState(false);
-  const [open, setOpen] = React.useState(false);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const token = localStorage.getItem("token");
 
-  const [showAlert, setShowAlert] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [error, setError] = useState("");
-  const token = localStorage.getItem("token");
+    const handleLogout = () => {
+        setLoading(true);
+        setOpenDialog(false); // Close the dialog
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("admin")
-        localStorage.removeItem("authority")
-        localStorage.removeItem("name")
-        localStorage.removeItem("profile_picture");
-        toast("Logout Sucessfull!", {
-          style: {
-            backgroundColor: "#00fa9a",
-          },
-        });
-        setTimeout(() => {
-          // setShowAlert(false);
-          router.push("/auth/login"); // Redirect after logout
-        }, 1000);
-      })
-      .catch((error) => {
-        toast(
-          `${error.response?.data?.response_message || "An error occured"}`,
-          {
-            style: {
-              backgroundColor: "red",
-            },
-          }
-        );
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-  const profile_picture = localStorage.getItem("profile_picture");
-  return (
-    <div className="flex items-center gap-4 cursor-pointer">
-      <Dropdown placement="bottom-end">
-        <DropdownTrigger>
-          {profile_picture == "" ? (
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-            />
-          ) : (
-            <Image
-              src={profile_picture as string}
-              alt="profile"
-              width={45}
-              height={45}
-              className="rounded-full"
-            />
-          )}
-        </DropdownTrigger>
-        <DropdownMenu
-          aria-label="Profile Actions"
-          variant="flat"
-          className="bg-[#313465] p-3 rounded-md text-white"
-        >
-          {/* <DropdownItem key="settings" className="p-1">
-            My Settings
-          </DropdownItem> */}
-          {/* <DropdownItem key="team_settings">Team Settings</DropdownItem>
-          <DropdownItem key="analytics">Analytics</DropdownItem>
-          <DropdownItem key="system">System</DropdownItem>
-          <DropdownItem key="configurations">Configurations</DropdownItem>
-          <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem> */}
-          <DropdownItem
-            key="logout"
-            className="p-1"
-            color="danger"
-            onClick={handleLogout}
-          >
-            Logout
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-      {loading && (
-        <CircularProgress
-          variant="indeterminate"
-          color="primary"
-          className="mt-4 absolute top-40 right-40"
-        />
-      )}
-    </div>
-  );
+        signOut(auth)
+            .then(() => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                localStorage.removeItem("admin");
+                localStorage.removeItem("authority");
+                localStorage.removeItem("name");
+                localStorage.removeItem("profile_picture");
+
+                toast("Logout Successful!", {
+                    style: {
+                        backgroundColor: "#00fa9a",
+                    },
+                });
+
+                setTimeout(() => {
+                    router.push("/auth/login");
+                }, 1000);
+            })
+            .catch((error) => {
+                toast(
+                    `${
+                        error.response?.data?.response_message ||
+                        "An error occurred"
+                    }`,
+                    {
+                        style: {
+                            backgroundColor: "red",
+                        },
+                    }
+                );
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    const handleProfile = () => {
+        router.push("/profile");
+    };
+
+    const profile_picture = localStorage.getItem("profile_picture");
+
+    return (
+        <div className="flex items-center gap-4 cursor-pointer">
+            {profile_picture && (
+                <div onClick={handleProfile}>
+                    <Image
+                        src={profile_picture}
+                        alt="profile"
+                        width={45}
+                        height={45}
+                        className="rounded-full"
+                    />
+                </div>
+            )}
+            <div onClick={() => setOpenDialog(true)}>
+                <LuLogOut
+                    className="mr-1 mt-0.5"
+                    size={24}
+                    style={{ color: "black" }}
+                />
+            </div>
+
+            {loading && (
+                <CircularProgress
+                    variant="indeterminate"
+                    color="primary"
+                    className="mt-4 absolute top-40 right-40"
+                />
+            )}
+
+            {/* Dialog for logout confirmation */}
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>Confirm Logout</DialogTitle>
+                <DialogContent>
+                    <Alert severity="warning">
+                        Are you sure you want to logout?
+                    </Alert>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+                    <Button onClick={handleLogout} variant="contained">
+                        Logout
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
 };
+
 export default DropdownComponent;

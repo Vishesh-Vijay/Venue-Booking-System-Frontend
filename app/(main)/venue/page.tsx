@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React, { useEffect, useState } from "react";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, TextField, MenuItem, Box } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import VenueCard from "@/components/VenueCard/page";
 import {
@@ -95,6 +95,20 @@ const Venue = () => {
     const [speakers, setSpeakers] = useState("false");
     const [building, setBuilding] = useState("");
     const [airConditioner, setAirConditioner] = useState("false");
+
+    const [filteredVenues, setFilteredVenues] = useState<Array<Venue>>([]);
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [buildingFilter, setBuildingFilter] = useState(null);
+    const [venueTypeFilter, setVenueTypeFilter] = useState(null);
+
+    const venueTypeOptions = [
+        "CLASSROOM",
+        "LAB",
+        "MEETING_ROOM",
+        "AUDITORIUM",
+        "OTHER",
+    ];
     const handleCreateVenue = async () => {
         setOpen(false);
         setAddVenueLoading(true);
@@ -145,6 +159,36 @@ const Venue = () => {
             setAddVenueLoading(false);
         }
     };
+    const filterVenues = () => {
+        let filtered = venues;
+        if (searchQuery.trim() !== "") {
+            filtered = filtered.filter((venue) =>
+                venue.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+        if (buildingFilter) {
+            filtered = filtered.filter(
+                (venue) => venue.building_id === buildingFilter
+            );
+        }
+
+        if (venueTypeFilter) {
+            filtered = filtered.filter(
+                (venue) => venue.venue_type === venueTypeFilter
+            );
+        }
+        setFilteredVenues(filtered);
+    };
+    const handleBuildingChange = (event: any) => {
+        setBuildingFilter(event.target.value);
+    };
+
+    const handleVenueTypeChange = (event: any) => {
+        setVenueTypeFilter(event.target.value);
+    };
+    useEffect(() => {
+        filterVenues();
+    }, [searchQuery, buildingFilter, venueTypeFilter, venues]);
     useEffect(() => {
         const getBuildings = async () => {
             try {
@@ -219,333 +263,410 @@ const Venue = () => {
         getBuildings();
         getVenues();
     }, [resetVenues]);
-    // console.log(Venues);
     return (
         <div className="p-4">
-            <h1 className="text-center mt-4 font-semibold text-4xl">Venues</h1>
-            <div className="w-full flex justify-center mt-6">
-                <Dialog open={open} onOpenChange={setOpen}>
-                    {localStorage.getItem("admin") == "yes" && (
-                        <DialogTrigger>
-                            <Button className="bg-green-400 flex items-center justify-center">
-                                <IoAddCircleOutline className="mr-1 w-4 h-4 mt-0.5" />
-                                <span>Add New Venue</span>
-                            </Button>
-                        </DialogTrigger>
-                    )}
-                    <DialogContent
-                        style={{ maxHeight: "70vh", overflowY: "auto" }}
-                    >
-                        <DialogHeader>
-                            <DialogTitle>Create New Venue</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-center">
-                                    Name:
-                                </Label>
-                                <Input
-                                    id="name"
-                                    placeholder="New Venue"
-                                    value={newVenue}
-                                    className="col-span-3"
-                                    onChange={(e) => {
-                                        setNewVenue(e.target.value);
-                                    }}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="building"
-                                    className="text-center"
-                                >
-                                    Building:
-                                </Label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Select
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={building}
-                                            onValueChange={setBuilding}
-                                        >
-                                            {buildings.length > 0 ? (
-                                                buildings.map(
-                                                    (build, index) => (
-                                                        <div key={index}>
-                                                            <DropdownMenuRadioItem
-                                                                value={
-                                                                    build.name
-                                                                }
-                                                            >
-                                                                {build.name}
-                                                            </DropdownMenuRadioItem>
-                                                        </div>
+            <div className="flex gap-5 items-center mt-4 px-6">
+                <h1 className=" font-semibold text-4xl">Venues</h1>
+                <div className="">
+                    <Dialog open={open} onOpenChange={setOpen}>
+                        {localStorage.getItem("admin") == "yes" && (
+                            <DialogTrigger>
+                                <Button className="bg-[#598dcd] flex items-center justify-center rounded-3xl">
+                                    <span>Add Venue</span>
+                                    <IoAddCircleOutline className="ml-4 w-5 h-5 mt-0.5" />
+                                </Button>
+                            </DialogTrigger>
+                        )}
+                        <DialogContent
+                            style={{ maxHeight: "70vh", overflowY: "auto" }}
+                        >
+                            <DialogHeader>
+                                <DialogTitle>Create New Venue</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="name"
+                                        className="text-center"
+                                    >
+                                        Name:
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        placeholder="New Venue"
+                                        value={newVenue}
+                                        className="col-span-3"
+                                        onChange={(e) => {
+                                            setNewVenue(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="building"
+                                        className="text-center"
+                                    >
+                                        Building:
+                                    </Label>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline">
+                                                Select
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={building}
+                                                onValueChange={setBuilding}
+                                            >
+                                                {buildings.length > 0 ? (
+                                                    buildings.map(
+                                                        (build, index) => (
+                                                            <div key={index}>
+                                                                <DropdownMenuRadioItem
+                                                                    value={
+                                                                        build.name
+                                                                    }
+                                                                >
+                                                                    {build.name}
+                                                                </DropdownMenuRadioItem>
+                                                            </div>
+                                                        )
                                                     )
-                                                )
-                                            ) : (
-                                                <span>
-                                                    No buildings yet! Create one
-                                                    first
-                                                </span>
-                                            )}
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                                ) : (
+                                                    <span>
+                                                        No buildings yet! Create
+                                                        one first
+                                                    </span>
+                                                )}
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="floor"
+                                        className="text-center"
+                                    >
+                                        Floor:
+                                    </Label>
+                                    <Input
+                                        id="floor"
+                                        placeholder="Floor"
+                                        value={floor}
+                                        className="col-span-3"
+                                        onChange={(e) => {
+                                            setFloor(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="capacity"
+                                        className="text-center"
+                                    >
+                                        Capacity:
+                                    </Label>
+                                    <Input
+                                        id="capacity"
+                                        placeholder="Capacity"
+                                        value={capacity}
+                                        className="col-span-3"
+                                        onChange={(e) => {
+                                            setCapacity(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="type"
+                                        className="text-center"
+                                    >
+                                        Type:
+                                    </Label>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline">
+                                                Select
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={venueType}
+                                                onValueChange={setVenueType}
+                                            >
+                                                <DropdownMenuRadioItem value="Classroom">
+                                                    Classroom
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="Meeting Room">
+                                                    Meeting Room
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="Lab">
+                                                    Lab
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="Auditorium">
+                                                    Auditorium
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="Other">
+                                                    Other
+                                                </DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="authority"
+                                        className="text-center"
+                                    >
+                                        Authority Email:
+                                    </Label>
+                                    <Input
+                                        id="authority"
+                                        placeholder="Authority Email"
+                                        value={authority}
+                                        className="col-span-3"
+                                        onChange={(e) => {
+                                            setAuthority(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="type"
+                                        className="text-center"
+                                    >
+                                        Accessibility
+                                    </Label>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline">
+                                                Select
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={accessible}
+                                                onValueChange={setAccesible}
+                                            >
+                                                <DropdownMenuRadioItem value="true">
+                                                    Yes
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="false">
+                                                    No
+                                                </DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="type"
+                                        className="text-center"
+                                    >
+                                        Air Conditioner:
+                                    </Label>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline">
+                                                Select
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={airConditioner}
+                                                onValueChange={
+                                                    setAirConditioner
+                                                }
+                                            >
+                                                <DropdownMenuRadioItem value="true">
+                                                    Yes
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="false">
+                                                    No
+                                                </DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="type"
+                                        className="text-center"
+                                    >
+                                        Projectors:
+                                    </Label>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline">
+                                                Select
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={projectors}
+                                                onValueChange={setProjectors}
+                                            >
+                                                <DropdownMenuRadioItem value="true">
+                                                    Yes
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="false">
+                                                    No
+                                                </DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="type"
+                                        className="text-center"
+                                    >
+                                        White Board:
+                                    </Label>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline">
+                                                Select
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={whiteboard}
+                                                onValueChange={setWhiteboard}
+                                            >
+                                                <DropdownMenuRadioItem value="true">
+                                                    Yes
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="false">
+                                                    No
+                                                </DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="type"
+                                        className="text-center"
+                                    >
+                                        Speakers:
+                                    </Label>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline">
+                                                Select
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={speakers}
+                                                onValueChange={setSpeakers}
+                                            >
+                                                <DropdownMenuRadioItem value="true">
+                                                    Yes
+                                                </DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="false">
+                                                    No
+                                                </DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="floor" className="text-center">
-                                    Floor:
-                                </Label>
-                                <Input
-                                    id="floor"
-                                    placeholder="Floor"
-                                    value={floor}
-                                    className="col-span-3"
-                                    onChange={(e) => {
-                                        setFloor(e.target.value);
-                                    }}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="capacity"
-                                    className="text-center"
+                            <DialogFooter>
+                                <Button
+                                    type="submit"
+                                    className="bg-[#598dcd]"
+                                    onClick={() => handleCreateVenue()}
                                 >
-                                    Capacity:
-                                </Label>
-                                <Input
-                                    id="capacity"
-                                    placeholder="Capacity"
-                                    value={capacity}
-                                    className="col-span-3"
-                                    onChange={(e) => {
-                                        setCapacity(e.target.value);
+                                    Create
+                                </Button>
+                                <Button
+                                    type="reset"
+                                    onClick={() => {
+                                        setNewVenue("");
+                                        setBuilding("");
+                                        setAuthority("");
+                                        setAccesible("false");
+                                        setAirConditioner("false");
+                                        setCapacity("");
+                                        setFloor("");
+                                        setProjectors("false");
+                                        setSpeakers("false");
+                                        setVenueType("");
+                                        setOpen((val) => !val);
                                     }}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-center">
-                                    Type:
-                                </Label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Select
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={venueType}
-                                            onValueChange={setVenueType}
-                                        >
-                                            <DropdownMenuRadioItem value="Classroom">
-                                                Classroom
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="Meeting Room">
-                                                Meeting Room
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="Lab">
-                                                Lab
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="Auditorium">
-                                                Auditorium
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="Other">
-                                                Other
-                                            </DropdownMenuRadioItem>
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="authority"
-                                    className="text-center"
                                 >
-                                    Authority Email:
-                                </Label>
-                                <Input
-                                    id="authority"
-                                    placeholder="Authority Email"
-                                    value={authority}
-                                    className="col-span-3"
-                                    onChange={(e) => {
-                                        setAuthority(e.target.value);
-                                    }}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-center">
-                                    Accessibility
-                                </Label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Select
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={accessible}
-                                            onValueChange={setAccesible}
-                                        >
-                                            <DropdownMenuRadioItem value="true">
-                                                Yes
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="false">
-                                                No
-                                            </DropdownMenuRadioItem>
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-center">
-                                    Air Conditioner:
-                                </Label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Select
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={airConditioner}
-                                            onValueChange={setAirConditioner}
-                                        >
-                                            <DropdownMenuRadioItem value="true">
-                                                Yes
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="false">
-                                                No
-                                            </DropdownMenuRadioItem>
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-center">
-                                    Projectors:
-                                </Label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Select
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={projectors}
-                                            onValueChange={setProjectors}
-                                        >
-                                            <DropdownMenuRadioItem value="true">
-                                                Yes
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="false">
-                                                No
-                                            </DropdownMenuRadioItem>
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-center">
-                                    White Board:
-                                </Label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Select
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={whiteboard}
-                                            onValueChange={setWhiteboard}
-                                        >
-                                            <DropdownMenuRadioItem value="true">
-                                                Yes
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="false">
-                                                No
-                                            </DropdownMenuRadioItem>
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-center">
-                                    Speakers:
-                                </Label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Select
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={speakers}
-                                            onValueChange={setSpeakers}
-                                        >
-                                            <DropdownMenuRadioItem value="true">
-                                                Yes
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="false">
-                                                No
-                                            </DropdownMenuRadioItem>
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button
-                                type="submit"
-                                className="bg-green-400"
-                                onClick={() => handleCreateVenue()}
-                            >
-                                Create
-                            </Button>
-                            <Button
-                                type="reset"
-                                onClick={() => {
-                                    setNewVenue("");
-                                    setBuilding("");
-                                    setAuthority("");
-                                    setAccesible("false");
-                                    setAirConditioner("false");
-                                    setCapacity("");
-                                    setFloor("");
-                                    setProjectors("false");
-                                    setSpeakers("false");
-                                    setVenueType("");
-                                    setOpen((val) => !val);
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                                    Cancel
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div>
+            <div className="px-6 mt-6 flex items-center gap-4">
+                <div className="w-1/2">
+                    <TextField
+                        id="search"
+                        label="Search Venue"
+                        variant="outlined"
+                        fullWidth
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+                <div className="w-1/2">
+                    <Box sx={{ minWidth: 120 }}>
+                        <TextField
+                            id="building-filter"
+                            select
+                            label="Filter by Building"
+                            variant="outlined"
+                            fullWidth
+                            value={buildingFilter}
+                            onChange={handleBuildingChange}
+                        >
+                            {buildings.map((building) => (
+                                <MenuItem key={building.id} value={building.id}>
+                                    {building.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Box>
+                </div>
+                <div className="w-1/2">
+                    <Box sx={{ minWidth: 120 }}>
+                        <TextField
+                            id="venue-type-filter"
+                            select
+                            label="Filter by Venue Type"
+                            variant="outlined"
+                            fullWidth
+                            value={venueTypeFilter}
+                            onChange={handleVenueTypeChange}
+                        >
+                            {venueTypeOptions.map((venueType) => (
+                                <MenuItem key={venueType} value={venueType}>
+                                    {venueType}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Box>
+                </div>
             </div>
             {loading == false ? (
                 <ScrollArea className="h-[550px] mt-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-6 mt-6 px-6">
-                        {venues.length > 0 ? (
-                            venues.map((Venue, index) => (
+                        {filteredVenues.length > 0 ? (
+                            filteredVenues.map((Venue, index) => (
                                 <div
                                     key={index}
                                     className="mt-2 flex flex-col justify-center items-center"

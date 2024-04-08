@@ -139,7 +139,7 @@ const BuildingCard = ({
     return (
         <>
             <Card
-                className={`w-full bg-[#313465] text-white ${
+                className={`w-full h-full flex flex-col bg-[#313465] text-white ${
                     isSelected ? "border-4 border-green-500" : ""
                 }`}
                 onClick={onSelect}
@@ -149,9 +149,9 @@ const BuildingCard = ({
                     alt="building"
                     width={400}
                     height={400}
-                    className="w-full rounded-t-lg"
+                    className="w-full rounded-t-lg flex-1"
                 />
-                <div className="flex justify-between items-center w-full">
+                <div className="flex flex-shrink justify-between items-center w-full">
                     <CardHeader>
                         {updateBuildingLoading === false &&
                         deleteBuildingLoading === false ? (
@@ -217,7 +217,7 @@ const BuildingCard = ({
                                     <DialogFooter>
                                         <Button
                                             type="submit"
-                                            className="bg-green-400"
+                                            className="bg-[#598dcd]"
                                             onClick={handleUpdateBuilding}
                                         >
                                             Update
