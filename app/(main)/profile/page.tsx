@@ -71,7 +71,7 @@ const Profile = () => {
     return (
         <div className="">
             <div className="relative">
-                <div className="w-full h-40 bg-[#598dcd] rounded-br-lg"></div>
+                <div className="w-full h-40 bg-[#313465] rounded-br-lg"></div>
                 <div className="absolute  bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
                     <Image
                         src={profilePicture}
