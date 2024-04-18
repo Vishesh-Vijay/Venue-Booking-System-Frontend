@@ -422,7 +422,7 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
                     )}
                 </>
             )}
-            <div className="flex items-center justify-between mx-12">
+            <div className="flex items-center justify-between mx-12 mt-8">
                 <div className="w-full p-5 border-2 rounded-xl h-96 border-blue">
                     <h2 className="text-center text-2xl font-bold">Comments</h2>
                     {bookingDetails ? (
