@@ -108,11 +108,17 @@ const BookingRequestCard = (props: BookingRequestCardProps) => {
   //     ? inputDate.getMinutes() - 30
   //     : inputDate.getMinutes() + 30;
 
-  const monthIndex = parseInt(moment(inputDate).utc().format("MM")) ;
-  const day = parseInt(moment(inputDate).utc().format("DD")) ;
-  const year = parseInt(moment(inputDate).utc().format("YYYY")) ;
-  let hours =  parseInt(moment(inputDate).utc().format("HH")) ;
-  const minutes =  parseInt(moment(inputDate).utc().format("mm")) ;
+  // const monthIndex = parseInt(moment(inputDate).utc().format("MM")) ;
+  // const day = parseInt(moment(inputDate).utc().format("DD")) ;
+  // const year = parseInt(moment(inputDate).utc().format("YYYY")) ;
+  // let hours =  parseInt(moment(inputDate).utc().format("HH")) ;
+  // const minutes =  parseInt(moment(inputDate).utc().format("mm")) ;
+
+  const monthIndex = parseInt(moment(inputDate).local().format("MM")) ;
+  const day = parseInt(moment(inputDate).local().format("DD")) ;
+  const year = parseInt(moment(inputDate).local().format("YYYY")) ;
+  let hours =  parseInt(moment(inputDate).local().format("HH")) ;
+  const minutes =  parseInt(moment(inputDate).local().format("mm")) ;
 
   // Convert hours to 12-hour format and determine AM/PM
   const amPm = hours >= 12 ? "pm" : "am";
@@ -142,6 +148,7 @@ const BookingRequestCard = (props: BookingRequestCardProps) => {
   const handleViewDetails = () => {
     router.push(`/bookings/requests/${props.request_id}`);
   };
+
   return (
     <div className="w-full">
       {bookingDetails && (

@@ -33,10 +33,10 @@ const BookingRequests = () => {
         getBookingRequests();
     }, []);
     const pendingRequests = bookingRequests?.filter(
-        (request) => request.request_status !== "APPROVED"
+        (request) => request.request_status !== "APPROVED" && request.request_status !== "REJECTED"
     );
     const resolvedRequests = bookingRequests?.filter(
-        (request) => request.request_status === "APPROVED"
+        (request) => request.request_status === "APPROVED" || request.request_status === "REJECTED"
     );
     return (
         <div className="p-4">

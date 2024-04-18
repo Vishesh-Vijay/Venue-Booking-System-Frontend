@@ -44,9 +44,11 @@ const BookingDetails = ({params}:{params:{id:string}}) => {
     function convertISOToUTC(isoTimeString:Date) {
       const date = new Date(isoTimeString);
 
-      const dateString = moment(date).utc().format('YYYY-MM-DD');
+      // const dateString = moment(date).utc().format('YYYY-MM-DD');
+      const dateString = moment(date).local().format("DD-MM-YYYY")
       // const hourString = moment(date).tz('Asia/Kolkata').format('HH:mm');
-      const hourString = moment(date).utc().format('HH:mm');
+      const hourString = moment(date).local().format("hh:mm A")
+      // const hourString = moment(date).utc().format('HH:mm');
 
       // const hours =
       //   date.getMinutes() >= 30 ? date.getHours() - 5 : date.getHours() - 6;

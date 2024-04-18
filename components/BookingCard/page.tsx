@@ -71,6 +71,10 @@ const BookingCard = (props: BookingCardProps) => {
         router.push(`/bookings/${props.id}`);
     };
 
+    const handleEditRequest = () => {
+
+    }
+
     const handleCancelBooking = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -151,6 +155,15 @@ const BookingCard = (props: BookingCardProps) => {
                     >
                         View Details
                     </Button>
+                    {props.Btype!="past" && props.approval!=="APPROVED" && props.approval!=="REJECTED" && props.approval!=="AUTOMATICALLY_DECLINED" &&
+                        <Button
+                        variant="default"
+                        className="mr-2 bg-yellow-600"
+                            onClick={() => handleEditRequest()}
+                        >
+                        Edit Booking
+                        </Button>
+                    }
                     {props.Btype == "upcoming" &&
                         (props.approval == "APPROVED" ||
                             props.approval == "PENDING") && (

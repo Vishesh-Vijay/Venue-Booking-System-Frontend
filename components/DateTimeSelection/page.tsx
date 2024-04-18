@@ -51,11 +51,14 @@ const DateTimeSelection = ({
         const selectedStart = moment(selectInfo.startStr);
         return selectedStart.isSameOrAfter(now);
     };
-    const events = bookings.map((booking) => ({
+    console.log(bookings)
+    const approvedBookings = bookings.filter(booking => booking.booking_status.toLowerCase()=="approved")
+    const events = approvedBookings.map((booking) => ({
         title: booking.title,
-        start: moment(booking.booking_time).format(),
-        end: moment(booking.booking_time)
+        start: moment(booking.event_time).format(),
+        end: moment(booking.event_time)
             .add(booking.event_duration, "minutes")
+            .local()
             .format(),
     }));
     useEffect(() => {
