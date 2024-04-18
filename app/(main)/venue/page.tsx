@@ -252,9 +252,7 @@ const Venue = () => {
                         }
                     });
                 }
-                // console.log(userDetails);
             } catch (error: any) {
-                // Handle error
                 console.log(error);
             } finally {
                 setLoading(false);

@@ -335,6 +335,7 @@ const AddNewBooking = () => {
                     venues={venues}
                     selectedVenueId={selectedVenueId}
                     onSelectVenue={handleVenueSelect}
+                    buildings={buildings}
                 />
             )}
             {currentStep === 3 && (
