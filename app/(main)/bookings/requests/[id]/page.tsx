@@ -244,9 +244,11 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
         // const month = date.getUTCMonth() + 1; // Adding 1 because getUTCMonth() returns zero-based month index
         // const day = date.getUTCDate();
         // const dateString = moment(date).tz('Asia/Kolkata').format('YYYY-MM-DD');
-        const dateString = moment(date).utc().format("YYYY-MM-DD");
+        // const dateString = moment(date).utc().format("YYYY-MM-DD");
+        const dateString = moment(date).local().format("DD-MM-YYYY");
         // const hourString = moment(date).tz('Asia/Kolkata').format('HH:mm');
-        const hourString = moment(date).utc().format("HH:mm");
+        // const hourString = moment(date).utc().format("HH:mm");
+        const hourString = moment(date).local().format("hh:mm A");
 
         // const hours =
         //   date.getMinutes() >= 30 ? date.getHours() - 5 : date.getHours() - 6;
