@@ -374,157 +374,140 @@ const BookingDetails = ({ params }: { params: { id: string } }) => {
         if (currentStep === 2) fetchBookings();
     }, [currentStep]);
     return (
-        <>
-            {currentStep === 1 && (
-                <div className="p-4">
-                    {bookingDetails && (
-                        <>
-                            <div className="flex w-full justify-between items-center mt-4">
-                                <h1 className="w-5/6 text-center font-semibold text-4xl">
-                                    Booking Details
-                                </h1>
-                                <div className="w-1/6 flex justify-center items-end">
-                                    <Button
-                                        variant="default"
-                                        className="bg-[#313465] text-white flex items-center justify-between"
-                                        onClick={() => {
-                                            router.push("/bookings");
-                                        }}
-                                    >
-                                        <IoArrowBack className="w-4 h-4 mr-1 mt-0.5" />
-                                        <span>Back</span>
-                                    </Button>
-                                </div>
-                            </div>
-                            <div className="mx-24 my-16">
-                                <div className="flex justify-between items-center">
-                                    <h1 className="text-4xl font-semibold">
-                                        {bookingDetails.title}
-                                    </h1>
-                                    <Badge
-                                        variant="outline"
-                                        className={
-                                            bookingDetails.booking_status ==
-                                            "PENDING"
-                                                ? "border-blue-400 text-blue-400 px-4 py-2 border-2 font-bold mt-2"
-                                                : bookingDetails.booking_status ==
-                                                  "CANCELLED"
-                                                ? "border-yellow-400 text-yellow-400 px-4 py-2 border-2 font-bold mt-2"
-                                                : bookingDetails.booking_status ==
-                                                  "REJECTED"
-                                                ? "border-red-400 text-red-400 px-4 py-2 border-2 font-bold mt-2"
-                                                : "border-green-400 text-green-400 px-4 py-2 border-2 font-bold mt-2"
-                                        }
-                                    >
-                                        {bookingDetails.booking_status}
-                                    </Badge>
-                                </div>
-                                <div className="flex justify-between items-center mt-4 text-xl">
-                                    <div className="flex justify-left items-center">
-                                        <IoCalendarOutline className="w-5 h-5 text-gray-400 mr-1" />
-                                        <span className="text-gray-400">
-                                            {dateString}
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-col justify-center items-center mr-2">
-                                        <div className="flex items-center justify-center">
-                                            <CiTimer className="w-5 h-5 text-gray-400 mr-1 mt-0.5" />
-                                            <span className="text-gray-400">
-                                                {timeString} hrs
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-full flex flex-col justify-center items-start space-y-4 mt-4">
-                                    <h1>{bookingDetails.description}</h1>
-                                    <h1>
-                                        {" "}
-                                        <span className="font-semibold">
-                                            Expected Strength:
-                                        </span>{" "}
-                                        {String(
-                                            bookingDetails.expected_strength
-                                        )}
-                                    </h1>
-                                    <h1>
-                                        {" "}
-                                        <span className="font-semibold">
-                                            Duration:
-                                        </span>{" "}
-                                        {String(bookingDetails.event_duration)}{" "}
-                                        Minutes
-                                    </h1>
-                                    <h1>
-                                        {" "}
-                                        <span className="font-semibold">
-                                            Booking Time:
-                                        </span>{" "}
-                                        {bookingDateString.date +
-                                            " at " +
-                                            bookingDateString.time +
-                                            " hrs"}
-                                    </h1>
-                                    <h1>
-                                        {" "}
-                                        <span className="font-semibold">
-                                            Last Updated Time:
-                                        </span>{" "}
-                                        {lastUpdatedDateString.date +
-                                            " at " +
-                                            lastUpdatedDateString.time +
-                                            " hrs"}
-                                    </h1>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                    {bookingDetails?.booking_status?.toLowerCase() ===
-                        "pending" && (
-                        <Button
-                            variant="default"
-                            className="mr-2 bg-yellow-600"
-                            onClick={handleEditRequest}
-                        >
-                            Edit Booking
-                        </Button>
-                    )}
-                    <div className="flex items-center justify-between mx-12 mt-8">
-                        <div className="w-full p-5 border-2 rounded-xl h-96 border-blue">
-                            <h2 className="text-center text-2xl font-bold">
-                                Comments
-                            </h2>
-                            {bookingDetails ? (
-                                <CommentSection
-                                    bookingId={bookingDetails.id as string}
-                                />
-                            ) : (
-                                <h2 className="text-center font-semibold text-2xl">
-                                    No Comments
-                                </h2>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-            {currentStep === 2 && (
-                <>
-                    <DateTimeSelection
-                        bookings={bookings}
-                        eventTime={eventTime}
-                        eventDuration={eventDuration}
-                        onEventTimeChange={handleSetEventTime}
-                        onEventDurationChange={handleEventDuration}
-                    />
+      <>
+        {currentStep === 1 && (
+          <div className="p-4">
+            {bookingDetails && (
+              <>
+                <div className="flex w-full justify-between items-center mt-4">
+                  <h1 className="w-5/6 text-center font-semibold text-4xl">
+                    Booking Details
+                  </h1>
+                  <div className="w-1/6 flex justify-center items-end">
                     <Button
-                        variant="default"
-                        className="mr-2 bg-green-600"
-                        onClick={handleTimeRequest}
+                      variant="default"
+                      className="bg-[#313465] text-white flex items-center justify-between"
+                      onClick={() => {
+                        router.push("/bookings");
+                      }}
                     >
-                        Submit
+                      <IoArrowBack className="w-4 h-4 mr-1 mt-0.5" />
+                      <span>Back</span>
                     </Button>
-                </>
+                  </div>
+                </div>
+                <div className="mx-24 my-16">
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-4xl font-semibold">
+                      {bookingDetails.title}
+                    </h1>
+                    <Badge
+                      variant="outline"
+                      className={
+                        bookingDetails.booking_status == "PENDING"
+                          ? "border-blue-400 text-blue-400 px-4 py-2 border-2 font-bold mt-2"
+                          : bookingDetails.booking_status == "CANCELLED"
+                          ? "border-yellow-400 text-yellow-400 px-4 py-2 border-2 font-bold mt-2"
+                          : bookingDetails.booking_status == "REJECTED"
+                          ? "border-red-400 text-red-400 px-4 py-2 border-2 font-bold mt-2"
+                          : "border-green-400 text-green-400 px-4 py-2 border-2 font-bold mt-2"
+                      }
+                    >
+                      {bookingDetails.booking_status}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center mt-4 text-xl">
+                    <div className="flex justify-left items-center">
+                      <IoCalendarOutline className="w-5 h-5 text-gray-400 mr-1" />
+                      <span className="text-gray-400">{dateString}</span>
+                    </div>
+                    <div className="flex flex-col justify-center items-center mr-2">
+                      <div className="flex items-center justify-center">
+                        <CiTimer className="w-5 h-5 text-gray-400 mr-1 mt-0.5" />
+                        <span className="text-gray-400">{timeString} hrs</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full flex flex-col justify-center items-start space-y-4 mt-4">
+                    <h1>{bookingDetails.description}</h1>
+                    <h1>
+                      {" "}
+                      <span className="font-semibold">
+                        Expected Strength:
+                      </span>{" "}
+                      {String(bookingDetails.expected_strength)}
+                    </h1>
+                    <h1>
+                      {" "}
+                      <span className="font-semibold">Duration:</span>{" "}
+                      {String(bookingDetails.event_duration)} Minutes
+                    </h1>
+                    <h1>
+                      {" "}
+                      <span className="font-semibold">Booking Time:</span>{" "}
+                      {bookingDateString.date +
+                        " at " +
+                        bookingDateString.time +
+                        " hrs"}
+                    </h1>
+                    <h1>
+                      {" "}
+                      <span className="font-semibold">
+                        Last Updated Time:
+                      </span>{" "}
+                      {lastUpdatedDateString.date +
+                        " at " +
+                        lastUpdatedDateString.time +
+                        " hrs"}
+                    </h1>
+                  </div>
+                </div>
+              </>
             )}
-        </>
+            {bookingDetails?.booking_status?.toLowerCase() === "pending" && (
+              <Button
+                variant="default"
+                className="mx-24 bg-yellow-600"
+                onClick={handleEditRequest}
+              >
+                Edit Booking
+              </Button>
+            )}
+            <div className="flex items-center justify-between mx-12 mt-8">
+              <div className="w-full p-5 border-2 rounded-xl h-96 border-blue">
+                <h2 className="text-center text-2xl font-bold">Comments</h2>
+                {bookingDetails ? (
+                  <CommentSection bookingId={bookingDetails.id as string} />
+                ) : (
+                  <h2 className="text-center font-semibold text-2xl">
+                    No Comments
+                  </h2>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        {currentStep === 2 && (
+          <>
+            <DateTimeSelection
+              bookings={bookings}
+              eventTime={eventTime}
+              eventDuration={eventDuration}
+              onEventTimeChange={handleSetEventTime}
+              onEventDurationChange={handleEventDuration}
+            />
+            <div className="w-full flex items-center justify-center">
+              <Button
+                variant="default"
+                className=" bg-[#313465] mb-4"
+                onClick={handleTimeRequest}
+              >
+                Update
+              </Button>
+            </div>
+          </>
+        )}
+      </>
     );
 };
 
