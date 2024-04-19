@@ -191,7 +191,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ bookingId }) => {
                         type="submit"
                         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mt-2"
                     >
-                        Submit
+                        Send
                     </button>
                 </div>
             </form>
