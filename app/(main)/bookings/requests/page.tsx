@@ -33,10 +33,18 @@ const BookingRequests = () => {
         getBookingRequests();
     }, []);
     const pendingRequests = bookingRequests?.filter(
-        (request) => request.request_status !== "APPROVED" && request.request_status !== "REJECTED"
+        (request) =>
+            request.request_status !== "APPROVED" &&
+            request.request_status !== "REJECTED" &&
+            request.request_status !== "CANCELLED" &&
+            request.request_status !== "AUTOMATICALLY_DECLINED"
     );
     const resolvedRequests = bookingRequests?.filter(
-        (request) => request.request_status === "APPROVED" || request.request_status === "REJECTED"
+        (request) =>
+            request.request_status === "APPROVED" ||
+            request.request_status === "REJECTED" ||
+            request.request_status === "CANCELLED" ||
+            request.request_status === "AUTOMATICALLY_DECLINED"
     );
     return (
         <div className="p-4">
