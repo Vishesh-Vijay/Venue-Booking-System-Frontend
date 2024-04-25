@@ -97,6 +97,20 @@ const Sidebar = ({ admin, authority }: SidebarProps) => {
                                 <IoIosAddCircleOutline className="mr-2 h-4 w-4" />
                                 Add a Booking
                             </Button>
+                            <Button
+                                variant={
+                                    pathname === "/vh-bookings/new"
+                                        ? "secondary"
+                                        : "ghost"
+                                }
+                                className="w-full flex items-center justify-start"
+                                onClick={() => {
+                                    router.push("/vh-bookings/new");
+                                }}
+                            >
+                                <RiBook2Line className="mr-2 h-4 w-4" />
+                                VH Bookings
+                            </Button>
                             {(admin == true || authority == true) && (
                                 <Button
                                     variant={
