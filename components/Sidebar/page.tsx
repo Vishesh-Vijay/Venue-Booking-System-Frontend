@@ -97,20 +97,7 @@ const Sidebar = ({ admin, authority }: SidebarProps) => {
                                 <IoIosAddCircleOutline className="mr-2 h-4 w-4" />
                                 Add a Booking
                             </Button>
-                            <Button
-                                variant={
-                                    pathname === "/vh-bookings/new"
-                                        ? "secondary"
-                                        : "ghost"
-                                }
-                                className="w-full flex items-center justify-start"
-                                onClick={() => {
-                                    router.push("/vh-bookings/new");
-                                }}
-                            >
-                                <RiBook2Line className="mr-2 h-4 w-4" />
-                                VH Bookings
-                            </Button>
+
                             {(admin == true || authority == true) && (
                                 <Button
                                     variant={
@@ -131,7 +118,62 @@ const Sidebar = ({ admin, authority }: SidebarProps) => {
                                 </Button>
                             )}
                         </ScrollArea>
+                        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight mt-4">
+                            Visitor's Hostel
+                        </h2>
+                        <ScrollArea className=" px-3 ">
+                            <Button
+                                variant={
+                                    pathname === "/vh-bookings/new"
+                                        ? "secondary"
+                                        : "ghost"
+                                }
+                                className="w-full flex items-center justify-start"
+                                onClick={() => {
+                                    router.push("/vh-bookings/new");
+                                }}
+                            >
+                                <IoIosAddCircleOutline className="mr-2 h-4 w-4" />
+                                Add a Booking
+                            </Button>
+                            {(admin == true || authority == true) && (
+                                <Button
+                                    variant={
+                                        pathname === "/vh-venues"
+                                            ? "secondary"
+                                            : "ghost"
+                                    }
+                                    className="w-full flex items-center justify-start mt-2"
+                                    onClick={() => {
+                                        router.push("/vh-venue");
+                                    }}
+                                >
+                                    <FaRegBuilding className="mr-2 h-4 w-4" />
+                                    Manage Venues
+                                </Button>
+                            )}
+                            {(admin == true || authority == true) && (
+                                <Button
+                                    variant={
+                                        pathname === "/vh-bookings/requests" ||
+                                        pathname.startsWith(
+                                            "/vh-bookings/requests"
+                                        )
+                                            ? "secondary"
+                                            : "ghost"
+                                    }
+                                    className="w-full flex items-center justify-start mt-2"
+                                    onClick={() => {
+                                        router.push("/vh-bookings/requests");
+                                    }}
+                                >
+                                    <VscRequestChanges className="mr-2 h-4 w-4" />
+                                    Booking Requests
+                                </Button>
+                            )}
+                        </ScrollArea>
                     </div>
+
                     {(admin === true || authority == true) && (
                         <>
                             <div className="py-2">

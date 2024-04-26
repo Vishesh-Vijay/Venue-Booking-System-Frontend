@@ -20,6 +20,13 @@ interface addNewVenueProps {
     has_whiteboard: Boolean;
 }
 
+interface addNewVHVenueProps {
+    name: string;
+    authority_id: string;
+    building_id: string;
+    floor_number: Number;
+    accomodation_type: String;
+}
 interface createBookingProps {
     title: string;
     description: string;
@@ -686,5 +693,120 @@ export const postComment = async (
         return response;
     } catch (error) {
         return error;
+    }
+};
+
+export const deleteVHVenue = async (venue_id: string, credentials: string) => {
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/vhvenues/remove/`,
+            {
+                id: venue_id,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const UpdateExistingVHVenue = async (
+    id: string,
+    newVenue: string,
+    authority: string,
+    build_id: string,
+    floor: string,
+    accomodationType: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/vhvenues/update/`,
+            {
+                id,
+                name: newVenue,
+                authority_id: authority,
+                building_id: build_id,
+                floor_number: Number(floor),
+                accomodation_type: accomodationType,
+                credentials,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        console.log(error);
+        //  throw error;
+    }
+};
+
+export const addNewVHVenue = async (
+    props: addNewVHVenueProps,
+    credentials: string
+) => {
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/vhvenues/add/`,
+            props,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        console.log(error);
+        //  throw error;
+    }
+};
+
+export const getAllVHVenues = async (credentials: string) => {
+    try {
+        const response = await axios.get(
+            `http://127.0.0.1:8000/vhvenues/details/all/`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        console.log(error);
+        // throw error;
+    }
+};
+
+export const getVHVenuesByAuthority = async (
+    authority_id: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.get(
+            `http://127.0.0.1:8000/vhvenues/details/byAuthority/${authority_id}/`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        console.log(error);
     }
 };
