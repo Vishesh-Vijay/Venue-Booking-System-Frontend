@@ -89,6 +89,9 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
     const date = new Date(bookingDetails?.arrival_time as string);
     const dateString = convertISOToUTC(date).date;
     const timeString = convertISOToUTC(date).time;
+    const departureDate = new Date(bookingDetails?.departure_time as string);
+    const departureDateString = convertISOToUTC(departureDate).date;
+    const departureTimeString = convertISOToUTC(departureDate).time;
     const bookingDate = new Date(bookingDetails?.booking_time as string);
     const bookingDateString = convertISOToUTC(bookingDate);
     const lastUpdatedDate = new Date(
@@ -167,14 +170,14 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
                             <div className="flex justify-left items-center">
                                 <IoCalendarOutline className="w-5 h-5 text-gray-400 mr-1" />
                                 <span className="text-gray-400">
-                                    {dateString}
+                                    {dateString} - {departureDateString}
                                 </span>
                             </div>
                             <div className="flex flex-col justify-center items-center mr-2">
                                 <div className="flex items-center justify-center">
                                     <CiTimer className="w-5 h-5 text-gray-400 mr-1 mt-0.5" />
                                     <span className="text-gray-400">
-                                        {timeString} hrs
+                                        {timeString} - {departureTimeString} hrs
                                     </span>
                                 </div>
                             </div>

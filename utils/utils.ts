@@ -51,11 +51,11 @@ interface VHBooking {
     user_contact: string;
     arrival_time: string;
     departure_time: string;
-    rooms_required: Number;
+    rooms_required: number;
     booking_purpose: string;
     booking_type: string;
     requestby: string;
-    id_proof: string;
+    id_proof: File | null;
 }
 export const loginUser = async (
     user_data: userDataProps,
@@ -708,17 +708,42 @@ export const postComment = async (
     }
 };
 
+// interface VHBooking {
+//     user_id: string;
+//     user_address: string;
+//     user_contact: string;
+//     arrival_time: string;
+//     departure_time: string;
+//     rooms_required: Number;
+//     booking_purpose: string;
+//     booking_type: string;
+//     requestby: string;
+//     id_proof: File | null;
+// }
+
 export const createVHBooking = async (
     props: VHBooking,
     credentials: string
 ) => {
     try {
+        const formData = new FormData();
+        formData.append("user_id", props.user_id);
+        formData.append("user_address", props.user_address);
+        formData.append("user_contact", props.user_contact);
+        formData.append("arrival_time", props.arrival_time);
+        formData.append("departure_time", props.departure_time);
+        formData.append("rooms_required", props.rooms_required);
+        formData.append("booking_purpose", props.booking_purpose);
+        formData.append("booking_type", props.booking_type);
+        formData.append("requestby", props.requestby);
+        if (props.id_proof) {
+            formData.append("id_proof", props.id_proof);
+        }
         const response = await axios.post(
             `http://127.0.0.1:8000/vhbookings/add/`,
-            props,
+            formData,
             {
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: credentials,
                 },
             }

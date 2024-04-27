@@ -100,7 +100,7 @@ const VHBookingRequestCard = (props: BookingRequestCardProps) => {
         }
     }
     const handleViewDetails = () => {
-        router.push(`/bookings/requests/${props.request_id}`);
+        router.push(`/vh-bookings/requests/${props.request_id}`);
     };
 
     return (
@@ -110,6 +110,7 @@ const VHBookingRequestCard = (props: BookingRequestCardProps) => {
                     <div>
                         <CardHeader>
                             <CardDescription className="font-semibold">
+                                {bookingDetails?.user_id}{" "}
                                 {bookingDetails?.booking_type}
                             </CardDescription>
                         </CardHeader>
