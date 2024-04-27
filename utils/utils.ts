@@ -696,6 +696,27 @@ export const postComment = async (
     }
 };
 
+export const createVHBooking = async (
+    props,
+    credentials: string
+) => {
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/vhbookings/add/`,
+            props,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+};
+
 export const deleteVHVenue = async (venue_id: string, credentials: string) => {
     try {
         const response = await axios.post(

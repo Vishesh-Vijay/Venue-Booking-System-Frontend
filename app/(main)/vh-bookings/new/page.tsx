@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import {
     Card,
     CardContent,
@@ -35,41 +35,31 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { CircularProgress } from "@mui/material";
+import { TextField } from '@mui/material'; 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import Checkbox from '@mui/material/Checkbox';
 import { Calendar } from '@/components/ui/calendar';
 import { toast } from "sonner";
+import { createVHBooking } from "@/utils/utils"
 
 interface VH{
 
 }
 
 const VHBookingForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    building: '',
-    floor: '',
-    capacity: '',
-    venueType: '',
-    authority: '',
-    accessible: '',
-    airConditioner: '',
-    projectors: '',
-    whiteboard: '',
-    speakers: '',
-  });
 
-  const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
+//   const [email, setEmail] = useState("")
+//   const [name, setName] = useState("")
   const [address, setAddress] = useState("")
   const [contactNumber, setContactNumber] = useState("")
-  const [arrivalDate, setArrivalDate] = useState<Date>(new Date())
-  const [arrivalTime, setArrivalTime] = useState("")
-  const [departureDate, setDepartureDate] = useState("")
-  const [departureTime, setDepartureTime] = useState("")
+  const [arrivalDate, setArrivalDate] = useState<Dayjs | null>(null)
+  const [arrivalTime, setArrivalTime] = useState<Dayjs | null>(null)
+  const [departureDate, setDepartureDate] = useState<Dayjs | null>(null)
+  const [departureTime, setDepartureTime] = useState<Dayjs | null>(null)
   const [accomodation, setAccomodation] = useState("")
   const [rooms, setRooms] = useState("")
   const [requestBy, setRequestBy] = useState("")
@@ -77,12 +67,13 @@ const VHBookingForm = () => {
   const [bookingPurpose, setBookingPurpose] = useState("")
   const [idProof, setIdProof] = useState("")
   const [disclaimer, setDisclaimer] = useState(false)
+  const [idPicture, setIdPicture] = useState<File | null>(null);
 
   const handleDisclaimerChange = () => {
     setDisclaimer(!disclaimer)
   }
 
-  const handleCreateBooking = () => {
+  const handleCreateBooking = async () => {
     if(!disclaimer){
         toast("Accept the disclaimer to make your booking", {
             style: {
@@ -92,20 +83,94 @@ const VHBookingForm = () => {
         });
         return
     }
+
+    if(!arrivalDate || !arrivalTime || !departureDate || !departureTime){
+        toast("Arrival and departure date and time fields are mandatory", {
+            style: {
+                backgroundColor: "red",
+                color: "white"
+            },
+        });
+        return
+    }
+
+    let hours = arrivalTime.hour();
+    let minutes = arrivalTime.minute();
+
+    const arrivalDateTime = arrivalDate.hour(hours).minute(minutes)
+    const arrivalIsoString = arrivalDateTime.toISOString();
+
+    hours = departureTime.hour()
+    minutes = departureTime.minute()
+
+    const departureDateTime = departureDate.hour(hours).minute(minutes)
+    const departureIsoString = departureDateTime.toISOString();
+
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user") as string;
+
+    const obj = {
+        user_id: user,
+        user_address: address,
+        user_contact: contactNumber,
+        arrival_time: arrivalIsoString,
+        departure_time: departureIsoString,
+        rooms_required: rooms,
+        booking_purpose: bookingPurpose,
+        booking_type: bookingType,
+        requestby: requestBy,
+        id_proof: idPicture
+    }
+
+    try{
+        const response = await createVHBooking(
+            obj,
+            token as string
+        ).then((res: any) => {
+            const resp = res;
+            if (
+                resp.data.response_data.booking_status ===
+                "AUTOMATICALLY_DECLINED"
+            ) {
+                toast(
+                    "Booking Declined Automatically due to conflicting time with another event!",
+                    {
+                        style: {
+                            backgroundColor: "#eb575a",
+                        },
+                    }
+                );
+            } else {
+                toast(
+                    "Booking Created Successfully! Check Bookings Tab for further updates",
+                    {
+                        style: {
+                            backgroundColor: "#00fa9a",
+                        },
+                    }
+                );
+            }
+        });
+    } catch (error: any) {
+        // setIsError(true);
+        // setError(error.response.data.response_message);
+        // setTimeout(() => {
+        //     setIsError(false);
+        //     setError("");
+        // }, 3000);
+    } finally {
+        // setLoading(false);
+    }
   }
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    setIdPicture(file);
+};
 
   return (
     <>
-        {/* <Card className="w-full bg-[#313465] text-white">
-            <Image
-                src="/Building.jpg"
-                alt="Venue"
-                width={400}
-                height={400}
-                className="w-full rounded-t-lg"
-            /> */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-            {/* <DemoContainer components={['DatePicker']}> */}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div className="ml-5 mt-3 items-center w-4/5 space-y-2 mb-10">
 
                 <div className="mx-5 mb-5 font-sans sm:font-sans font-medium">
@@ -113,7 +178,7 @@ const VHBookingForm = () => {
                 No cash payment for booking of guest house is allowed.
                 </div>
 
-                <div className="grid grid-cols-4 items-center gap-4">
+                {/* <div className="grid grid-cols-4 items-center gap-4">
                     <Label
                         htmlFor="email"
                         className="text-center"
@@ -147,7 +212,7 @@ const VHBookingForm = () => {
                             setName(e.target.value);
                         }}
                     />
-                </div>
+                </div> */}
 
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label
@@ -179,25 +244,106 @@ const VHBookingForm = () => {
                         placeholder="Your contact number"
                         value={contactNumber}
                         className="col-span-3"
+                        type="number"
                         onChange={(e) => {
                             setContactNumber(e.target.value);
                         }}
                     />
                 </div>
 
-                {/* <div className="grid grid-cols-4 items-center gap-4">
+                <div className="grid grid-cols-4 items-center gap-4">
                     <Label
                         htmlFor="arrival-date"
                         className="text-center"
                     >
-                        Arrival Time:
+                        Arrival Date:
                     </Label>
+                    <div className="col-span-3">
+
+                    <DemoContainer
+                    // className="overflow-hidden"
+                    components={[
+                        'DatePicker',
+                        'DatePicker',
+                    ]}
+                    >
                     <DatePicker
-                    label="Controlled picker"
+                    label="Select Date"
                     value={arrivalDate}
-                    onChange={(newValue: Date) => setArrivalDate(newValue)}
+                    onChange={(newValue) => setArrivalDate(newValue)}
                     />
-                </div> */}
+                    </DemoContainer> 
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label
+                        htmlFor="arrival-date"
+                        className="text-center"
+                    >
+                        Tentative Arrival Time:
+                    </Label>
+                    <div className="col-span-3">
+                    <DemoContainer
+                    components={[
+                    'TimePicker',
+                    'TimePicker',
+                    ]}
+                    >
+                    <TimePicker
+                    label="Select Time"
+                    value={arrivalTime}
+                    onChange={(newValue) => setArrivalTime(newValue)}
+                    />
+                    </DemoContainer> 
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label
+                        htmlFor="departure-date"
+                        className="text-center"
+                    >
+                        Departure Date:
+                    </Label>
+                    <div className="col-span-3">
+                    <DemoContainer
+                    components={[
+                    'DatePicker',
+                    'DatePicker',
+                    ]}
+                    >
+                    <DatePicker
+                    label="Select Date"
+                    value={departureDate}
+                    onChange={(newValue) => setDepartureDate(newValue)}
+                    />
+                    </DemoContainer> 
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label
+                        htmlFor="departure-date"
+                        className="text-center"
+                    >
+                        Tentative Departure Time:
+                    </Label>
+                    <div className="col-span-3">
+                    <DemoContainer
+                    components={[
+                    'TimePicker',
+                    'TimePicker',
+                    ]}
+                    >
+                    <TimePicker
+                    label="Select Time"
+                    value={departureTime}
+                    onChange={(newValue) => setDepartureTime(newValue)}
+                    />
+                    </DemoContainer> 
+                    </div>
+                </div>
 
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label
@@ -390,6 +536,21 @@ const VHBookingForm = () => {
                     </div>
                 </div>
 
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label
+                        htmlFor="id_picture"
+                        className="text-center"
+                    >
+                        ID Proof:
+                    </Label>
+                    <Input
+                        id="id_picture"
+                        type="file"
+                        className="col-span-3"
+                        onChange={handleFileChange}
+                    />
+                </div>
+
                 <div className="mx-5 my-5 font-sans sm:font-sans">
                 
                     <div className="text-lg font-semibold">Rules and Regulations</div>
@@ -430,9 +591,7 @@ const VHBookingForm = () => {
                 </Button>
                                 
             </div>
-        {/* </DemoContainer>  */}
         </LocalizationProvider>
-        {/* </Card> */}
     </>
   );
 };
