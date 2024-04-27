@@ -171,6 +171,23 @@ const Sidebar = ({ admin, authority }: SidebarProps) => {
                                     Booking Requests
                                 </Button>
                             )}
+                            {(admin == true || authority == true) && (
+                                <Button
+                                    variant={
+                                        pathname === "/vh-bookings/past" ||
+                                        pathname.startsWith("/vh-bookings/past")
+                                            ? "secondary"
+                                            : "ghost"
+                                    }
+                                    className="w-full flex items-center justify-start mt-2"
+                                    onClick={() => {
+                                        router.push("/vh-bookings/past");
+                                    }}
+                                >
+                                    <VscRequestChanges className="mr-2 h-4 w-4" />
+                                    Past Bookings
+                                </Button>
+                            )}
                         </ScrollArea>
                     </div>
 

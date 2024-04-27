@@ -1,5 +1,7 @@
 import { auth } from "@/app/firebase";
 import axios, { AxiosRequestConfig } from "axios";
+
+const API_BASE_URL = "http://127.0.0.1:8000/";
 interface userDataProps {
     name: string;
     email: string;
@@ -63,7 +65,7 @@ export const loginUser = async (
 ) => {
     try {
         const response = await axios.post(
-            "http://127.0.0.1:8000/users/login/",
+            `${API_BASE_URL}/users/login/`,
             user_data,
             {
                 headers: {
@@ -89,7 +91,7 @@ export const getUserDetailsByEmail = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/users/details/${email}/`,
+            `${API_BASE_URL}/users/details/${email}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -105,15 +107,12 @@ export const getUserDetailsByEmail = async (
 };
 export const getAllUsers = async (credentials: string) => {
     try {
-        const response = await axios.get(
-            `http://127.0.0.1:8000/users/details/all/`,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: credentials,
-                },
-            }
-        );
+        const response = await axios.get(`${API_BASE_URL}/users/details/all/`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: credentials,
+            },
+        });
         return response;
     } catch (error) {
         console.log(error);
@@ -124,7 +123,7 @@ export const getAllUsers = async (credentials: string) => {
 export const DeleteUser = async (email: string, credentials: string) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/users/remove/`,
+            `${API_BASE_URL}/users/remove/`,
             {
                 email: email,
             },
@@ -146,16 +145,12 @@ export const addNewUser = async (
     credentials: string
 ) => {
     try {
-        const response = await axios.post(
-            `http://127.0.0.1:8000/users/add/`,
-            props,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: credentials,
-                },
-            }
-        );
+        const response = await axios.post(`${API_BASE_URL}/users/add/`, props, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: credentials,
+            },
+        });
         return response;
     } catch (error) {
         console.log(error);
@@ -173,7 +168,7 @@ export const UpdateExistingUser = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/users/update/`,
+            `${API_BASE_URL}/users/update/`,
             {
                 email,
                 name,
@@ -201,7 +196,7 @@ export const UpdateExistingUser = async (
 export const getAllBuildings = async (credentials: string) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/buildings/details/all/`,
+            `${API_BASE_URL}/buildings/details/all/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -222,7 +217,7 @@ export const getBuildingDetailsById = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/buildings/details/${building_id}/`,
+            `${API_BASE_URL}/buildings/details/${building_id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -248,7 +243,7 @@ export const addNewBuilding = async (
             formData.append("building_picture", building_picture);
         }
         const response = await axios.post(
-            `http://127.0.0.1:8000/buildings/add/`,
+            `${API_BASE_URL}/buildings/add/`,
             formData,
             {
                 headers: {
@@ -276,7 +271,7 @@ export const UpdateExistingBuilding = async (
             formData.append("building_picture", building_picture);
         }
         const response = await axios.post(
-            `http://127.0.0.1:8000/buildings/update/`,
+            `${API_BASE_URL}/buildings/update/`,
             formData,
             {
                 headers: {
@@ -293,7 +288,7 @@ export const UpdateExistingBuilding = async (
 export const DeleteBuilding = async (id: string, credentials: string) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/buildings/remove/`,
+            `${API_BASE_URL}/buildings/remove/`,
             {
                 id: id,
             },
@@ -314,7 +309,7 @@ export const DeleteBuilding = async (id: string, credentials: string) => {
 export const getAllVenues = async (credentials: string) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/venues/details/all/`,
+            `${API_BASE_URL}/venues/details/all/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -335,7 +330,7 @@ export const getVenueDetailsById = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/venues/details/${venue_id}/`,
+            `${API_BASE_URL}/venues/details/${venue_id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -355,7 +350,7 @@ export const getVenuesByAuthority = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/venues/details/byAuthority/${authority_id}/`,
+            `${API_BASE_URL}/venues/details/byAuthority/${authority_id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -375,7 +370,7 @@ export const getVenueByBuilding = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/venues/details/byBuilding/${buildingId}/`,
+            `${API_BASE_URL}/venues/details/byBuilding/${buildingId}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -394,7 +389,7 @@ export const addNewVenue = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/venues/add/`,
+            `${API_BASE_URL}/venues/add/`,
             props,
             {
                 headers: {
@@ -427,7 +422,7 @@ export const UpdateExistingVenue = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/venues/update/`,
+            `${API_BASE_URL}/venues/update/`,
             {
                 id,
                 name: newVenue,
@@ -460,7 +455,7 @@ export const UpdateExistingVenue = async (
 export const DeleteVenue = async (id: string, credentials: string) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/venues/remove/`,
+            `${API_BASE_URL}/venues/remove/`,
             {
                 id: id,
             },
@@ -484,7 +479,7 @@ export const createBooking = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/bookings/add/`,
+            `${API_BASE_URL}/bookings/add/`,
             props,
             {
                 headers: {
@@ -502,7 +497,7 @@ export const createBooking = async (
 export const getAllBookings = async (user_id: string, credentials: string) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/bookings/details/byUser/${user_id}/`,
+            `${API_BASE_URL}/bookings/details/byUser/${user_id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -519,7 +514,7 @@ export const getAllBookings = async (user_id: string, credentials: string) => {
 export const getBookingDetails = async (id: string, credentials: string) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/bookings/details/${id}/`,
+            `${API_BASE_URL}/bookings/details/${id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -538,7 +533,7 @@ export const getBookingDetailsByVenue = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/bookings/details/byVenue/${venue_id}`,
+            `${API_BASE_URL}/bookings/details/byVenue/${venue_id}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -557,7 +552,7 @@ export const getBookingRequestsByUser = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/bookings/bookingRequests/byReceiver/${receiver_id}`,
+            `${API_BASE_URL}/bookings/bookingRequests/byReceiver/${receiver_id}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -578,7 +573,7 @@ export const updateBookingRequest = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/bookings/bookingRequests/update/`,
+            `${API_BASE_URL}/bookings/bookingRequests/update/`,
             { id, request_status },
             {
                 headers: {
@@ -599,7 +594,7 @@ export const getBookingRequestDetails = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/bookings/bookingRequests/details/${id}/`,
+            `${API_BASE_URL}/bookings/bookingRequests/details/${id}/`,
 
             {
                 headers: {
@@ -621,7 +616,7 @@ export const editBooking = async (
 ) => {
     try {
         const response = await axios.post(
-            "http://127.0.0.1:8000/bookings/update/time/",
+            `${API_BASE_URL}/bookings/update/time/`,
             {
                 booking_id,
                 event_time,
@@ -645,7 +640,7 @@ export const cancelBooking = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/bookings/cancel/`,
+            `${API_BASE_URL}/bookings/cancel/`,
             { booking_id },
             {
                 headers: {
@@ -666,7 +661,7 @@ export const getCommentsByBooking = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/comments/byBooking/${booking_id}/`,
+            `${API_BASE_URL}/comments/byBooking/${booking_id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -689,7 +684,7 @@ export const postComment = async (
     console.log(booking_id, user_id, comment_content, credentials);
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/comments/add/`,
+            `${API_BASE_URL}/comments/add/`,
             {
                 booking_id: booking_id,
                 user_id: user_id,
@@ -740,7 +735,7 @@ export const createVHBooking = async (
             formData.append("id_proof", props.id_proof);
         }
         const response = await axios.post(
-            `http://127.0.0.1:8000/vhbookings/add/`,
+            `${API_BASE_URL}/vhbookings/add/`,
             formData,
             {
                 headers: {
@@ -757,7 +752,7 @@ export const createVHBooking = async (
 export const deleteVHVenue = async (venue_id: string, credentials: string) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/vhvenues/remove/`,
+            `${API_BASE_URL}/vhvenues/remove/`,
             {
                 id: venue_id,
             },
@@ -785,7 +780,7 @@ export const UpdateExistingVHVenue = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/vhvenues/update/`,
+            `${API_BASE_URL}/vhvenues/update/`,
             {
                 id,
                 name: newVenue,
@@ -815,7 +810,7 @@ export const addNewVHVenue = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/vhvenues/add/`,
+            `${API_BASE_URL}/vhvenues/add/`,
             props,
             {
                 headers: {
@@ -834,7 +829,7 @@ export const addNewVHVenue = async (
 export const getAllVHVenues = async (credentials: string) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/vhvenues/details/all/`,
+            `${API_BASE_URL}/vhvenues/details/all/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -855,7 +850,7 @@ export const getVHVenuesByAuthority = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/vhvenues/details/byAuthority/${authority_id}/`,
+            `${API_BASE_URL}/vhvenues/details/byAuthority/${authority_id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -875,7 +870,7 @@ export const getAllVHBookings = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/vhbookings/details/byUser/${user_id}/`,
+            `${API_BASE_URL}/vhbookings/details/byUser/${user_id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -895,7 +890,7 @@ export const cancelVHBooking = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/vhbookings/cancel/`,
+            `${API_BASE_URL}/vhbookings/cancel/`,
             { booking_id },
             {
                 headers: {
@@ -916,7 +911,7 @@ export const getVHBookingRequestsByUser = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/vhbookings/bookingRequests/byReceiver/${receiver_id}`,
+            `${API_BASE_URL}/vhbookings/bookingRequests/byReceiver/${receiver_id}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -933,7 +928,7 @@ export const getVHBookingRequestsByUser = async (
 export const getVHBookingDetails = async (id: string, credentials: string) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/vhbookings/details/${id}/`,
+            `${API_BASE_URL}/vhbookings/details/${id}/`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -953,7 +948,7 @@ export const getVHBookingRequestDetails = async (
 ) => {
     try {
         const response = await axios.get(
-            `http://127.0.0.1:8000/vhbookings/bookingRequests/details/${id}/`,
+            `${API_BASE_URL}/vhbookings/bookingRequests/details/${id}/`,
 
             {
                 headers: {
@@ -974,7 +969,7 @@ export const updateVHBookingRequest = async (
 ) => {
     try {
         const response = await axios.post(
-            `http://127.0.0.1:8000/vhbookings/bookingRequests/update/`,
+            `${API_BASE_URL}/vhbookings/bookingRequests/update/`,
             { id, request_status },
             {
                 headers: {
