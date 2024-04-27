@@ -45,6 +45,18 @@ interface addNewUserProps {
     is_admin: Boolean;
     is_authority: Boolean;
 }
+interface VHBooking {
+    user_id: string;
+    user_address: string;
+    user_contact: string;
+    arrival_time: string;
+    departure_time: string;
+    rooms_required: Number;
+    booking_purpose: string;
+    booking_type: string;
+    requestby: string;
+    id_proof: string;
+}
 export const loginUser = async (
     user_data: userDataProps,
     credentials: string
@@ -697,7 +709,7 @@ export const postComment = async (
 };
 
 export const createVHBooking = async (
-    props,
+    props: VHBooking,
     credentials: string
 ) => {
     try {
@@ -829,5 +841,125 @@ export const getVHVenuesByAuthority = async (
         return response;
     } catch (error) {
         console.log(error);
+    }
+};
+
+export const getAllVHBookings = async (
+    user_id: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.get(
+            `http://127.0.0.1:8000/vhbookings/details/byUser/${user_id}/`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const cancelVHBooking = async (
+    booking_id: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/vhbookings/cancel/`,
+            { booking_id },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const getVHBookingRequestsByUser = async (
+    receiver_id: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.get(
+            `http://127.0.0.1:8000/vhbookings/bookingRequests/byReceiver/${receiver_id}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const getVHBookingDetails = async (id: string, credentials: string) => {
+    try {
+        const response = await axios.get(
+            `http://127.0.0.1:8000/vhbookings/details/${id}/`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+};
+
+export const getVHBookingRequestDetails = async (
+    id: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.get(
+            `http://127.0.0.1:8000/vhbookings/bookingRequests/details/${id}/`,
+
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
+};
+export const updateVHBookingRequest = async (
+    id: string,
+    request_status: string,
+    credentials: string
+) => {
+    try {
+        const response = await axios.post(
+            `http://127.0.0.1:8000/vhbookings/bookingRequests/update/`,
+            { id, request_status },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: credentials,
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        return error;
     }
 };
